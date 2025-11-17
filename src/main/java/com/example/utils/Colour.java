@@ -1,9 +1,9 @@
-package com.example;
+package com.example.utils;
 
 /**
  * An enum for output colours
  */
-public enum TerminalColour {
+public enum Colour {
     // GENERICS
     BLACK("30"),
     RED("31"),
@@ -27,7 +27,7 @@ public enum TerminalColour {
     // The ANSI code number
     private final String code;
 
-    TerminalColour(String code) {
+    Colour(String code) {
         this.code = code;
     }
 

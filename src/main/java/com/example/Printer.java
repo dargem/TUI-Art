@@ -11,12 +11,9 @@ public class Printer
     private static final String CLEAR_SCREEN = "\u001b[2J";
     private static final String MOVE_TO_TOP_LEFT = "\u001b[1;1H";
     private static final String INSERT_LINE = "\u001b[L";
-    
-    private static final String GREEN = "\u001b[32m";
-    private static final String BROWN = "\u001b[33m";
-    private static final String RESET = "\u001b[0m";
+
     /**
-     * Install Jansi and setup terminal
+     * Install Jansi console and set it up
      */
     public Printer()
     {
