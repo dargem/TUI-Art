@@ -1,5 +1,9 @@
 package com.example;
 import org.fusesource.jansi.AnsiConsole;
+import org.fusesource.jansi.Ansi;
+
+import com.example.utils.Colour;
+import com.example.utils.TerminalStatus;
 
 public class Main {
 
@@ -16,6 +20,28 @@ public class Main {
 
     public static void main(String[] args) {
         // 1. Install Jansi to make ANSI codes work
+        while (true)
+        {
+            try
+            {
+                int x = TerminalStatus.getWidth();
+                for (int i = 0; i < x; i++)
+                {
+                    System.out.print(
+                        Ansi.ansi()
+                        .fg(Ansi.Color.GREEN)
+                        .bg(Ansi.Color.RED)
+                        .bold()
+                        .a("A")
+                        .reset()
+                    );
+                }
+                System.out.print("\n");
+            } catch(Exception e){
+                break;
+            }
+        }
+        System.exit(0);
         AnsiConsole.systemInstall();
 
         // 2. Use a try...finally block to ensure we always restore the terminal

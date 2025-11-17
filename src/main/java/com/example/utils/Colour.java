@@ -3,6 +3,7 @@ package com.example.utils;
 /**
  * An enum for output colours
  */
+
 public enum Colour {
     // GENERICS
     BLACK("30"),
