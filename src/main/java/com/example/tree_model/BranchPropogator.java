@@ -1,7 +1,9 @@
-package com.example.model_layer;
+package com.example.tree_model;
 
 import com.example.config.BranchParams;
 import com.example.utils.NumberGenerator;
+import com.example.utils.Point;
+import com.example.utils.EndPointFinder;
 
 public class BranchPropogator {
     private final BranchParams PARAMETERS;
@@ -17,19 +19,12 @@ public class BranchPropogator {
         final double angle = branchSection.getAngle();
         final double length = branchSection.getLength();
         
-        final Point next_location = findNextPoint(branchSection.getLocation(), angle, length);
+        final Point next_location = EndPointFinder.findEnd(branchSection.getLocation(), angle, length);
         final double next_length = findNextLength(length);
         final double next_angle = findNextAngle(angle);
         final double next_width = findNextWidth(branchSection.getWidth());
 
         return new BranchSection(next_location, next_length, next_angle, next_width);
-    }
-
-    private Point findNextPoint(final Point start_point, final double angle, final double length)
-    {
-        final double end_x = start_point.x() + length*Math.sin(angle);
-        final double end_y = start_point.y() + length*Math.cos(angle);
-        return new Point(end_x, end_y);
     }
 
     private double findNextLength(final double length)

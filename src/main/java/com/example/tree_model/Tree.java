@@ -1,4 +1,4 @@
-package  com.example.model_layer;
+package  com.example.tree_model;
 import java.util.LinkedList;
 
 abstract class Tree

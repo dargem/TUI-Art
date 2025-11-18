@@ -1,4 +1,6 @@
-package com.example.model_layer;
+package com.example.tree_model;
+
+import com.example.utils.Point;
 
 public class BranchSection 
 {
