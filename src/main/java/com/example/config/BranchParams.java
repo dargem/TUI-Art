@@ -1,6 +1,6 @@
 package com.example.config;
 
-public record GrowthParams(
+public record BranchParams(
         double initialLength,
         double lengthDecay,
         double widthDecay,

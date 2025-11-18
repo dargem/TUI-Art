@@ -1,12 +1,12 @@
 package com.example.model_layer;
 
-import com.example.config.GrowthParams;
+import com.example.config.BranchParams;
 import com.example.utils.NumberGenerator;
 
 public class BranchPropogator {
-    private final GrowthParams PARAMETERS;
+    private final BranchParams PARAMETERS;
 
-    public BranchPropogator(GrowthParams params)
+    public BranchPropogator(BranchParams params)
     {
         this.PARAMETERS = params;
     }
@@ -47,6 +47,6 @@ public class BranchPropogator {
     private double findNextWidth(final double width)
     {
         final double scale = NumberGenerator.getRandomNumber();
-        return width *  (1 - PARAMETERS.widthDecay()*scale);
+        return width * (1 - PARAMETERS.widthDecay()*scale);
     }
 }

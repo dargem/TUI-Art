@@ -10,7 +10,7 @@ public class Branch {
     {
         this.alive = true;
         this.branch_propogator = branch_propogator;
-        this.length_list = new ArrayList<BranchSection>();
+        this.length_list = new ArrayList<>();
     }
 
     public boolean getAlive()
@@ -22,7 +22,7 @@ public class Branch {
     {
         if (length_list.isEmpty())
         {
-
+            
             return;
         }
     }
