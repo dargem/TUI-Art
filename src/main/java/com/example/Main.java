@@ -1,12 +1,11 @@
 package com.example;
-import org.fusesource.jansi.AnsiConsole;
 import org.fusesource.jansi.Ansi;
+import org.fusesource.jansi.AnsiConsole;
 
-import com.example.utils.Colour;
 import com.example.utils.TerminalStatus;
 
-public class Main {
-
+public class Main 
+{
     // Define our ANSI escape codes as constants
     private static final String HIDE_CURSOR = "\u001b[?25l";
     private static final String SHOW_CURSOR = "\u001b[?25h";
@@ -18,7 +17,8 @@ public class Main {
     private static final String BROWN = "\u001b[33m";
     private static final String RESET = "\u001b[0m";
 
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
         // 1. Install Jansi to make ANSI codes work
         while (true)
         {
@@ -37,7 +37,11 @@ public class Main {
                     );
                 }
                 System.out.print("\n");
-            } catch(Exception e){
+                Thread.sleep(100);
+            } 
+            catch(Exception e)
+            {
+                System.out.println(e);
                 break;
             }
         }
