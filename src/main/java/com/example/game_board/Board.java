@@ -22,6 +22,8 @@ public class Board {
         this.access_width = Math.min(this.array_width, needed_width);
     }
 
+    
+
 
 
 }
