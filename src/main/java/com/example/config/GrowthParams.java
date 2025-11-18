@@ -1,6 +1,6 @@
-package com.example.model_layer;
+package com.example.config;
 
-public record Params(
+public record GrowthParams(
         double initialLength,
         double lengthDecay,
         int maxDepth,

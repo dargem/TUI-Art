@@ -3,14 +3,14 @@ import java.util.ArrayList;
 
 public class Branch {
     private boolean alive;
-    private ArrayList<Length> length_list;
+    private ArrayList<BranchSection> length_list;
     private final BranchPropogator branch_propogator;
 
     public Branch(BranchPropogator branch_propogator)
     {
         this.alive = true;
         this.branch_propogator = branch_propogator;
-        this.length_list = new ArrayList<Length>();
+        this.length_list = new ArrayList<BranchSection>();
     }
 
     public boolean getAlive()
@@ -22,6 +22,7 @@ public class Branch {
     {
         if (length_list.isEmpty())
         {
+
             return;
         }
     }

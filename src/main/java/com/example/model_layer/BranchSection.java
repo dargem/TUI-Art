@@ -1,13 +1,13 @@
 package com.example.model_layer;
 
-public class Branch 
+public class BranchSection 
 {
     private final Point location;
     private final double length;
     private final double angle; // radians
     private final double width;
 
-    public Branch(final Point location, final double length, final double angle, final double width)
+    public BranchSection(final Point location, final double length, final double angle, final double width)
     {
         this.location = location;
         this.length = length;
