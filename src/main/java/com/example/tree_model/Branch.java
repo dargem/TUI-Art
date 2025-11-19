@@ -27,7 +27,7 @@ public class Branch implements Renderable{
     {
         if (segment_list.isEmpty())
         {
-
+            
             return;
         }
     }
