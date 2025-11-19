@@ -5,7 +5,8 @@ import java.util.ArrayList;
 import com.example.representations.DirectedSegment;
 import com.example.utils.Bound;
 
-public interface Renderable {
+public interface Renderable 
+{
     /**
      * Get an array list of segments that are positioned onscreen for rendering
      * @param bound A Bound object used for checking if points are within it
