@@ -8,15 +8,14 @@ import com.example.utils.Bound;
 public interface Renderable {
     /**
      * Get an array list of segments that are positioned onscreen for rendering
-     * @param min_y Returned segments must be at least this high
-     * @param max_y Returned segments must be at most this high
+     * @param bound A Bound object used for checking if points are within it
      * @return ArrayList of DirectedSegment that conform to these input parameters
      */
-    public ArrayList<DirectedSegment> returnSegments(Bound bound);
+    public ArrayList<DirectedSegment> returnBoundSegments(Bound bound);
 
     /**
      * Remove segments that are below a threshold to save memory
-     * @param min_y Minimum height of a segment for it to continue
+     * @param bound A bound object used for checking if points are within it
      */
-    public void trimSegments(double min_y);
+    public void trimSegments(Bound bound);
 }
