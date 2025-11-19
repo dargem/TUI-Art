@@ -22,7 +22,8 @@ public record BranchParams(
     {
         Properties p = new Properties();
 
-        try (InputStream in = BranchParams.class.getResourceAsStream(path)) {
+        try (InputStream in = BranchParams.class.getResourceAsStream(path)) 
+        {
             if (in != null) 
             {
                 p.load(in);
@@ -35,10 +36,10 @@ public record BranchParams(
             }
             else
             {
-                System.out.println("Input Stream Null for BranchParams, quitting");
+                System.out.println("Input Stream Null for " + path + ", quitting");
                 System.exit(0);
             }
-        } 
+        }
         catch (IOException e) 
         {
             System.out.println("File for path not found");

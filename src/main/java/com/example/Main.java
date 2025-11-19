@@ -3,6 +3,7 @@ import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 
 import com.example.config.BranchParams;
+import com.example.config.TrunkParams;
 import com.example.utils.TerminalStatus;
 
 public class Main 
@@ -21,7 +22,8 @@ public class Main
     public static void main(String[] args)
     {
         BranchParams params = BranchParams.fromFile();
-        System.out.println(params.angle_variance());
+        TrunkParams param_trunk = TrunkParams.fromFile();
+        System.out.println(param_trunk.width());
         //TreeFactory tree_factory = new TreeFactory(null, null)
 
 
