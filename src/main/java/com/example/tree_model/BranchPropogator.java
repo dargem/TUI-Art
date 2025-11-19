@@ -1,16 +1,16 @@
 package com.example.tree_model;
 
 import com.example.config.BranchParams;
+import com.example.utils.EndPointFinder;
 import com.example.utils.NumberGenerator;
 import com.example.utils.Point;
-import com.example.utils.EndPointFinder;
 
 public class BranchPropogator {
-    private final BranchParams PARAMETERS;
+    private final BranchParams parameters;
 
     public BranchPropogator(BranchParams params)
     {
-        this.PARAMETERS = params;
+        this.parameters = params;
     }
 
     public BranchSection extendBranch(final BranchSection branchSection)
@@ -30,18 +30,18 @@ public class BranchPropogator {
     private double findNextLength(final double length)
     {
         final double scale = NumberGenerator.getRandomNumber();
-        return length * (1 - PARAMETERS.lengthDecay()*scale);
+        return length * (1 - parameters.lengthDecay()*scale);
     }
 
     private double findNextAngle(final double angle)
     {
         final double scale = NumberGenerator.getRandomNumber(-1, 1);
-        return angle + scale * PARAMETERS.angleVariance();
+        return angle + scale * parameters.angleVariance();
     }
 
     private double findNextWidth(final double width)
     {
         final double scale = NumberGenerator.getRandomNumber();
-        return width * (1 - PARAMETERS.widthDecay()*scale);
+        return width * (1 - parameters.widthDecay()*scale);
     }
 }

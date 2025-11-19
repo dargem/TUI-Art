@@ -8,22 +8,22 @@ import com.example.utils.Point;
 
 public class Trunk 
 {
-    private final TrunkParams PARAMETERS;
+    private final TrunkParams parameters;
     private final LinkedList<BranchSection> trunk_list;
     private final double start_x;
 
     public Trunk(TrunkParams params, Point location)
     {
-        this.PARAMETERS = params;
+        this.parameters = params;
         this.trunk_list = new LinkedList<>();
         this.start_x = location.x();
 
         trunk_list.add(
             new BranchSection(
                 location, 
-                PARAMETERS.section_length(), 
+                parameters.section_length(), 
                 0, 
-                PARAMETERS.width()
+                parameters.width()
             )
         );
     }
@@ -42,11 +42,10 @@ public class Trunk
         final double next_angle = find_angle(location.x());
 
         // add the next branch section to the top
-        trunk_list.add(
-            new BranchSection(
+        trunk_list.add(new BranchSection(
                 next_point, 
-                PARAMETERS.section_length(), 
-                next_angle, PARAMETERS.width()
+                parameters.section_length(), 
+                next_angle, parameters.width()
             )
         );
     }
@@ -56,8 +55,8 @@ public class Trunk
         // this doesn't care about prior states, can consider doing that in the future
         // e.g. if further left then start, then positive offset
         final double needed_realignment = start_x - current_x;
-        final double needed_realignment_angle = Math.asin(needed_realignment / PARAMETERS.section_length());
-        final double scale = NumberGenerator.getRandomNumber() + needed_realignment_angle * PARAMETERS.centralness();
-        return scale * PARAMETERS.angle_variance();
+        final double needed_realignment_angle = Math.asin(needed_realignment / parameters.section_length());
+        final double scale = NumberGenerator.getRandomNumber() + needed_realignment_angle * parameters.centralness();
+        return scale * parameters.angle_variance();
     }
 }

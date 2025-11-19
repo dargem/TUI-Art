@@ -46,7 +46,7 @@ public enum Colour {
      * @return The background color escape sequence.
      */
     public String background() {
-        // We parse the code as an integer, add 10 (or 60 for bright codes),
+        // Parse the code as an integer, add 10 (or 60 for bright codes),
         // and convert it back to a string for the background sequence.
         int bgCode = Integer.parseInt(this.code);
         if (bgCode >= 30 && bgCode <= 37) {
