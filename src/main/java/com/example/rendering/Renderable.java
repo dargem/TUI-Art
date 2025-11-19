@@ -12,11 +12,11 @@ public interface Renderable
      * @param bound A Bound object used for checking if points are within it
      * @return ArrayList of DirectedSegment that conform to these input parameters
      */
-    public ArrayList<DirectedSegment> returnBoundSegments(Bound bound);
+    public abstract ArrayList<DirectedSegment> returnBoundSegments(Bound bound);
 
     /**
      * Remove segments that are below a threshold to save memory
      * @param bound A bound object used for checking if points are within it
      */
-    public void trimSegments(Bound bound);
+    public abstract void trimSegments(Bound bound);
 }

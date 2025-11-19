@@ -9,7 +9,7 @@ import com.example.utils.Bound;
 /**
  * A world represents a collection of renderable models
  * These models can be decomposed into lines (DirectedSegment)
- * This world of lines then can be rasterized into a 2d map
+ * This world of lines then can be rasterized into a 2d grid
  */
 public class World implements Renderable
 {
