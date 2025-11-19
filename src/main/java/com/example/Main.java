@@ -2,6 +2,7 @@ package com.example;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 
+import com.example.config.BranchParams;
 import com.example.utils.TerminalStatus;
 
 public class Main 
@@ -19,6 +20,13 @@ public class Main
 
     public static void main(String[] args)
     {
+        BranchParams params = BranchParams.fromFile();
+        System.out.println(params.angle_variance());
+        //TreeFactory tree_factory = new TreeFactory(null, null)
+
+
+
+
         // 1. Install Jansi to make ANSI codes work
         while (true)
         {

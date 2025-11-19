@@ -11,5 +11,6 @@ public class BranchFactory {
     public Branch getBranch()
     {
         // option for adding later branch types
+        return new Branch(branch_propogator);
     }
 }

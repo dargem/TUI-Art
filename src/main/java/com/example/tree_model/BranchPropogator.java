@@ -30,18 +30,18 @@ public class BranchPropogator {
     private double findNextLength(final double length)
     {
         final double scale = NumberGenerator.getRandomNumber();
-        return length * (1 - parameters.lengthDecay()*scale);
+        return length * (1 - parameters.length_decay()*scale);
     }
 
     private double findNextAngle(final double angle)
     {
         final double scale = NumberGenerator.getRandomNumber(-1, 1);
-        return angle + scale * parameters.angleVariance();
+        return angle + scale * parameters.angle_variance();
     }
 
     private double findNextWidth(final double width)
     {
         final double scale = NumberGenerator.getRandomNumber();
-        return width * (1 - parameters.widthDecay()*scale);
+        return width * (1 - parameters.width_decay()*scale);
     }
 }
