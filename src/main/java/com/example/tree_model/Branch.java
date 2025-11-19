@@ -1,9 +1,11 @@
 package com.example.tree_model;
 import java.util.ArrayList;
 
+import com.example.representations.DirectedSegment;
+
 public class Branch {
     private boolean alive;
-    private ArrayList<BranchSection> length_list;
+    private ArrayList<DirectedSegment> length_list;
     private final BranchPropogator branch_propogator;
 
     public Branch(BranchPropogator branch_propogator)

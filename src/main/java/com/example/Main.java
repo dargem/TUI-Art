@@ -4,6 +4,8 @@ import org.fusesource.jansi.AnsiConsole;
 
 import com.example.config.BranchParams;
 import com.example.config.TrunkParams;
+import com.example.tree_model.Tree;
+import com.example.tree_model.TreeFactory;
 import com.example.utils.TerminalStatus;
 
 public class Main 
@@ -21,13 +23,13 @@ public class Main
 
     public static void main(String[] args)
     {
-        BranchParams params = BranchParams.fromFile();
-        TrunkParams param_trunk = TrunkParams.fromFile();
-        System.out.println(param_trunk.width());
-        //TreeFactory tree_factory = new TreeFactory(null, null)
+        TreeFactory tree_factory = new TreeFactory(
+            BranchParams.fromFile(),
+            TrunkParams.fromFile()
+        );
 
-
-
+        final Tree tree = tree_factory.createTree();
+        
 
         // 1. Install Jansi to make ANSI codes work
         while (true)

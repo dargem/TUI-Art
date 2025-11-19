@@ -1,9 +1,9 @@
 package com.example.tree_model;
 
 import com.example.config.BranchParams;
-import com.example.utils.EndPointFinder;
+import com.example.representations.DirectedSegment;
+import com.example.representations.Point;
 import com.example.utils.NumberGenerator;
-import com.example.utils.Point;
 
 public class BranchPropogator {
     private final BranchParams parameters;
@@ -13,18 +13,18 @@ public class BranchPropogator {
         this.parameters = params;
     }
 
-    public BranchSection extendBranch(final BranchSection branchSection)
+    public DirectedSegment extendBranch(final DirectedSegment branch_section)
     {
         // First calculate start branch of next using original
-        final double angle = branchSection.getAngle();
-        final double length = branchSection.getLength();
+        final double angle = branch_section.getAngle();
+        final double length = branch_section.getLength();
         
-        final Point next_location = EndPointFinder.findEnd(branchSection.getLocation(), angle, length);
+        final Point next_location = branch_section.getEndLocation();
         final double next_length = findNextLength(length);
         final double next_angle = findNextAngle(angle);
-        final double next_width = findNextWidth(branchSection.getWidth());
+        final double next_width = findNextWidth(branch_section.getWidth());
 
-        return new BranchSection(next_location, next_length, next_angle, next_width);
+        return new DirectedSegment(next_location, next_length, next_angle, next_width);
     }
 
     private double findNextLength(final double length)

@@ -2,8 +2,8 @@ package com.example.tree_model;
 
 import com.example.config.BranchParams;
 import com.example.config.TrunkParams;
+import com.example.representations.Point;
 import com.example.utils.NumberGenerator;
-import com.example.utils.Point;
 
 public class TreeFactory {
 
