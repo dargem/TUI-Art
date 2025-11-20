@@ -48,6 +48,7 @@ public class BasicRasterizerStrategy implements SegmentRasterizerStrategy
         {
             y_inc = 1;
             n += (int) Math.floor(y1) - y;
+            error -= (Math.floor(y0) + 1 - y0) * dx;
         }
         else
         {
