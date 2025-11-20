@@ -1,12 +1,12 @@
 package com.example;
-import org.fusesource.jansi.Ansi;
+import static org.fusesource.jansi.Ansi.ansi;
 import org.fusesource.jansi.AnsiConsole;
 
 import com.example.config.BranchParams;
 import com.example.config.TrunkParams;
 import com.example.models.tree_model.TreeFactory;
 import com.example.rendering.World;
-import com.example.utils.TerminalStatus;
+
 
 public class Main 
 {
@@ -29,11 +29,12 @@ public class Main
         );
         
         final World world = new World();
-        world.addModel(tree_factory.createTree());
+        //world.addModel(tree_factory.createTree());
 
 
 
         // 1. Install Jansi to make ANSI codes work
+        /*
         while (true)
         {
             try
@@ -59,7 +60,8 @@ public class Main
                 break;
             }
         }
-        System.exit(0);
+        */
+        //System.exit(0);
         AnsiConsole.systemInstall();
 
         // 2. Use a try...finally block to ensure we always restore the terminal
@@ -95,9 +97,10 @@ public class Main
                 }
                 
                 print(art);
-
+                if (i % 5 == 0) System.out.print(ansi().cursor(0, 0).a("H").reset());
+                if (i % 7 == 0) System.out.print(ansi().cursor(0, 13).a("K").reset());
                 // 6. Wait for a moment to make the animation visible
-                Thread.sleep(200); // 200 milliseconds
+                Thread.sleep(500); // 200 milliseconds
             }
 
         } catch (InterruptedException e) {

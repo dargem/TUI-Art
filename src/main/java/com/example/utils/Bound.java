@@ -10,10 +10,11 @@ public class Bound {
     private final double min_y;
     private final double max_y;
 
-    public Bound(final double min_x, final double max_x, final double min_y, final double max_y)
+    
+    public Bound(double min_y, double max_y)
     {
-        this.min_x = min_x;
-        this.max_x = max_x;
+        this.min_x = 0;
+        this.max_x = TerminalStatus.getWidth();
         this.min_y = min_y;
         this.max_y = max_y;
     }

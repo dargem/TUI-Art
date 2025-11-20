@@ -31,12 +31,12 @@ public final class TerminalStatus {
         }
         return terminal;
     }
-    public static int getWidth() throws IOException, InterruptedException
+    public static int getWidth() throws RuntimeException
     {
         return getTerminal().getWidth();
     }
 
-    public static int getHeight() throws IOException, InterruptedException
+    public static int getHeight() throws RuntimeException
     {
         return getTerminal().getHeight();
     }

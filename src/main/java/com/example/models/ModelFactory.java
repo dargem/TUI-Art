@@ -7,7 +7,7 @@ import com.example.rendering.Renderable;
  * Used so the controller can store many factories
  * knowing these factories produce renderables
  */
-public interface ModelFactoryInterface {
+public interface ModelFactory {
 
     /**
      * Used to request a renderable object
@@ -26,5 +26,6 @@ public interface ModelFactoryInterface {
      * Finds the number of renderables that should be created on startup
      * @return int number of items to render on startup
      */
-    public abstract int numStartupRenders();
+    public abstract int checkNumStartupRenders();
 }
+

@@ -2,12 +2,12 @@ package com.example.models.tree_model;
 
 import com.example.config.BranchParams;
 import com.example.config.TrunkParams;
-import com.example.models.ModelFactoryInterface;
+import com.example.models.ModelFactory;
 import com.example.rendering.Renderable;
 import com.example.representations.Point;
 import com.example.utils.NumberGenerator;
 
-public class TreeFactory implements ModelFactoryInterface{
+public class TreeFactory implements ModelFactory{
 
     private final BranchParams branch_params;
     private final TrunkParams trunk_params;
@@ -42,7 +42,7 @@ public class TreeFactory implements ModelFactoryInterface{
     }
 
     @Override
-    public int numStartupRenders()
+    public int checkNumStartupRenders()
     {
         // trees will never get rendered randomly
         return NUM_STARTUP_RENDERS;
