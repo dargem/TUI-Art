@@ -21,6 +21,9 @@ public class SegmentRasterizerContext {
 
     public void rasterizeSegments(ArrayList<DirectedSegment> segment_list)
     {
-        segmentRasterizerStrategy.rasterizeSegments(segment_list);
+        for (DirectedSegment segment : segment_list)
+        {
+            segmentRasterizerStrategy.rasterizeSegment(segment);
+        }
     }
 }
