@@ -1,4 +1,4 @@
-package com.example.tree_model;
+package com.example.models.tree_model;
 
 import com.example.config.BranchParams;
 import com.example.representations.DirectedSegment;

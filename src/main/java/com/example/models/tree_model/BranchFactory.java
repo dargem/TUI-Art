@@ -1,4 +1,4 @@
-package com.example.tree_model;
+package com.example.models.tree_model;
 
 public class BranchFactory {
     private final BranchPropogator branch_propogator;
