@@ -25,7 +25,7 @@ public class Controller
     private final SegmentRasterizerContext rasterizer;
     private int rounds = 0;
 
-    private final int SLEEP_DURATION = 300; // sleep duration of loops in ms
+    private final int SLEEP_DURATION = 100; // sleep duration of loops in ms
     
     public Controller()
     {
@@ -59,8 +59,12 @@ public class Controller
             }
         }
 
-        ArrayList<DirectedSegment> directed_segments = world.growAndFetchRenderable(new Bound(0, rounds + 100));
+        ArrayList<DirectedSegment> directed_segments = world.growAndFetchRenderable(new Bound(0, rounds + 30));
+        //System.out.println(directed_segments.size());
+        //System.out.println("starting rasterisation");
         rasterizer.rasterizeSegments(directed_segments, board);
+        //System.out.println("rasterisation done");
+        //System.out.println(board.getRow(rounds).size());
         printer.printLine(rounds, board);
         rounds += 1;
 

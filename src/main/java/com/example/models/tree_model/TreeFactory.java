@@ -11,8 +11,8 @@ public class TreeFactory implements ModelFactory{
 
     private final BranchParams branch_params;
     private final TrunkParams trunk_params;
-    private static final double LEFT_MIN = 0.2;
-    private static final double RIGHT_MAX = 0.8;
+    private static final double LEFT_MIN = 40;
+    private static final double RIGHT_MAX = 50;
     private static final double GROUND_LEVEL = 0;
     // Potentially have it load startup renders from a config file later
     private static final int NUM_STARTUP_RENDERS = 0;

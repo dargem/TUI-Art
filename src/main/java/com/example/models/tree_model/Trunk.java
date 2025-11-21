@@ -77,7 +77,7 @@ public class Trunk implements LineBasedRenderable
         final double random_angle = NumberGenerator.getRandomNumber() * parameters.angle_variance();
         final double expected_x = EndPointFinder.findEndX(current_x, random_angle, parameters.section_length());
         // this doesn't care about prior states, can consider doing that in the future
-        final double wanted_offset = (start_x - expected_x) * parameters.centralness();
+        final double wanted_offset = (start_x - expected_x) * (1 - parameters.centralness());
         return Math.asin(wanted_offset / parameters.section_length());
     }
 

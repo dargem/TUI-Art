@@ -11,6 +11,7 @@ public class BasicRasterizerStrategy implements SegmentRasterizerStrategy
     @Override
     public void rasterizeSegment(DirectedSegment segment, Board board)
     {
+        //System.out.println("rasterising line");
         final double x0 = segment.getStartLocation().x();
         final double x1 = segment.getEndLocation().x();
         final double y0 = segment.getStartLocation().y();
@@ -60,10 +61,11 @@ public class BasicRasterizerStrategy implements SegmentRasterizerStrategy
             n += y - (int) Math.floor(y1);
             error -= (y0 - Math.floor(y0)) * dx;
         }
-
         for (; n>0; --n)
         {
+            //System.out.println(x + " " + y);
             board.addTile(x, y, new Tile());
+            //System.out.println("added tile");
             if (error > 0)
             {
                 y += y_inc;
@@ -74,6 +76,8 @@ public class BasicRasterizerStrategy implements SegmentRasterizerStrategy
                 x += x_inc;
                 error += dy;
             }
-        }        
+        }       
+        
+        //System.out.println("finished rasterising line");
     }
 }

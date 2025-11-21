@@ -28,13 +28,14 @@ public class Printer
 
     public void printLine(int round, Board board)
     {
+        //System.out.println("getting ready to print");
         String output = "";
         ArrayList<Tile> output_row = board.getRow(round);
 
         if (output_row == null)
         {
-            System.out.print(MOVE_TO_TOP_LEFT);
-            System.out.print(INSERT_LINE);
+            //System.out.print(MOVE_TO_TOP_LEFT);
+            //System.out.print(INSERT_LINE);
             return;
         }
 
@@ -50,6 +51,7 @@ public class Printer
             output += tile.getForeground().foreground();
             output += tile.getCharacter();
         }
+        //System.out.println("printed line");
         System.out.print(MOVE_TO_TOP_LEFT);
         System.out.print(INSERT_LINE);
         System.out.print(output);

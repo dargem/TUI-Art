@@ -12,7 +12,7 @@ public class Tile
     public Tile()
     {
         // holder for now
-        foreground = Colour.BLUE;
+        foreground = Colour.GREEN;
         background = Colour.BLACK;
         character = '&';
     }

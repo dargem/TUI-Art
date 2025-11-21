@@ -35,6 +35,7 @@ public class Main
         Controller controller = new Controller();
         
         controller.addModelFactory(tree_factory);
+        controller.startUp();
         while (true)
         {
             controller.runRound();
