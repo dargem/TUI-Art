@@ -1,6 +1,7 @@
 package  com.example.models.tree_model;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 import com.example.representations.DirectedSegment;
@@ -9,18 +10,14 @@ import com.example.rendering.LineBasedRenderable;
 
 public class Tree implements LineBasedRenderable
 {
-    final private int MAX_RANCHES = 5;
-    final private int MIN_BRANCHES = 5;
     private final LinkedList<Branch> alive_branch_list;
     private final LinkedList<Branch> dead_branch_list;
 
     private final Trunk trunk;
-    private final BranchFactory branch_factory;
 
-    public Tree(Trunk trunk, BranchFactory branch_factory)
+    public Tree(Trunk trunk)
     {
         this.trunk = trunk;
-        this.branch_factory = branch_factory;
         this.alive_branch_list = new LinkedList<>();
         this.dead_branch_list = new LinkedList<>();
     }
@@ -35,12 +32,24 @@ public class Tree implements LineBasedRenderable
             segments.addAll(alive_branch.growAndFetchRenderable(bound));
         }
 
-        for (Branch dead_branch: dead_branch_list)
-        {
-            segments.addAll(dead_branch.growAndFetchRenderable(bound));
-        }
-
         segments.addAll(trunk.growAndFetchRenderable(bound));
+        
+        // collect any new branches created during trunk growth
+        final LinkedList<Branch> new_branches = trunk.fetchAndClearPendingBranches();
+        alive_branch_list.addAll(new_branches);
+        
+        // move dead branches from alive to dead list
+        final Iterator<Branch> branch_iterator = alive_branch_list.iterator();
+        while (branch_iterator.hasNext())
+        {
+            final Branch branch = branch_iterator.next();
+            if (!branch.getAlive())
+            {
+                branch_iterator.remove();
+                dead_branch_list.add(branch);
+            }
+        }
+        
         return segments;
     }
 

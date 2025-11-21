@@ -28,10 +28,10 @@ public class TreeFactory implements ModelFactory{
     {
         // Potential for a treetype in the future
         final Point start_location = new Point(NumberGenerator.getRandomNumber(LEFT_MIN, RIGHT_MAX), GROUND_LEVEL);
-        final Trunk trunk = new Trunk(trunk_params, start_location);
         final BranchPropogator propogator = new BranchPropogator(branch_params);
         final BranchFactory branch_factory = new BranchFactory(propogator);
-        return new Tree(trunk, branch_factory);
+        final Trunk trunk = new Trunk(trunk_params, start_location, branch_factory);
+        return new Tree(trunk);
     }
 
     @Override

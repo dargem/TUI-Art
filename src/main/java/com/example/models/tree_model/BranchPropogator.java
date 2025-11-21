@@ -7,10 +7,22 @@ import com.example.utils.NumberGenerator;
 
 public class BranchPropogator {
     private final BranchParams parameters;
+    // y = x^(1/3), then *1.2 just for a bit more variation
+    private final double INITIAL_ANGLE_SCALAR = 1/3*1.2;
 
     public BranchPropogator(BranchParams params)
     {
         this.parameters = params;
+    }
+
+    public DirectedSegment createFirstBranch(DirectedSegment trunk_segment)
+    {
+        final double angle = Math.pow(NumberGenerator.getRandomNumber(), INITIAL_ANGLE_SCALAR);
+        final double length = parameters.initial_length();
+        final Point start_location = trunk_segment.getEndLocation();
+        final double width = trunk_segment.getWidth() * 0.8; // branches start slightly thinner
+        
+        return new DirectedSegment(start_location, length, angle, width);
     }
 
     public DirectedSegment extendBranch(final DirectedSegment branch_section)

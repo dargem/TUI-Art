@@ -16,12 +16,16 @@ public class Trunk implements LineBasedRenderable
     private final TrunkParams parameters;
     private final LinkedList<DirectedSegment> trunk_list;
     private final double start_x;
+    private final BranchFactory branch_factory;
+    private final LinkedList<Branch> pending_branches;
 
-    public Trunk(TrunkParams params, Point location)
+    public Trunk(TrunkParams params, Point location, BranchFactory branch_factory)
     {
         this.parameters = params;
         this.trunk_list = new LinkedList<>();
         this.start_x = location.x();
+        this.branch_factory = branch_factory;
+        this.pending_branches = new LinkedList<>();
 
         trunk_list.add(
             new DirectedSegment(
@@ -47,6 +51,25 @@ public class Trunk implements LineBasedRenderable
                 next_angle, parameters.width()
             )
         );
+
+        // check if a branch should be created
+        if (shouldCreateBranch())
+        {
+            final Branch new_branch = branch_factory.getBranch(trunk_list.getLast());
+            pending_branches.add(new_branch);
+        }
+    }
+
+    private boolean shouldCreateBranch()
+    {
+        return NumberGenerator.getRandomNumber() < parameters.branch_chance();
+    }
+
+    public LinkedList<Branch> fetchAndClearPendingBranches()
+    {
+        final LinkedList<Branch> branches_to_return = new LinkedList<>(pending_branches);
+        pending_branches.clear();
+        return branches_to_return;
     }
 
     private double find_angle(double current_x)
@@ -62,13 +85,13 @@ public class Trunk implements LineBasedRenderable
     public ArrayList<DirectedSegment> growAndFetchRenderable(Bound bound)
     {
         final ArrayList<DirectedSegment> bound_segments = new ArrayList<>();
-        for (DirectedSegment segment: trunk_list)
+
+        while (bound.checkIsInBound(trunk_list.getLast()))
         {
-            if (bound.checkIsInBound(segment))
-            {
-                bound_segments.add(segment);
-            }
+            extendTrunk();
+            bound_segments.add(trunk_list.getLast());
         }
+
         return bound_segments;
     }
 

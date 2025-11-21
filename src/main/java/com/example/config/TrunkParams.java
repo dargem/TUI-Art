@@ -8,7 +8,8 @@ public record TrunkParams(
     double section_length,
     double angle_variance,
     double centralness,
-    double width
+    double width,
+    double branch_chance
 ) 
 {
     public static TrunkParams fromFile()
@@ -29,7 +30,8 @@ public record TrunkParams(
                 double angle_variance = Double.parseDouble(p.getProperty("angle_variance"));
                 double centralness = Double.parseDouble(p.getProperty("centralness"));
                 double width = Double.parseDouble(p.getProperty("width"));
-                return new TrunkParams(section_length, angle_variance, centralness, width);
+                double branch_chance = Double.parseDouble(p.getProperty("branch_chance"));
+                return new TrunkParams(section_length, angle_variance, centralness, width, branch_chance);
             }
             else
             {
