@@ -1,5 +1,8 @@
 package com.example;
 import org.fusesource.jansi.AnsiConsole;
+import com.example.game_board.Board;
+import java.util.ArrayList;
+import com.example.game_board.Tile;
 /**
  * Responsible for writing to the console
  */
@@ -18,12 +21,37 @@ public class Printer
     public Printer()
     {
         AnsiConsole.systemInstall();
-        System.out.println(HIDE_CURSOR);
-        System.out.println(CLEAR_SCREEN);
+        System.out.print(HIDE_CURSOR);
+        System.out.print(CLEAR_SCREEN);
     }
 
 
-    public void printLine(String contextString)
+    public void printLine(int round, Board board)
     {
+        String output = "";
+        ArrayList<Tile> output_row = board.getRow(round);
+
+        if (output_row == null)
+        {
+            System.out.print(MOVE_TO_TOP_LEFT);
+            System.out.print(INSERT_LINE);
+            return;
+        }
+
+        for (Tile tile : output_row)
+        {
+            if (tile == null)
+            {
+                // empty space for tiles not containing anything
+                output += " ";
+                continue;
+            }
+
+            output += tile.getForeground().foreground();
+            output += tile.getCharacter();
+        }
+        System.out.print(MOVE_TO_TOP_LEFT);
+        System.out.print(INSERT_LINE);
+        System.out.print(output);
     }
 }

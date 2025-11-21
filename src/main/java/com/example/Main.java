@@ -29,16 +29,16 @@ public class Main
             BranchParams.fromFile(),
             TrunkParams.fromFile()
         );
-        
-        final World world = new World();
-        //world.addModel(tree_factory.createTree());
-        System.out.println(TerminalStatus.getHeight());
 
 
         // 1. Install Jansi to make ANSI codes work
-        /*
+        Controller controller = new Controller();
+        
+        controller.addModelFactory(tree_factory);
         while (true)
         {
+            controller.runRound();
+            /*
             try
             {
                 int x = TerminalStatus.getWidth();
@@ -61,8 +61,9 @@ public class Main
                 System.out.println(e);
                 break;
             }
+            */
         }
-        */
+        /*
         //System.exit(0);
         AnsiConsole.systemInstall();
 
@@ -113,6 +114,7 @@ public class Main
             print(SHOW_CURSOR);
             AnsiConsole.systemUninstall();
         }
+            */
     }
 
     /**

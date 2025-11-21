@@ -8,6 +8,11 @@ public class Board {
     private final int ARRAY_BASE_SIZE = 100;
     private final double ARRAY_RESIZE_FACTOR = 1.5;
 
+    public ArrayList<Tile> getRow(int y)
+    {
+        return tileMapArrayList.get(y);
+    }
+
     public void addTile(int x, int y, Tile tile)
     {
         if (!tileMapArrayList.containsKey(y))
@@ -25,5 +30,6 @@ public class Board {
             
             array_list.ensureCapacity( (int) Math.round(wanted_size));
         }
+        array_list.add(x, tile);
     }
 }

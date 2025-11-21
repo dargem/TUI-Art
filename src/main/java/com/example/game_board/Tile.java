@@ -16,6 +16,7 @@ public class Tile
         background = Colour.BLACK;
         character = '&';
     }
+    
     public Tile(final Colour foreground, final Colour background, final char character)
     {
         init(foreground, background, character);

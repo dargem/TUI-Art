@@ -3,10 +3,12 @@ package com.example;
 import java.util.ArrayList;
 
 import com.example.game_board.Board;
+import com.example.utils.Bound;
 import com.example.models.ModelFactory;
 import com.example.rendering.BasicRasterizerStrategy;
 import com.example.rendering.SegmentRasterizerContext;
 import com.example.rendering.World;
+import com.example.representations.DirectedSegment;
 
 /**
  * Controls a world
@@ -18,10 +20,12 @@ public class Controller
 {
     private final Board board = new Board();
     private final World world = new World();
+    private final Printer printer = new Printer();
     private final ArrayList<ModelFactory> model_factory_list = new ArrayList<>();
     private final SegmentRasterizerContext rasterizer;
+    private int rounds = 0;
 
-    private final double SLEEP_DURATION = 300; // sleep duration of loops in ms
+    private final int SLEEP_DURATION = 300; // sleep duration of loops in ms
     
     public Controller()
     {
@@ -53,6 +57,20 @@ public class Controller
             {
                 world.addModel(model_factory.getRenderable());
             }
+        }
+
+        ArrayList<DirectedSegment> directed_segments = world.growAndFetchRenderable(new Bound(0, rounds + 100));
+        rasterizer.rasterizeSegments(directed_segments, board);
+        printer.printLine(rounds, board);
+        rounds += 1;
+
+        try
+        {
+            Thread.sleep(SLEEP_DURATION);
+        }
+        catch(Exception e)
+        {
+            throw new RuntimeException("Issue with sleep " + e);
         }
     }
 }
