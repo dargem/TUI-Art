@@ -19,7 +19,6 @@ public class Controller
     private final ArrayList<ModelFactory> model_factory_list = new ArrayList<>();
     private final SegmentRasterizerContext rasterizer;
 
-
     private final double SLEEP_DURATION = 300; // sleep duration of loops in ms
     
     public Controller()
