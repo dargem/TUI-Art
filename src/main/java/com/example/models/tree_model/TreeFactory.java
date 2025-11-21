@@ -3,9 +3,9 @@ package com.example.models.tree_model;
 import com.example.config.BranchParams;
 import com.example.config.TrunkParams;
 import com.example.models.ModelFactory;
-import com.example.rendering.Renderable;
 import com.example.representations.Point;
 import com.example.utils.NumberGenerator;
+import com.example.rendering.LineBasedRenderable;
 
 public class TreeFactory implements ModelFactory{
 
@@ -24,7 +24,7 @@ public class TreeFactory implements ModelFactory{
     }
 
     @Override
-    public Renderable getRenderable()
+    public LineBasedRenderable getRenderable()
     {
         // Potential for a treetype in the future
         final Point start_location = new Point(NumberGenerator.getRandomNumber(LEFT_MIN, RIGHT_MAX), GROUND_LEVEL);

@@ -11,22 +11,22 @@ import com.example.utils.Bound;
  * These models can be decomposed into lines (DirectedSegment)
  * This world of lines then can be rasterized into a 2d grid
  */
-public class World implements Renderable
+public class World implements LineBasedRenderable
 {
-    final LinkedList<Renderable> model_list = new LinkedList<>();
+    final LinkedList<LineBasedRenderable> model_list = new LinkedList<>();
 
-    public void addModel(Renderable model)
+    public void addModel(LineBasedRenderable model)
     {
         model_list.add(model);
     }
 
     @Override
-    public ArrayList<DirectedSegment> returnBoundSegments(Bound bound)
+    public ArrayList<DirectedSegment> growAndFetchRenderable(Bound bound)
     {
         final ArrayList<DirectedSegment> segment_list = new ArrayList<>();
-        for (Renderable model : model_list)
+        for (LineBasedRenderable model : model_list)
         {
-            segment_list.addAll(model.returnBoundSegments(bound));
+            segment_list.addAll(model.growAndFetchRenderable(bound));
         }
         return segment_list;
     }
@@ -34,7 +34,7 @@ public class World implements Renderable
     @Override
     public void trimSegments(Bound bound)
     {
-        for (Renderable model : model_list)
+        for (LineBasedRenderable model : model_list)
         {
             model.trimSegments(bound);
         }

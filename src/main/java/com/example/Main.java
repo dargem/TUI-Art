@@ -1,11 +1,13 @@
 package com.example;
 import static org.fusesource.jansi.Ansi.ansi;
 import org.fusesource.jansi.AnsiConsole;
+import org.jline.terminal.Terminal;
 
 import com.example.config.BranchParams;
 import com.example.config.TrunkParams;
 import com.example.models.tree_model.TreeFactory;
 import com.example.rendering.World;
+import com.example.utils.TerminalStatus;
 
 
 public class Main 
@@ -30,7 +32,7 @@ public class Main
         
         final World world = new World();
         //world.addModel(tree_factory.createTree());
-
+        System.out.println(TerminalStatus.getHeight());
 
 
         // 1. Install Jansi to make ANSI codes work
@@ -97,8 +99,8 @@ public class Main
                 }
                 
                 print(art);
-                if (i % 5 == 0) System.out.print(ansi().cursor(0, 0).a("H").reset());
-                if (i % 7 == 0) System.out.print(ansi().cursor(0, 13).a("K").reset());
+                if (i % 5 == 0) System.out.print(ansi().cursor(0, 4).a("H").reset());
+                if (i % 7 == 0) System.out.print(ansi().cursor(0, 6).a("K").reset());
                 // 6. Wait for a moment to make the animation visible
                 Thread.sleep(500); // 200 milliseconds
             }

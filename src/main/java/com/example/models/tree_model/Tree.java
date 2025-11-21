@@ -3,11 +3,11 @@ package  com.example.models.tree_model;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-import com.example.rendering.Renderable;
 import com.example.representations.DirectedSegment;
 import com.example.utils.Bound;
+import com.example.rendering.LineBasedRenderable;
 
-public class Tree implements Renderable
+public class Tree implements LineBasedRenderable
 {
     final private int MAX_RANCHES = 5;
     final private int MIN_BRANCHES = 5;
@@ -26,21 +26,21 @@ public class Tree implements Renderable
     }
 
     @Override
-    public ArrayList<DirectedSegment> returnBoundSegments(Bound bound)
+    public ArrayList<DirectedSegment> growAndFetchRenderable(Bound bound)
     {
         final ArrayList<DirectedSegment> segments = new ArrayList<>();
 
         for (Branch alive_branch: alive_branch_list)
         {
-            segments.addAll(alive_branch.returnBoundSegments(bound));
+            segments.addAll(alive_branch.growAndFetchRenderable(bound));
         }
 
         for (Branch dead_branch: dead_branch_list)
         {
-            segments.addAll(dead_branch.returnBoundSegments(bound));
+            segments.addAll(dead_branch.growAndFetchRenderable(bound));
         }
 
-        segments.addAll(trunk.returnBoundSegments(bound));
+        segments.addAll(trunk.growAndFetchRenderable(bound));
         return segments;
     }
 

@@ -4,14 +4,14 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import com.example.config.TrunkParams;
-import com.example.rendering.Renderable;
 import com.example.representations.DirectedSegment;
 import com.example.representations.Point;
 import com.example.utils.Bound;
 import com.example.utils.EndPointFinder;
 import com.example.utils.NumberGenerator;
+import com.example.rendering.LineBasedRenderable;
 
-public class Trunk implements Renderable
+public class Trunk implements LineBasedRenderable
 {
     private final TrunkParams parameters;
     private final LinkedList<DirectedSegment> trunk_list;
@@ -59,7 +59,7 @@ public class Trunk implements Renderable
     }
 
     @Override
-    public ArrayList<DirectedSegment> returnBoundSegments(Bound bound)
+    public ArrayList<DirectedSegment> growAndFetchRenderable(Bound bound)
     {
         final ArrayList<DirectedSegment> bound_segments = new ArrayList<>();
         for (DirectedSegment segment: trunk_list)

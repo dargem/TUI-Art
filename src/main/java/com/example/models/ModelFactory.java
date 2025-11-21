@@ -1,6 +1,6 @@
 package com.example.models;
 
-import com.example.rendering.Renderable;
+import com.example.rendering.LineBasedRenderable;
 
 /**
  * An interface for model factories
@@ -13,7 +13,7 @@ public interface ModelFactory {
      * Used to request a renderable object
      * @return the factories renderable model
      */
-    public abstract Renderable getRenderable();
+    public abstract LineBasedRenderable getRenderable();
 
     /**
      * Checks if a factory wants to render something
