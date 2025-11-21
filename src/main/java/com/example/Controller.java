@@ -2,6 +2,7 @@ package com.example;
 
 import java.util.ArrayList;
 
+import com.example.game_board.Board;
 import com.example.models.ModelFactory;
 import com.example.rendering.BasicRasterizerStrategy;
 import com.example.rendering.SegmentRasterizerContext;
@@ -15,6 +16,7 @@ import com.example.rendering.World;
  */
 public class Controller 
 {
+    private final Board board = new Board();
     private final World world = new World();
     private final ArrayList<ModelFactory> model_factory_list = new ArrayList<>();
     private final SegmentRasterizerContext rasterizer;

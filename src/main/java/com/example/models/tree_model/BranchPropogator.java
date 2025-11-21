@@ -2,7 +2,7 @@ package com.example.models.tree_model;
 
 import com.example.config.BranchParams;
 import com.example.representations.DirectedSegment;
-import com.example.representations.Point;
+import com.example.representations.Coord;
 import com.example.utils.NumberGenerator;
 
 public class BranchPropogator {
@@ -19,7 +19,7 @@ public class BranchPropogator {
     {
         final double angle = Math.pow(NumberGenerator.getRandomNumber(), INITIAL_ANGLE_SCALAR);
         final double length = parameters.initial_length();
-        final Point start_location = trunk_segment.getEndLocation();
+        final Coord start_location = trunk_segment.getEndLocation();
         final double width = trunk_segment.getWidth() * 0.8; // branches start slightly thinner
         
         return new DirectedSegment(start_location, length, angle, width);
@@ -31,7 +31,7 @@ public class BranchPropogator {
         final double angle = branch_section.getAngle();
         final double length = branch_section.getLength();
         
-        final Point next_location = branch_section.getEndLocation();
+        final Coord next_location = branch_section.getEndLocation();
         final double next_length = findNextLength(length);
         final double next_angle = findNextAngle(angle);
         final double next_width = findNextWidth(branch_section.getWidth());

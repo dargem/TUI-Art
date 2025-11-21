@@ -1,7 +1,7 @@
 package com.example.utils;
 
 import com.example.representations.DirectedSegment;
-import com.example.representations.Point;
+import com.example.representations.Coord;
 
 
 public class Bound {
@@ -30,7 +30,7 @@ public class Bound {
             && checkLowerTrimmable(segment.getStartLocation());
     }
 
-    private boolean checkLowerTrimmable(Point point)
+    private boolean checkLowerTrimmable(Coord point)
     {
         return point.y() < min_y 
             || point.x() < min_x
@@ -48,7 +48,7 @@ public class Bound {
             || checkIsInBound(segment.getEndLocation());
     }
 
-    private boolean checkIsInBound(Point point)
+    private boolean checkIsInBound(Coord point)
     {
         return point.y() > min_y && point.y() < max_y
             && point.x() > min_x && point.x() < max_x;

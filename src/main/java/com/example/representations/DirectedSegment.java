@@ -5,13 +5,13 @@ import com.example.utils.EndPointFinder;
 
 public class DirectedSegment 
 {
-    private final Point start_location;
-    private final Point end_location;
+    private final Coord start_location;
+    private final Coord end_location;
     private final double length;
     private final double angle; // radians
     private final double width;
 
-    public DirectedSegment(final Point location, final double length, final double angle, final double width)
+    public DirectedSegment(final Coord location, final double length, final double angle, final double width)
     {
         this.start_location = location;
         this.length = length;
@@ -20,12 +20,12 @@ public class DirectedSegment
         this.end_location = EndPointFinder.findEnd(start_location, angle, length);
     }
 
-    public Point getStartLocation()
+    public Coord getStartLocation()
     {
         return start_location;
     }
 
-    public Point getEndLocation()
+    public Coord getEndLocation()
     {
         return end_location;
     }

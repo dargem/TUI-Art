@@ -5,7 +5,7 @@ import java.util.LinkedList;
 
 import com.example.config.TrunkParams;
 import com.example.representations.DirectedSegment;
-import com.example.representations.Point;
+import com.example.representations.Coord;
 import com.example.utils.Bound;
 import com.example.utils.EndPointFinder;
 import com.example.utils.NumberGenerator;
@@ -19,7 +19,7 @@ public class Trunk implements LineBasedRenderable
     private final BranchFactory branch_factory;
     private final LinkedList<Branch> pending_branches;
 
-    public Trunk(TrunkParams params, Point location, BranchFactory branch_factory)
+    public Trunk(TrunkParams params, Coord location, BranchFactory branch_factory)
     {
         this.parameters = params;
         this.trunk_list = new LinkedList<>();
@@ -41,7 +41,7 @@ public class Trunk implements LineBasedRenderable
     {
         // find parameters for the next branch section
         final DirectedSegment branch_section = trunk_list.getLast();
-        final Point next_point = branch_section.getEndLocation();
+        final Coord next_point = branch_section.getEndLocation();
         final double next_angle = find_angle(next_point.x());
 
         // add the next branch section to the top

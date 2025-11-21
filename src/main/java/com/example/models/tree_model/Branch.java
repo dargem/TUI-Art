@@ -8,7 +8,7 @@ import com.example.rendering.LineBasedRenderable;
 
 public class Branch implements LineBasedRenderable{
     private boolean alive;
-    private ArrayList<DirectedSegment> segment_list;
+    private final ArrayList<DirectedSegment> segment_list;
     private final BranchPropogator branch_propogator;
 
     public Branch(BranchPropogator branch_propogator, DirectedSegment trunk_segment)

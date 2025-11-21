@@ -3,7 +3,7 @@ package com.example.models.tree_model;
 import com.example.config.BranchParams;
 import com.example.config.TrunkParams;
 import com.example.models.ModelFactory;
-import com.example.representations.Point;
+import com.example.representations.Coord;
 import com.example.utils.NumberGenerator;
 import com.example.rendering.LineBasedRenderable;
 
@@ -27,7 +27,7 @@ public class TreeFactory implements ModelFactory{
     public LineBasedRenderable getRenderable()
     {
         // Potential for a treetype in the future
-        final Point start_location = new Point(NumberGenerator.getRandomNumber(LEFT_MIN, RIGHT_MAX), GROUND_LEVEL);
+        final Coord start_location = new Coord(NumberGenerator.getRandomNumber(LEFT_MIN, RIGHT_MAX), GROUND_LEVEL);
         final BranchPropogator propogator = new BranchPropogator(branch_params);
         final BranchFactory branch_factory = new BranchFactory(propogator);
         final Trunk trunk = new Trunk(trunk_params, start_location, branch_factory);

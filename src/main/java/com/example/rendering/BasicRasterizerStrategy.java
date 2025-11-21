@@ -1,5 +1,7 @@
 package com.example.rendering;
 
+import com.example.game_board.Board;
+import com.example.game_board.Tile;
 import com.example.representations.DirectedSegment;
 // https://playtechs.blogspot.com/2007/03/raytracing-on-grid.html
 // java implementation of this algorithm
@@ -7,7 +9,7 @@ import com.example.representations.DirectedSegment;
 public class BasicRasterizerStrategy implements SegmentRasterizerStrategy   
 {
     @Override
-    public void rasterizeSegment(DirectedSegment segment)
+    public void rasterizeSegment(DirectedSegment segment, Board board)
     {
         final double x0 = segment.getStartLocation().x();
         final double x1 = segment.getEndLocation().x();
@@ -61,7 +63,7 @@ public class BasicRasterizerStrategy implements SegmentRasterizerStrategy
 
         for (; n>0; --n)
         {
-            // visit(x, y)
+            board.addTile(x, y, new Tile());
             if (error > 0)
             {
                 y += y_inc;
