@@ -1,24 +1,21 @@
 package com.example.game_board;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.ArrayList;
 
 public class Board {
-    private Tile[][] tile_array;
-    final private int array_width;
-    private int access_width;
+    Map<Integer, ArrayList<Tile>> tileMapArrayList = new HashMap<>();
 
-    public Board(final int needed_width)
+    public void addTile(int x, int y, Tile tile)
     {
-        this.array_width = needed_width;
-        this.tile_array = new Tile[200][needed_width];
-        // 200 rows, current width wide
-    }
-
-    public boolean checkWidthSame(final int needed_width)
-    {
-        return this.access_width == needed_width;
-    }
-
-    public void resizeArray(final int needed_width)
-    {
-        this.access_width = Math.min(this.array_width, needed_width);
+        if (!tileMapArrayList.containsKey(y))
+        {
+            tileMapArrayList.put(y, new ArrayList<Tile>(100)); //arbitary number can increase later
+        }
+        ArrayList<Tile> array_list = tileMapArrayList.get(y);
+        while (x > array_list.size()-1)
+        {
+            array_list.ensureCapacity( (int) Math.round(array_list.size()*1.5));
+        }
     }
 }
