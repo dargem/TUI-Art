@@ -7,8 +7,8 @@ import com.example.utils.NumberGenerator;
 
 public class BranchPropogator {
     private final BranchParams parameters;
-    // y = x^(1/3), then *1.2 just for a bit more variation
-    private final double INITIAL_ANGLE_SCALAR = 1/3*1.2;
+    // y = x^(1/3), then *1.2 just for a bit more variation, need 1.0 or its int division
+    private final double INITIAL_ANGLE_SCALAR = 1.0/3.0*1.2;
 
     public BranchPropogator(BranchParams params)
     {
