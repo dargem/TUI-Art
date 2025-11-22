@@ -24,9 +24,9 @@ public class Tile
         init(foreground, background, character, z_score);
     }
 
-    public void rewriteTile(final Colour foreground, final Colour background, final char character, double z_score)
+    public boolean checkOverwritable(double z_score)
     {
-        init(foreground, background, character, z_score);
+        return this.z_score < z_score;
     }
 
     private void init(final Colour foreground, final Colour background, final char character, double z_score) {
@@ -49,5 +49,10 @@ public class Tile
     public char getCharacter()
     {
         return character;
+    }
+
+    public double getZScore()
+    {
+        return z_score;
     }
 }

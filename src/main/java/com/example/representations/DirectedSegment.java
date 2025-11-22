@@ -1,5 +1,6 @@
 package com.example.representations;
 
+import com.example.rendering.TileProvider;
 import com.example.utils.EndPointFinder;
 
 
@@ -10,14 +11,21 @@ public class DirectedSegment
     private final double length;
     private final double angle; // radians
     private final double width;
+    private final TileProvider tile_provider;
 
-    public DirectedSegment(final Coord location, final double length, final double angle, final double width)
+    public DirectedSegment(Coord location, double length, double angle, double width, TileProvider tile_provider)
     {
         this.start_location = location;
         this.length = length;
         this.angle = angle;
         this.width = width;
         this.end_location = EndPointFinder.findEnd(start_location, angle, length);
+        this.tile_provider = tile_provider;
+    }
+
+    public Tile getTile()
+    {
+        return tile_provider.getTile();
     }
 
     public Coord getStartLocation()
