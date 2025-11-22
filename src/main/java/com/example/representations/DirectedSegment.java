@@ -25,7 +25,7 @@ public class DirectedSegment
 
     public Tile getTile()
     {
-        return tile_provider.getTile();
+        return tile_provider.getTile(angle);
     }
 
     public Coord getStartLocation()

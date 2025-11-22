@@ -19,18 +19,17 @@ public class TileProvider {
     Colour background_colour;
     // to allow some variation in outputted colours
     double colour_blend = 0; 
-    final ArrayList<Character> possible_characters;
 
-    final TreeMap<Double, ArrayList<Character>> tree_char_map = new TreeMap<>();
+    final TreeMap<Double, ArrayList<Character>> tree_char_map;
 
     // Ideally want some complex angle based 
 
-    public TileProvider(int minimum_z_score, int maximum_z_score, Colour primary_colour, ArrayList<Character> possible_characters)
+    public TileProvider(int minimum_z_score, int maximum_z_score, Colour primary_colour, final TreeMap<Double, ArrayList<Character>> tree_char_map)
     {
         this.minimum_z_score = minimum_z_score;
         this.maximum_z_score = maximum_z_score;
         this.primary_colour = primary_colour;
-        this.possible_characters = possible_characters;
+        this.tree_char_map = tree_char_map;
     }
 
     public void addCharacter(ArrayList<Character> output_char, double angle)

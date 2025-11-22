@@ -10,16 +10,12 @@ import com.example.rendering.LineBasedRenderable;
 
 public class Tree implements LineBasedRenderable
 {
-    private final LinkedList<Branch> alive_branch_list;
-    private final LinkedList<Branch> dead_branch_list;
 
     private final Trunk trunk;
 
     public Tree(Trunk trunk)
     {
         this.trunk = trunk;
-        this.alive_branch_list = new LinkedList<>();
-        this.dead_branch_list = new LinkedList<>();
     }
 
     @Override

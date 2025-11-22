@@ -6,6 +6,7 @@ import com.example.models.ModelFactory;
 import com.example.representations.Coord;
 import com.example.utils.NumberGenerator;
 import com.example.rendering.LineBasedRenderable;
+import com.example.rendering.TileProvider;
 
 public class TreeFactory implements ModelFactory{
 
@@ -16,6 +17,7 @@ public class TreeFactory implements ModelFactory{
     private static final double GROUND_LEVEL = 0;
     // Potentially have it load startup renders from a config file later
     private static final int NUM_STARTUP_RENDERS = 0;
+    private final TileProvider trunk_tile_provider = new TileProvider(10, 11, , null);
 
     public TreeFactory(BranchParams branch_params, TrunkParams trunk_params)
     {
