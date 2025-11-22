@@ -1,7 +1,7 @@
 package com.example.rendering;
 import java.util.ArrayList;
-import com.example.game_board.Board;
 
+import com.example.representations.Board;
 import com.example.representations.DirectedSegment;
 /**
  * Context object as part of the strategy pattern

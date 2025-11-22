@@ -2,13 +2,13 @@ package com.example;
 
 import java.util.ArrayList;
 
-import com.example.game_board.Board;
 import com.example.utils.Bound;
 import com.example.models.ModelFactory;
 import com.example.rendering.BasicRasterizerStrategy;
 import com.example.rendering.OutlineRasterizerStrategy;
 import com.example.rendering.SegmentRasterizerContext;
 import com.example.rendering.World;
+import com.example.representations.Board;
 import com.example.representations.DirectedSegment;
 
 /**

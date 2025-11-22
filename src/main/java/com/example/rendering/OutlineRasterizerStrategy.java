@@ -1,10 +1,10 @@
 package com.example.rendering;
 
+import com.example.representations.Board;
 import com.example.representations.Coord;
-import com.example.game_board.Board;
 import com.example.representations.DirectedSegment;
+import com.example.representations.Tile;
 import com.example.representations.CoordPair;
-import com.example.game_board.Tile;
 
 public class OutlineRasterizerStrategy implements SegmentRasterizerStrategy{
     // basically just outsources to basic rasterizer strategy with each side line

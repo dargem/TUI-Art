@@ -1,8 +1,10 @@
 package com.example;
 import org.fusesource.jansi.AnsiConsole;
-import com.example.game_board.Board;
+
 import java.util.ArrayList;
-import com.example.game_board.Tile;
+
+import com.example.representations.Board;
+import com.example.representations.Tile;
 /**
  * Responsible for writing to the console
  */

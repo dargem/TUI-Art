@@ -1,4 +1,4 @@
-package com.example.game_board;
+package com.example.representations;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ArrayList;

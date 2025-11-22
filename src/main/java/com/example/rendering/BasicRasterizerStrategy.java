@@ -1,10 +1,10 @@
 package com.example.rendering;
 
-import com.example.game_board.Board;
-import com.example.game_board.Tile;
+import com.example.representations.Board;
 import com.example.representations.DirectedSegment;
 // https://playtechs.blogspot.com/2007/03/raytracing-on-grid.html
 // java implementation of this algorithm
+import com.example.representations.Tile;
 
 public class BasicRasterizerStrategy implements SegmentRasterizerStrategy   
 {

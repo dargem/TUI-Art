@@ -1,6 +1,6 @@
 package com.example.rendering;
+import com.example.representations.Board;
 import com.example.representations.DirectedSegment;
-import com.example.game_board.Board;
 
 public interface SegmentRasterizerStrategy 
 {

@@ -21,4 +21,9 @@ public final class NumberGenerator {
         random_number += min;
         return random_number;
     }
+
+    public static int getIntNumber(int min, int max)
+    {
+        return random.nextInt(min, max);
+    }
 }
