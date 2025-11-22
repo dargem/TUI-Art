@@ -25,6 +25,7 @@ public class Printer
         AnsiConsole.systemInstall();
         System.out.print(HIDE_CURSOR);
         System.out.print(CLEAR_SCREEN);
+        
     }
 
 

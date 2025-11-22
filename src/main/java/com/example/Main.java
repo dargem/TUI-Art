@@ -30,6 +30,13 @@ public class Main
             TrunkParams.fromFile()
         );
 
+        // 1. Make a shutdown hook to uninstall jansi and show cursor
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            System.out.println("Shutting down...");
+            print(SHOW_CURSOR);
+            AnsiConsole.systemUninstall();
+        }));
+
 
         // 1. Install Jansi to make ANSI codes work
         Controller controller = new Controller();
