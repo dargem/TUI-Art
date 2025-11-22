@@ -8,7 +8,8 @@ import com.example.utils.NumberGenerator;
 public class BranchPropogator {
     private final BranchParams parameters;
     // y = x^(1/3), then *1.2 just for a bit more variation, need 1.0 or its int division
-    private final double INITIAL_ANGLE_SCALAR = 1.0/3.0*1.2;
+    private final double INITIAL_ANGLE_POWER_SCALAR = 1.0/3.0;
+    private final double INITIAL_ANGLE_SCALAR = 1.3;
 
     public BranchPropogator(BranchParams params)
     {
@@ -22,7 +23,7 @@ public class BranchPropogator {
 
     public DirectedSegment createFirstBranch(DirectedSegment trunk_segment)
     {
-        double angle = Math.pow(NumberGenerator.getRandomNumber(), INITIAL_ANGLE_SCALAR);
+        double angle = Math.pow(NumberGenerator.getRandomNumber(), INITIAL_ANGLE_POWER_SCALAR) * INITIAL_ANGLE_SCALAR;
         if (NumberGenerator.getRandomNumber() < 0.5)
         {
             angle *= -1;
@@ -57,6 +58,7 @@ public class BranchPropogator {
     private double findNextAngle(final double angle)
     {
         final double scale = NumberGenerator.getRandomNumber(-1, 1);
+        //System.out.print( angle + scale * parameters.angle_variance());
         return angle + scale * parameters.angle_variance();
     }
 

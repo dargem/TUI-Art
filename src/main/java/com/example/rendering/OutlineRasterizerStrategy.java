@@ -20,9 +20,9 @@ public class OutlineRasterizerStrategy implements SegmentRasterizerStrategy{
         // the magnitude offset wanted
         double hypotenuse_shant = segment.getWidth() / 2;
 
-        // magnitude of the shift
-        double x_shift = hypotenuse_shant * Math.cos(segment.getAngle() + (Math.PI / 2));
-        double y_shift = hypotenuse_shant * Math.sin(segment.getAngle() + (Math.PI / 2));
+        // magnitude of the shift, considering 0 degrees is upwards
+        double x_shift = hypotenuse_shant * Math.sin(segment.getAngle() + (Math.PI / 2));
+        double y_shift = hypotenuse_shant * Math.cos(segment.getAngle() + (Math.PI / 2));
         
         // left / right of start
         Coord A = new Coord(start_point.x() + x_shift, start_point.y() + y_shift);
@@ -31,11 +31,13 @@ public class OutlineRasterizerStrategy implements SegmentRasterizerStrategy{
         Coord C = new Coord(end_point.x() + x_shift, end_point.y() + y_shift);
         Coord D = new Coord(end_point.x() - x_shift, end_point.y() - y_shift);
 
-        CoordPair[] coord_pairs = new CoordPair[3];
-        coord_pairs[0] = new CoordPair(A, B);
-        coord_pairs[1] = new CoordPair(A, C);
-        coord_pairs[2] = new CoordPair(B, D);
-        coord_pairs[3] = new CoordPair(C, D);
+        CoordPair[] coord_pairs = new CoordPair[2];
+        //coord_pairs[0] = new CoordPair(A, B);
+        //coord_pairs[1] = new CoordPair(A, C);
+        //coord_pairs[2] = new CoordPair(B, D);
+        //coord_pairs[3] = new CoordPair(C, D);
+        coord_pairs[0] = new CoordPair(A, C);
+        coord_pairs[1] = new CoordPair(B, D);
         
         for (CoordPair coord_pair : coord_pairs)
         {
@@ -91,6 +93,10 @@ public class OutlineRasterizerStrategy implements SegmentRasterizerStrategy{
             }
             for (; n>0; --n)
             {
+                if (x <= 0 || y<= 0)
+                {
+                    continue;
+                }
                 //System.out.println(x + " " + y);
                 board.addTile(x, y, new Tile());
                 //System.out.println("added tile");

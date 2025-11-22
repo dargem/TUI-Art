@@ -8,6 +8,7 @@ import com.example.representations.DirectedSegment;
 
 public class BasicRasterizerStrategy implements SegmentRasterizerStrategy   
 {
+
     @Override
     public void rasterizeSegment(DirectedSegment segment, Board board)
     {
@@ -63,6 +64,10 @@ public class BasicRasterizerStrategy implements SegmentRasterizerStrategy
         }
         for (; n>0; --n)
         {
+            if (x <= 0 || y<= 0)
+            {
+                continue;
+            }
             //System.out.println(x + " " + y);
             board.addTile(x, y, new Tile());
             //System.out.println("added tile");

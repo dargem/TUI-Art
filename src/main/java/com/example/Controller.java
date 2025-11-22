@@ -6,6 +6,7 @@ import com.example.game_board.Board;
 import com.example.utils.Bound;
 import com.example.models.ModelFactory;
 import com.example.rendering.BasicRasterizerStrategy;
+import com.example.rendering.OutlineRasterizerStrategy;
 import com.example.rendering.SegmentRasterizerContext;
 import com.example.rendering.World;
 import com.example.representations.DirectedSegment;
@@ -29,7 +30,7 @@ public class Controller
     
     public Controller()
     {
-        rasterizer = new SegmentRasterizerContext(new BasicRasterizerStrategy());
+        rasterizer = new SegmentRasterizerContext(new OutlineRasterizerStrategy());
     }
 
     public void addModelFactory(ModelFactory model_factory)
