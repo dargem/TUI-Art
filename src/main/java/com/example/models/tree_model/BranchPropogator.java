@@ -15,9 +15,18 @@ public class BranchPropogator {
         this.parameters = params;
     }
 
+    public boolean checkDies()
+    {
+        return NumberGenerator.getRandomNumber() < parameters.death_chance();
+    }
+
     public DirectedSegment createFirstBranch(DirectedSegment trunk_segment)
     {
-        final double angle = Math.pow(NumberGenerator.getRandomNumber(), INITIAL_ANGLE_SCALAR);
+        double angle = Math.pow(NumberGenerator.getRandomNumber(), INITIAL_ANGLE_SCALAR);
+        if (NumberGenerator.getRandomNumber() < 0.5)
+        {
+            angle *= -1;
+        }
         final double length = parameters.initial_length();
         final Coord start_location = trunk_segment.getEndLocation();
         final double width = trunk_segment.getWidth() * 0.8; // branches start slightly thinner

@@ -27,27 +27,15 @@ public class Tree implements LineBasedRenderable
     {
         final ArrayList<DirectedSegment> segments = new ArrayList<>();
 
-        for (Branch alive_branch: alive_branch_list)
-        {
-            segments.addAll(alive_branch.growAndFetchRenderable(bound));
-        }
-
         segments.addAll(trunk.growAndFetchRenderable(bound));
         
         // collect any new branches created during trunk growth
         final LinkedList<Branch> new_branches = trunk.fetchAndClearPendingBranches();
-        alive_branch_list.addAll(new_branches);
-        
-        // move dead branches from alive to dead list
-        final Iterator<Branch> branch_iterator = alive_branch_list.iterator();
-        while (branch_iterator.hasNext())
+        //System.out.println("fetched branches");
+        for (Branch branch : new_branches)
         {
-            final Branch branch = branch_iterator.next();
-            if (!branch.getAlive())
-            {
-                branch_iterator.remove();
-                dead_branch_list.add(branch);
-            }
+            //System.out.println("growing a branch");
+            segments.addAll(branch.growAndFetchRenderable(bound));
         }
         
         return segments;
@@ -56,16 +44,6 @@ public class Tree implements LineBasedRenderable
     @Override
     public void trimSegments(Bound bound)
     {
-        for (Branch alive_branch: alive_branch_list)
-        {
-            alive_branch.trimSegments(bound);
-        }
-
-        for (Branch dead_branch: dead_branch_list)
-        {
-            dead_branch.trimSegments(bound);
-        }
-
         trunk.trimSegments(bound);
     }
 }

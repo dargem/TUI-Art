@@ -19,6 +19,10 @@ public class Bound {
         this.max_y = max_y;
     }
 
+    public double getMaxY()
+    {
+        return max_y;
+    }
     /**
      * Checks whether a segment is out of left/right/bottom bound, fine to be above
      * @param segment inputted segment for checking
@@ -48,9 +52,21 @@ public class Bound {
             || checkIsInBound(segment.getEndLocation());
     }
 
+    public boolean checkIsInLooseBound(DirectedSegment segment)
+    {
+        return checkIsInLooseBound(segment.getStartLocation())
+            || checkIsInLooseBound(segment.getEndLocation());
+    }
+
     private boolean checkIsInBound(Coord point)
     {
         return point.y() > min_y && point.y() < max_y
+            && point.x() > min_x && point.x() < max_x;
+    }
+
+    private boolean checkIsInLooseBound(Coord point)
+    {
+        return point.y() > (min_y) && point.y() < (max_y+30)
             && point.x() > min_x && point.x() < max_x;
     }
 }

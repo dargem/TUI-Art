@@ -5,6 +5,7 @@ import java.util.Iterator;
 import com.example.representations.DirectedSegment;
 import com.example.utils.Bound;
 import com.example.rendering.LineBasedRenderable;
+import com.example.utils.NumberGenerator;
 
 public class Branch implements LineBasedRenderable{
     private boolean alive;
@@ -29,6 +30,11 @@ public class Branch implements LineBasedRenderable{
 
     public void extendBranch()
     {
+        if (branch_propogator.checkDies())
+        {
+            alive = false;
+        }
+        
         if (!alive || segment_list.isEmpty())
         {
             return;
@@ -43,16 +49,21 @@ public class Branch implements LineBasedRenderable{
     {
         final ArrayList<DirectedSegment> bound_segments = new ArrayList<>();
 
-        while (alive && !segment_list.isEmpty() && bound.checkIsInBound(segment_list.getLast()))
+        while (alive && !segment_list.isEmpty() && bound.checkIsInLooseBound(segment_list.getLast()))
         {
+            //System.out.println("extending branch");
             extendBranch();
             bound_segments.add(segment_list.getLast());
         }
 
         // if we've grown beyond the bound, mark as dead
-        if (!segment_list.isEmpty() && !bound.checkIsInBound(segment_list.getLast()))
+        if (!segment_list.isEmpty() && !bound.checkIsInLooseBound(segment_list.getLast()))
         {
+            //System.out.println("killed branch");
             alive = false;
+        } else
+        {
+            //System.out.println("kept branch");
         }
 
         return bound_segments;
