@@ -3,7 +3,6 @@ package com.example.representations;
 import java.util.ArrayList;
 import java.util.Map.Entry;
 import java.util.TreeMap;
-import java.lang.runtime.RuntimeException;
 
 import com.example.utils.NumberGenerator;
 
@@ -15,24 +14,38 @@ import com.example.utils.NumberGenerator;
 public class AngleMap {
     final TreeMap<Double, ArrayList<Character>> tree_char_map = new TreeMap<>();
 
+    /**
+     * Puts an array list of characters into the map, keyed by value
+     * Requires bearing to be between -Math.PI/2 rad and Math.PI/2 rad
+     * This is as retrieval will automatically wrap around
+     * @param bearing the bearing angle to correlate with the character
+     * @param characters An array list of characters paired with this bearing
+     */
     public void put(double bearing, ArrayList<Character> characters)
     {
-        if (bearing > -Math.PI/2 && bearing < Math.PI/2)
+        if (bearing < -Math.PI/2 || bearing > Math.PI/2)
         {
-            throw new RuntimeException("Angle bearing should be between -pi/2 and pi/2 radians to maintain search angle logic");
+            throw new IllegalArgumentException("Angle bearing should be between -pi/2 and pi/2 radians to maintain search angle logic");
 
         }
         tree_char_map.put(bearing, characters);
     }
 
+    /**
+     * Searches up a character using nearest neighbour search of a bearing
+     * Will wrap around for searches as e.g. -135 degrees equivalent to 45 degrees
+     * Returns a random character from the angle matched with the entry
+     * @param bearing The bearing inputted for search
+     * @return A character from the list
+     */
     public Character getCharacter(double bearing)
     {
-        if (bearing > Math.PI/2 && bearing < Math.PI)
+        if (bearing > Math.PI/2 && bearing <= Math.PI)
         {
             return searchAngle(bearing - Math.PI);
         }
         
-        if (bearing < -Math.PI/2 && bearing > -Math.PI)
+        if (bearing < -Math.PI/2 && bearing >= -Math.PI)
         {
             return searchAngle(bearing + Math.PI);
         }
