@@ -1,0 +1,63 @@
+package com.example.representations;
+
+import java.util.ArrayList;
+import java.util.Map.Entry;
+import java.util.TreeMap;
+import java.lang.runtime.RuntimeException;
+
+import com.example.utils.NumberGenerator;
+
+/**
+ * A custom modification of a tree map
+ * Retrieves by closest bearing
+ * Inputted by bearing + rotated pair
+ */
+public class AngleMap {
+    final TreeMap<Double, ArrayList<Character>> tree_char_map = new TreeMap<>();
+
+    public void put(double bearing, ArrayList<Character> characters)
+    {
+        if (bearing > -Math.PI/2 && bearing < Math.PI/2)
+        {
+            throw new RuntimeException("Angle bearing should be between -pi/2 and pi/2 radians to maintain search angle logic");
+
+        }
+        tree_char_map.put(bearing, characters);
+    }
+
+    public Character getCharacter(double bearing)
+    {
+        if (bearing > Math.PI/2 && bearing < Math.PI)
+        {
+            return searchAngle(bearing - Math.PI);
+        }
+        
+        if (bearing < -Math.PI/2 && bearing > -Math.PI)
+        {
+            return searchAngle(bearing + Math.PI);
+        }
+
+        return searchAngle(bearing);
+    }
+
+    private Character searchAngle(double bearing)
+    {
+        final Entry<Double, ArrayList<Character>> floor_entry = tree_char_map.floorEntry(bearing);
+        final Entry<Double, ArrayList<Character>> ceil_entry = tree_char_map.ceilingEntry(bearing);
+
+        final double floor_dif = Math.abs(floor_entry.getKey() - bearing);
+        final double ceil_dif = Math.abs(ceil_entry.getKey() - bearing);
+
+        final ArrayList<Character> char_list;
+        if (floor_dif < ceil_dif)
+        {
+            char_list = floor_entry.getValue();
+        }
+        else
+        {
+            char_list = ceil_entry.getValue();
+        }
+
+        return char_list.get(NumberGenerator.getIntNumber(0, char_list.size()-1));
+    }
+}
