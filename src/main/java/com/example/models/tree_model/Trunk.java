@@ -60,6 +60,7 @@ public class Trunk implements LineBasedRenderable
         // check if a branch should be created
         if (shouldCreateBranch())
         {
+            System.out.println("branch made");
             final Branch new_branch = branch_factory.getBranch(trunk_list.getLast());
             pending_branches.add(new_branch);
         }

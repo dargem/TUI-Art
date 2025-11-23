@@ -3,7 +3,6 @@ package com.example.rendering;
 import com.example.representations.Board;
 import com.example.representations.Coord;
 import com.example.representations.DirectedSegment;
-import com.example.representations.Tile;
 import com.example.representations.CoordPair;
 
 public class OutlineRasterizerStrategy implements SegmentRasterizerStrategy{

@@ -4,7 +4,6 @@ import com.example.representations.Board;
 import com.example.representations.DirectedSegment;
 // https://playtechs.blogspot.com/2007/03/raytracing-on-grid.html
 // java implementation of this algorithm
-import com.example.representations.Tile;
 
 public class BasicRasterizerStrategy implements SegmentRasterizerStrategy   
 {

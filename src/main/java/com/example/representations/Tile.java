@@ -1,5 +1,4 @@
 package com.example.representations;
-import java.awt.Color;
 
 import com.example.utils.Colour;
 
