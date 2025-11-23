@@ -46,7 +46,7 @@ public class Trunk implements LineBasedRenderable
         // find parameters for the next branch section
         final DirectedSegment branch_section = trunk_list.getLast();
         final Coord next_point = branch_section.getEndLocation();
-        final double next_angle = find_angle(next_point.x());
+        final double next_angle = find_angle(next_point.x(), branch_section.getAngle());
 
         // add the next branch section to the top
         trunk_list.add(new DirectedSegment(
@@ -77,13 +77,24 @@ public class Trunk implements LineBasedRenderable
         return branches_to_return;
     }
 
-    private double find_angle(double current_x)
+    private double find_angle(double current_x, Double current_angle)
     {
-        final double random_angle = NumberGenerator.getRandomNumber(-1, 1) * parameters.angle_variance();
+        if (current_angle.isNaN())
+        {
+            current_angle = 0.0;
+        }
+
+        double random_angle;
+        do
+        {
+            random_angle = current_angle + NumberGenerator.getRandomNumber(-1, 1) * parameters.angle_variance();
+            //System.out.println(random_angle);
+        }
+        while (random_angle > Math.PI/3 || random_angle < -Math.PI/3);
+
         final double expected_x = EndPointFinder.findEndX(current_x, random_angle, parameters.section_length());
-        // this doesn't care about prior states, can consider doing that in the future
-        final double wanted_offset = (start_x - expected_x) * (1 - parameters.centralness());
-        return Math.asin(wanted_offset / parameters.section_length());
+        final double wanted_offset = (start_x - expected_x) * parameters.centralness();
+        return Math.asin(wanted_offset / parameters.section_length()) + random_angle;
     }
 
     @Override
@@ -91,7 +102,7 @@ public class Trunk implements LineBasedRenderable
     {
         final ArrayList<DirectedSegment> bound_segments = new ArrayList<>();
 
-        while (bound.checkIsInBound(trunk_list.getLast()))
+        while (bound.checkIsInLooseBound(trunk_list.getLast()))
         {
             extendTrunk();
             bound_segments.add(trunk_list.getLast());
