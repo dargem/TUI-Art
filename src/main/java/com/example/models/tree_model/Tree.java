@@ -1,7 +1,6 @@
 package  com.example.models.tree_model;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
 
 import com.example.representations.DirectedSegment;

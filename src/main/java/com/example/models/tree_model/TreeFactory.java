@@ -59,7 +59,7 @@ public class TreeFactory implements ModelFactory{
             trunk_char_map
         );
 
-        final AngleMap branch_char_map = new AngleMap();
+        //final AngleMap branch_char_map = new AngleMap();
         
     }
 

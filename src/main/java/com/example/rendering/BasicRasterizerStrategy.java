@@ -69,7 +69,7 @@ public class BasicRasterizerStrategy implements SegmentRasterizerStrategy
                 continue;
             }
             //System.out.println(x + " " + y);
-            board.addTile(x, y, new Tile());
+            board.addTile(x, y, segment.getTile());
             //System.out.println("added tile");
             if (error > 0)
             {

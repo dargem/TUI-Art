@@ -77,10 +77,20 @@ public class AngleMap
         final Entry<Double, ArrayList<Character>> floor_entry = tree_char_map.floorEntry(bearing);
         final Entry<Double, ArrayList<Character>> ceil_entry = tree_char_map.ceilingEntry(bearing);
 
+        if (floor_entry == null)
+        {
+            return getRandomChar(ceil_entry.getValue());
+        }
+        else if (ceil_entry == null)
+        {
+            return getRandomChar(floor_entry.getValue());
+        }
+
         final double floor_dif = Math.abs(floor_entry.getKey() - bearing);
         final double ceil_dif = Math.abs(ceil_entry.getKey() - bearing);
 
         final ArrayList<Character> char_list;
+
         if (floor_dif < ceil_dif)
         {
             char_list = floor_entry.getValue();
@@ -90,6 +100,16 @@ public class AngleMap
             char_list = ceil_entry.getValue();
         }
 
-        return char_list.get(NumberGenerator.getIntNumber(0, char_list.size()-1));
+        return getRandomChar(char_list);
     }
+
+    /**
+     * Helper function for getting random member of array
+     * @param characters array of characters
+     * @return a character randomly chosen
+     */
+    private char getRandomChar(ArrayList<Character> characters)
+    {
+        return characters.get(NumberGenerator.getIntNumber(0, characters.size()-1));
+    }  
 }

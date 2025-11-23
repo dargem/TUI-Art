@@ -5,7 +5,6 @@ import java.util.Iterator;
 import com.example.representations.DirectedSegment;
 import com.example.utils.Bound;
 import com.example.rendering.LineBasedRenderable;
-import com.example.utils.NumberGenerator;
 
 public class Branch implements LineBasedRenderable{
     private boolean alive;
@@ -34,7 +33,7 @@ public class Branch implements LineBasedRenderable{
         {
             alive = false;
         }
-        
+
         if (!alive || segment_list.isEmpty())
         {
             return;
