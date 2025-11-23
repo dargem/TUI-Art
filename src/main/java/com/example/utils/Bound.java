@@ -41,6 +41,17 @@ public class Bound {
             || point.x() > max_x;
     }
 
+    public boolean checkIsInXBound(DirectedSegment segment)
+    {
+        return checkIsInXBound(segment.getStartLocation())
+            || checkIsInXBound(segment.getEndLocation());
+    }
+
+    private boolean checkIsInXBound(Coord point)
+    {
+        return point.x() > min_x 
+            && point.x() < max_x;
+    }
     /**
      * Checks whether a segment is within bounds
      * @param segment inputted segment for checking

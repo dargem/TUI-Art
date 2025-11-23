@@ -27,19 +27,15 @@ public class Branch implements LineBasedRenderable{
         return alive;
     }
 
-    public void extendBranch()
+    private void extendBranch()
     {
         if (branch_propogator.checkDies())
         {
             alive = false;
-        }
-
-        if (!alive || segment_list.isEmpty())
-        {
             return;
         }
         
-        final DirectedSegment new_segment = branch_propogator.extendBranch(segment_list.get(segment_list.size() - 1));
+        final DirectedSegment new_segment = branch_propogator.extendBranch(segment_list.getLast());
         segment_list.add(new_segment);
     }
 
@@ -48,23 +44,14 @@ public class Branch implements LineBasedRenderable{
     {
         final ArrayList<DirectedSegment> bound_segments = new ArrayList<>();
 
-        while (alive && !segment_list.isEmpty() && bound.checkIsInLooseBound(segment_list.getLast()))
+        do
         {
-            //System.out.println("extending branch");
             extendBranch();
             bound_segments.add(segment_list.getLast());
         }
+        while (alive && bound.checkIsInXBound(segment_list.getLast()));
 
-        // if we've grown beyond the bound, mark as dead
-        if (!segment_list.isEmpty() && !bound.checkIsInLooseBound(segment_list.getLast()))
-        {
-            //System.out.println("killed branch");
-            alive = false;
-        } else
-        {
-            //System.out.println("kept branch");
-        }
-
+        //System.out.print(bound_segments.size());
         return bound_segments;
     }
 

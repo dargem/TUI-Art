@@ -4,11 +4,11 @@ import com.example.representations.AngleMap;
 import com.example.representations.Tile;
 import com.example.utils.NumberGenerator;
 
-public class TileProvider {
+public class TileProvider 
+{
     /**
      * A class for providing tiles to the renderer
      */
-
     final int minimum_z_score;
     final int maximum_z_score;
     final Colour primary_colour;
