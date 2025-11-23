@@ -1,19 +1,22 @@
 package com.example.models.tree_model;
 
 import com.example.config.BranchParams;
+import com.example.rendering.TileProvider;
 import com.example.representations.DirectedSegment;
 import com.example.representations.Coord;
 import com.example.utils.NumberGenerator;
 
 public class BranchPropogator {
     private final BranchParams parameters;
+    private final TileProvider tile_provider;
     // y = x^(1/3), then *1.2 just for a bit more variation, need 1.0 or its int division
     private final double INITIAL_ANGLE_POWER_SCALAR = 1.0/3.0;
     private final double INITIAL_ANGLE_SCALAR = 1.3;
 
-    public BranchPropogator(BranchParams params)
+    public BranchPropogator(BranchParams params, TileProvider tile_provider)
     {
         this.parameters = params;
+        this.tile_provider = tile_provider;
     }
 
     public boolean checkDies()
@@ -32,7 +35,7 @@ public class BranchPropogator {
         final Coord start_location = trunk_segment.getEndLocation();
         final double width = trunk_segment.getWidth() * 0.8; // branches start slightly thinner
         
-        return new DirectedSegment(start_location, length, angle, width);
+        return new DirectedSegment(start_location, length, angle, width, tile_provider);
     }
 
     public DirectedSegment extendBranch(final DirectedSegment branch_section)
@@ -46,7 +49,7 @@ public class BranchPropogator {
         final double next_angle = findNextAngle(angle);
         final double next_width = findNextWidth(branch_section.getWidth());
 
-        return new DirectedSegment(next_location, next_length, next_angle, next_width);
+        return new DirectedSegment(next_location, next_length, next_angle, next_width, tile_provider);
     }
 
     private double findNextLength(final double length)

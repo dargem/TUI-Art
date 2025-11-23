@@ -1,10 +1,6 @@
 package com.example.rendering;
 import com.example.utils.Colour;
-
-import java.util.ArrayList;
-import java.util.TreeMap;
-import java.util.Map.Entry;
-
+import com.example.representations.AngleMap;
 import com.example.representations.Tile;
 import com.example.utils.NumberGenerator;
 
@@ -20,44 +16,21 @@ public class TileProvider {
     // to allow some variation in outputted colours
     double colour_blend = 0; 
 
-    final TreeMap<Double, ArrayList<Character>> tree_char_map;
+    final AngleMap angle_char_map;
 
     // Ideally want some complex angle based 
 
-    public TileProvider(int minimum_z_score, int maximum_z_score, Colour primary_colour, final TreeMap<Double, ArrayList<Character>> tree_char_map)
+    public TileProvider(int minimum_z_score, int maximum_z_score, Colour primary_colour, AngleMap angle_char_map)
     {
         this.minimum_z_score = minimum_z_score;
         this.maximum_z_score = maximum_z_score;
         this.primary_colour = primary_colour;
-        this.tree_char_map = tree_char_map;
-    }
-
-    public void addCharacter(ArrayList<Character> output_char, double angle)
-    {
-        tree_char_map.put(angle, output_char);
+        this.angle_char_map = angle_char_map;
     }
 
     public Tile getTile(double angle)
     {
-        final Entry<Double, ArrayList<Character>> floor_entry = tree_char_map.floorEntry(angle);
-        final Entry<Double, ArrayList<Character>> ceil_entry = tree_char_map.ceilingEntry(angle);
-        
-        final double displacement_floor = Math.abs(floor_entry.getKey() - angle);
-        final double displacement_ceil = Math.abs(ceil_entry.getKey() - angle);
-
-        // Choose the character arraylist with least angle discrepancy
-        // Then randomly choose a character from the array list!
-        char character;
-        if (displacement_ceil < displacement_floor)
-        {
-            int chosen_index = NumberGenerator.getIntNumber(0, ceil_entry.getValue().size()-1);
-            character = ceil_entry.getValue().get(chosen_index);
-        }
-        else
-        {
-            int chosen_index = NumberGenerator.getIntNumber(0, floor_entry.getValue().size()-1);
-            character = floor_entry.getValue().get(chosen_index);
-        }
+        char character = angle_char_map.getCharacter(angle);
 
         if (background_colour == null)
         {

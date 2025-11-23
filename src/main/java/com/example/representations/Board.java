@@ -26,7 +26,6 @@ public class Board {
             array_list.add(null);
         }
         
-        // wannabe walrus operator
         final Tile existing_tile;
         if ((existing_tile = array_list.get(x)) == null || existing_tile.checkOverwritable(tile.getZScore()))
         {

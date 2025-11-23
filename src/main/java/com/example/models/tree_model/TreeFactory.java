@@ -12,6 +12,7 @@ import com.example.utils.Colour;
 import com.example.utils.NumberGenerator;
 import com.example.rendering.LineBasedRenderable;
 import com.example.rendering.TileProvider;
+import com.example.representations.AngleMap;
 
 public class TreeFactory implements ModelFactory{
 
@@ -29,35 +30,37 @@ public class TreeFactory implements ModelFactory{
     {
         this.branch_params = branch_params;
         this.trunk_params = trunk_params;
-        final TreeMap<Double, ArrayList<Character>> tree_char_map = new TreeMap<>();
+        final AngleMap trunk_char_map = new AngleMap();
 
-        tree_char_map.put(
+        trunk_char_map.put(
             0.0,
             new ArrayList<>(List.of('|', '[', ']', 'I'))
         );
 
-        tree_char_map.put(
+        trunk_char_map.put(
             Math.PI/8,
             new ArrayList<>(List.of('/', '[', 'P'))
         );
 
-        tree_char_map.put(
+        trunk_char_map.put(
             -Math.PI/8,
             new ArrayList<>(List.of('\\', ']', 'J')) // only one backslash its just escape
         );
 
-        tree_char_map.put(
+        trunk_char_map.put(
             Math.PI/2,
             new ArrayList<>(List.of('-', '_'))
         );
 
-        trunk_tile_provider = new TileProvider(
+        this.trunk_tile_provider = new TileProvider(
             0,
             1,
             Colour.BROWN_LIGHT,
-            tree_char_map
+            trunk_char_map
         );
 
+        final AngleMap branch_char_map = new AngleMap();
+        
     }
 
     @Override
@@ -65,9 +68,9 @@ public class TreeFactory implements ModelFactory{
     {
         // Potential for a treetype in the future
         final Coord start_location = new Coord(NumberGenerator.getRandomNumber(LEFT_MIN, RIGHT_MAX), GROUND_LEVEL);
-        final BranchPropogator propogator = new BranchPropogator(branch_params);
+        final BranchPropogator propogator = new BranchPropogator(branch_params, trunk_tile_provider);
         final BranchFactory branch_factory = new BranchFactory(propogator);
-        final Trunk trunk = new Trunk(trunk_params, start_location, branch_factory);
+        final Trunk trunk = new Trunk(trunk_params, start_location, branch_factory, trunk_tile_provider);
         return new Tree(trunk);
     }
 

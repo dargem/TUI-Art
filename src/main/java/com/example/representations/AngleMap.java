@@ -8,10 +8,12 @@ import com.example.utils.NumberGenerator;
 
 /**
  * A custom modification of a tree map
- * Retrieves by closest bearing
- * Inputted by bearing + rotated pair
+ * Retrieves by closest bearing (w. potential rotation)
+ * Inputted by bearing
  */
-public class AngleMap {
+public class AngleMap 
+{
+
     final TreeMap<Double, ArrayList<Character>> tree_char_map = new TreeMap<>();
 
     /**
@@ -26,9 +28,19 @@ public class AngleMap {
         if (bearing < -Math.PI/2 || bearing > Math.PI/2)
         {
             throw new IllegalArgumentException("Angle bearing should be between -pi/2 and pi/2 radians to maintain search angle logic");
-
         }
         tree_char_map.put(bearing, characters);
+    }
+
+    /**
+     * Adds a generic character
+     * These are not angle specified
+     * And have a chance of always occurring
+     * @param character
+     */
+    public void putGeneric(Character character)
+    {
+
     }
 
     /**
@@ -53,6 +65,13 @@ public class AngleMap {
         return searchAngle(bearing);
     }
 
+    /**
+     * Helper function for searching angles
+     * Finds angle with lowest absolute angle discrepancy
+     * Returns a random character from the arraylist matched with it
+     * @param bearing angle to search with
+     * @return A random character
+     */
     private Character searchAngle(double bearing)
     {
         final Entry<Double, ArrayList<Character>> floor_entry = tree_char_map.floorEntry(bearing);

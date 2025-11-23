@@ -10,6 +10,7 @@ import com.example.utils.Bound;
 import com.example.utils.EndPointFinder;
 import com.example.utils.NumberGenerator;
 import com.example.rendering.LineBasedRenderable;
+import com.example.rendering.TileProvider;
 
 public class Trunk implements LineBasedRenderable
 {
@@ -18,21 +19,24 @@ public class Trunk implements LineBasedRenderable
     private final double start_x;
     private final BranchFactory branch_factory;
     private final LinkedList<Branch> pending_branches;
+    private final TileProvider tile_provider;
 
-    public Trunk(TrunkParams params, Coord location, BranchFactory branch_factory)
+    public Trunk(TrunkParams params, Coord location, BranchFactory branch_factory, TileProvider tile_provider)
     {
         this.parameters = params;
         this.trunk_list = new LinkedList<>();
         this.start_x = location.x();
         this.branch_factory = branch_factory;
         this.pending_branches = new LinkedList<>();
+        this.tile_provider = tile_provider;
 
         trunk_list.add(
             new DirectedSegment(
                 location, 
                 parameters.section_length(), 
                 0, 
-                parameters.width()
+                parameters.width(),
+                tile_provider
             )
         );
     }
@@ -48,7 +52,8 @@ public class Trunk implements LineBasedRenderable
         trunk_list.add(new DirectedSegment(
                 next_point, 
                 parameters.section_length(), 
-                next_angle, parameters.width()
+                next_angle, parameters.width(),
+                tile_provider
             )
         );
 
