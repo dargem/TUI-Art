@@ -10,8 +10,7 @@ public class BranchPropogator {
     private final BranchParams parameters;
     private final TileProvider tile_provider;
     // y = x^(1/3), then *1.2 just for a bit more variation, need 1.0 or its int division
-    private final double INITIAL_ANGLE_POWER_SCALAR = 1.0/3.0;
-    private final double INITIAL_ANGLE_SCALAR = 1.3;
+    private final double BASE_BRANCH_ANGLE = Math.PI/3;
 
     public BranchPropogator(BranchParams params, TileProvider tile_provider)
     {
@@ -26,11 +25,12 @@ public class BranchPropogator {
 
     public DirectedSegment createFirstBranch(DirectedSegment trunk_segment)
     {
-        double angle = Math.pow(NumberGenerator.getRandomNumber(), INITIAL_ANGLE_POWER_SCALAR) * INITIAL_ANGLE_SCALAR;
-        if (NumberGenerator.getRandomNumber() < 0.5)
-        {
-            angle *= -1;
-        }
+        // choose whether its a left/right branch, setting it to be an offset off the trunk
+        double angle = trunk_segment.getAngle();
+        angle += NumberGenerator.getRandomNumber() < 0.5 ? BASE_BRANCH_ANGLE : -BASE_BRANCH_ANGLE;   
+        // add a random angle for variation
+        angle += NumberGenerator.getRandomNumber(-1, 1) * parameters.angle_variance();
+
         final double length = parameters.initial_length();
         final Coord start_location = trunk_segment.getEndLocation();
         final double width = trunk_segment.getWidth() * 0.8; // branches start slightly thinner
