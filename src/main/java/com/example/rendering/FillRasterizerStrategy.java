@@ -9,6 +9,12 @@ public class FillRasterizerStrategy implements SegmentRasterizerStrategy{
     // https://playtechs.blogspot.com/2007/03/raytracing-on-grid.html
     // java implementation of this modified bresenham line algorihtm for floating points
     // then modified using edges of a constructed rectangle
+
+    // names for the switch statements to avoid magic numbers
+    private static final int INCREASING = 0;
+    private static final int DECREASING = 1;
+    private static final int CONSTANT = 2;
+
     @Override
     public void rasterizeSegment(DirectedSegment segment, Board board)
     {
@@ -20,8 +26,8 @@ public class FillRasterizerStrategy implements SegmentRasterizerStrategy{
         double half_width = segment.getWidth() / 2.0;
 
         // magnitude of the shift, considering 0 degrees is upwards
-        double x_shift = half_width * Math.sin(segment.getAngle() + (Math.PI / 2));
-        double y_shift = half_width * Math.cos(segment.getAngle() + (Math.PI / 2));
+        final double x_shift = half_width * Math.sin(segment.getAngle() + (Math.PI / 2));
+        final double y_shift = half_width * Math.cos(segment.getAngle() + (Math.PI / 2));
 
         /* 
         Create points
@@ -60,6 +66,17 @@ public class FillRasterizerStrategy implements SegmentRasterizerStrategy{
         coord_pairs[1] = new CoordPair(B, C);
         coord_pairs[2] = new CoordPair(C, D);
         coord_pairs[3] = new CoordPair(D, A);
+
+        // Then find the range of y's needed, allows sizing the min x / min y arrays
+        final int y_range = -y_displacement + (int) Math.ceil(
+            Math.max(
+                Math.max(A_y, B_y),
+                Math.max(C_y, D_y)
+            )
+        );
+
+        Integer[] buf_min_x = new Integer[y_range];
+        Integer[] buf_max_x = new Integer[y_range];
         
         for (CoordPair coord_pair : coord_pairs)
         {
@@ -77,6 +94,7 @@ public class FillRasterizerStrategy implements SegmentRasterizerStrategy{
             int n = 1;
             int x_inc, y_inc;
             double error;
+            int rate;
 
             if (dx == 0)
             {
@@ -96,6 +114,19 @@ public class FillRasterizerStrategy implements SegmentRasterizerStrategy{
                 error = (x0 - Math.floor(x0)) * dy;
             }
 
+            if (dy > 0)
+            {
+                rate = INCREASING;
+            }
+            else if (dy < 0)
+            {
+                rate = DECREASING;
+            }
+            else
+            {
+                rate = CONSTANT;
+            }
+
             if (dy == 0)
             {
                 y_inc = 0;
@@ -113,6 +144,7 @@ public class FillRasterizerStrategy implements SegmentRasterizerStrategy{
                 n += y - (int) Math.floor(y1);
                 error -= (y0 - Math.floor(y0)) * dx;
             }
+
             for (; n>0; --n)
             {
                 if (x <= 0 || y<= 0)
@@ -120,8 +152,27 @@ public class FillRasterizerStrategy implements SegmentRasterizerStrategy{
                     continue;
                 }
                 //System.out.println(x + " " + y);
-                board.addTile(x, y, segment.getTile());
+                switch (rate)
+                {
+                    case DECREASING:
+                        buf_min_x[y] = x;
+                        break;
+                    case INCREASING:
+                        buf_max_x[y] = x;
+                        break;
+                    case CONSTANT:
+                        if (buf_min_x[y] == null || x < buf_min_x[y])
+                            buf_min_x[y] = x;
+                        if (buf_max_x[y] == null || x > buf_max_x[y])
+                            buf_max_x[y] = x;
+                        break;
+                    default:
+                        throw new RuntimeException("rate not proper initialised in fill rasteriser strategy");
+                }
+
+                //board.addTile(x, y, segment.getTile());
                 //System.out.println("added tile");
+
                 if (error > 0)
                 {
                     y += y_inc;
