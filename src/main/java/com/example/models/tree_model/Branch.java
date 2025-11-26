@@ -2,9 +2,9 @@ package com.example.models.tree_model;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import com.example.rendering.LineBasedRenderable;
 import com.example.representations.DirectedSegment;
 import com.example.utils.Bound;
-import com.example.rendering.LineBasedRenderable;
 
 public class Branch implements LineBasedRenderable{
     private boolean alive;
@@ -29,7 +29,7 @@ public class Branch implements LineBasedRenderable{
 
     private void extendBranch()
     {
-        if (branch_propogator.checkDies())
+        if (branch_propogator.checkDies(segment_list.getLast()))
         {
             alive = false;
             return;

@@ -2,15 +2,15 @@ package com.example.models.tree_model;
 
 import com.example.config.BranchParams;
 import com.example.rendering.TileProvider;
-import com.example.representations.DirectedSegment;
 import com.example.representations.Coord;
+import com.example.representations.DirectedSegment;
 import com.example.utils.NumberGenerator;
 
 public class BranchPropogator {
     private final BranchParams parameters;
     private final TileProvider tile_provider;
     // y = x^(1/3), then *1.2 just for a bit more variation, need 1.0 or its int division
-    private final double BASE_BRANCH_ANGLE = Math.PI/3;
+    private final double BASE_BRANCH_ANGLE = Math.PI/2.5;
 
     public BranchPropogator(BranchParams params, TileProvider tile_provider)
     {
@@ -18,9 +18,10 @@ public class BranchPropogator {
         this.tile_provider = tile_provider;
     }
 
-    public boolean checkDies()
+    public boolean checkDies(DirectedSegment last_segment)
     {
-        return NumberGenerator.getRandomNumber() < parameters.death_chance();
+        final double adjusted_death_chance = parameters.death_chance() / last_segment.getWidth();
+        return NumberGenerator.getRandomNumber() < adjusted_death_chance;
     }
 
     public DirectedSegment createFirstBranch(DirectedSegment trunk_segment)

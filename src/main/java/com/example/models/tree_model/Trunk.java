@@ -4,19 +4,20 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import com.example.config.TrunkParams;
-import com.example.representations.DirectedSegment;
+import com.example.rendering.LineBasedRenderable;
+import com.example.rendering.TileProvider;
 import com.example.representations.Coord;
+import com.example.representations.DirectedSegment;
 import com.example.utils.Bound;
 import com.example.utils.EndPointFinder;
 import com.example.utils.NumberGenerator;
-import com.example.rendering.LineBasedRenderable;
-import com.example.rendering.TileProvider;
+import com.example.utils.TerminalStatus;
 
 public class Trunk implements LineBasedRenderable
 {
     private final TrunkParams parameters;
     private final LinkedList<DirectedSegment> trunk_list;
-    private final double start_x;
+    private double start_x;
     private final BranchFactory branch_factory;
     private final LinkedList<Branch> pending_branches;
     private final TileProvider tile_provider;
@@ -25,7 +26,8 @@ public class Trunk implements LineBasedRenderable
     {
         this.parameters = params;
         this.trunk_list = new LinkedList<>();
-        this.start_x = location.x();
+        //this.start_x = location.x();
+        this.start_x = TerminalStatus.getWidth()/2;
         this.branch_factory = branch_factory;
         this.pending_branches = new LinkedList<>();
         this.tile_provider = tile_provider;
@@ -102,8 +104,9 @@ public class Trunk implements LineBasedRenderable
     public ArrayList<DirectedSegment> growAndFetchRenderable(Bound bound)
     {
         final ArrayList<DirectedSegment> bound_segments = new ArrayList<>();
+        start_x = TerminalStatus.getWidth()/2;
 
-        while (bound.checkIsInLooseBound(trunk_list.getLast()))
+        while (bound.checkIsInBound(trunk_list.getLast()))
         {
             extendTrunk();
             bound_segments.add(trunk_list.getLast());

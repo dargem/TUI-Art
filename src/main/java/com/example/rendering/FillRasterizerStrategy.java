@@ -5,10 +5,10 @@ import com.example.representations.Coord;
 import com.example.representations.CoordPair;
 import com.example.representations.DirectedSegment;
 
-public class OutlineRasterizerStrategy implements SegmentRasterizerStrategy{
+public class FillRasterizerStrategy implements SegmentRasterizerStrategy{
     // https://playtechs.blogspot.com/2007/03/raytracing-on-grid.html
     // java implementation of this modified bresenham line algorihtm for floating points
-    // then modified using left/right edges of a constructed rectangle
+    // then modified using edges of a constructed rectangle
     @Override
     public void rasterizeSegment(DirectedSegment segment, Board board)
     {
@@ -16,28 +16,50 @@ public class OutlineRasterizerStrategy implements SegmentRasterizerStrategy{
         Coord start_point = segment.getStartLocation();
         Coord end_point = segment.getEndLocation();
 
-
         // the magnitude offset wanted
-        double hypotenuse_shant = segment.getWidth() / 2;
+        double half_width = segment.getWidth() / 2.0;
 
         // magnitude of the shift, considering 0 degrees is upwards
-        double x_shift = hypotenuse_shant * Math.sin(segment.getAngle() + (Math.PI / 2));
-        double y_shift = hypotenuse_shant * Math.cos(segment.getAngle() + (Math.PI / 2));
-        
-        // left / right of start
-        Coord A = new Coord(start_point.x() + x_shift, start_point.y() + y_shift);
-        Coord B = new Coord(start_point.x() - x_shift, start_point.y() - y_shift);
-        // left / right of the end
-        Coord C = new Coord(end_point.x() + x_shift, end_point.y() + y_shift);
-        Coord D = new Coord(end_point.x() - x_shift, end_point.y() - y_shift);
+        double x_shift = half_width * Math.sin(segment.getAngle() + (Math.PI / 2));
+        double y_shift = half_width * Math.cos(segment.getAngle() + (Math.PI / 2));
 
-        CoordPair[] coord_pairs = new CoordPair[2];
-        //coord_pairs[0] = new CoordPair(A, B);
-        //coord_pairs[1] = new CoordPair(A, C);
-        //coord_pairs[2] = new CoordPair(B, D);
-        //coord_pairs[3] = new CoordPair(C, D);
-        coord_pairs[0] = new CoordPair(A, C);
-        coord_pairs[1] = new CoordPair(B, D);
+        /* 
+        Create points
+
+            B
+                C
+
+        A
+            D
+        */
+        final double A_y = start_point.y() + y_shift;
+        final double B_y = end_point.y() + y_shift;
+        final double C_y = end_point.y() - y_shift;
+        final double D_y = start_point.y() - y_shift; 
+
+        // create a y re-scalar value, this is needed because its going to iterate through fixed size array
+        // and having tons of empty space isn't ideal since y will increase as program runs
+        // e.g. y is in thousands shift it down to base at 0, then shift it up when inserting to board
+
+        final int y_displacement = (int) Math.floor(
+            Math.min(
+                Math.min(A_y, B_y), 
+                Math.min(C_y, D_y)
+            )
+        );
+
+        // for each coord shift its y downwards so its y value is centered around 0
+        Coord A = new Coord(start_point.x() - x_shift, A_y - y_displacement);
+        Coord B = new Coord(end_point.x() - x_shift, B_y - y_displacement);
+        Coord C = new Coord(end_point.x() + x_shift, C_y - y_displacement);
+        Coord D = new Coord(start_point.x() + x_shift, D_y - y_displacement);
+
+        // create array for the rasterisation loop going around 4 points
+        CoordPair[] coord_pairs = new CoordPair[4];
+        coord_pairs[0] = new CoordPair(A, B);
+        coord_pairs[1] = new CoordPair(B, C);
+        coord_pairs[2] = new CoordPair(C, D);
+        coord_pairs[3] = new CoordPair(D, A);
         
         for (CoordPair coord_pair : coord_pairs)
         {

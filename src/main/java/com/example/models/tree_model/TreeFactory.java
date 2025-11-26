@@ -6,12 +6,12 @@ import java.util.List;
 import com.example.config.BranchParams;
 import com.example.config.TrunkParams;
 import com.example.models.ModelFactory;
-import com.example.representations.Coord;
-import com.example.utils.Colour;
-import com.example.utils.NumberGenerator;
 import com.example.rendering.LineBasedRenderable;
 import com.example.rendering.TileProvider;
 import com.example.representations.AngleMap;
+import com.example.representations.Coord;
+import com.example.utils.Colour;
+import com.example.utils.NumberGenerator;
 
 public class TreeFactory implements ModelFactory{
 
@@ -31,6 +31,84 @@ public class TreeFactory implements ModelFactory{
         this.trunk_params = trunk_params;
         final AngleMap trunk_char_map = new AngleMap();
 
+        // --- VERTICAL (0 degrees) ---
+        // Added '!' and '1' for variation, ':' for texture
+        trunk_char_map.put(
+            0.0,
+            new ArrayList<>(List.of('|', '[', ']', 'I', '!', '1', ':'))
+        );
+
+        // --- VERY STEEP RIGHT (~11 to 15 degrees) ---
+        // Parentheses and curly braces look like a vertical line bending slightly
+        trunk_char_map.put(
+            Math.PI/16, // or Math.PI/12
+            new ArrayList<>(List.of(')', '}', 'l', 'f'))
+        );
+
+        // --- VERY STEEP LEFT (~-11 to -15 degrees) ---
+        trunk_char_map.put(
+            -Math.PI/16, 
+            new ArrayList<>(List.of('(', '{', '1', 'S'))
+        );
+
+        // --- DIAGONAL RIGHT (22.5 to 45 degrees) ---
+        trunk_char_map.put(
+            Math.PI/8, // 22.5 deg
+            new ArrayList<>(List.of('/', '7', 'd', 'P'))
+        );
+
+        trunk_char_map.put(
+            Math.PI/4, // 45 deg
+            new ArrayList<>(List.of('/', 'F', '7'))
+        );
+
+        // --- DIAGONAL LEFT (-22.5 to -45 degrees) ---
+        trunk_char_map.put(
+            -Math.PI/8, // -22.5 deg
+            new ArrayList<>(List.of('\\', 'J', 'L')) // Escaped backslash
+        );
+
+        trunk_char_map.put(
+            -Math.PI/4, // -45 deg
+            new ArrayList<>(List.of('\\', 'v', 'Y'))
+        );
+
+        // --- LOW ANGLE / SIDEWAYS RIGHT (~60 to 90 degrees) ---
+        // Tilde ~ is great for gnarly horizontal branches
+        trunk_char_map.put(
+            Math.PI/3, // 60 deg (Steep horizontal)
+            new ArrayList<>(List.of('/', ',', '>', 'r'))
+        );
+
+        trunk_char_map.put(
+            Math.PI/2, // 90 deg (Pure East)
+            new ArrayList<>(List.of('-', '_', '~', '=', '>'))
+        );
+
+        // --- LOW ANGLE / SIDEWAYS LEFT (~-60 to -90 degrees) ---
+        trunk_char_map.put(
+            -Math.PI/3, // -60 deg
+            new ArrayList<>(List.of('\\', '`', '<'))
+        );
+
+        trunk_char_map.put(
+            -Math.PI/2, // -90 deg (Pure West)
+            new ArrayList<>(List.of('-', '_', '~', '=', '<'))
+        );
+
+        /*
+        // --- DOWNWARD SLOPES (If your tree droops/weeps) ---
+        trunk_char_map.put(
+            Math.PI * 0.75, // 135 deg (Down-Right)
+            new ArrayList<>(List.of('\\', '.', ','))
+        );
+
+        trunk_char_map.put(
+            -Math.PI * 0.75, // -135 deg (Down-Left)
+            new ArrayList<>(List.of('/', '\'', '`'))
+        );
+        */
+        /*
         trunk_char_map.put(
             0.0,
             new ArrayList<>(List.of('|', '[', ']', 'I'))
@@ -50,13 +128,14 @@ public class TreeFactory implements ModelFactory{
             Math.PI/2,
             new ArrayList<>(List.of('-', '_'))
         );
-
+        */
         this.trunk_tile_provider = new TileProvider(
             0,
             1,
             Colour.BROWN_LIGHT,
             trunk_char_map
         );
+        
 
         //final AngleMap branch_char_map = new AngleMap();
         
