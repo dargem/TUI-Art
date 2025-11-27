@@ -34,10 +34,10 @@ public class FillRasterizerStrategy implements SegmentRasterizerStrategy{
         A
             D
         */
-        final double A_y = start_point.y() + y_shift;
-        final double B_y = end_point.y() + y_shift;
-        final double C_y = end_point.y() - y_shift;
-        final double D_y = start_point.y() - y_shift; 
+        final double A_y = start_point.y() - y_shift;
+        final double B_y = end_point.y() - y_shift;
+        final double C_y = end_point.y() + y_shift;
+        final double D_y = start_point.y() + y_shift; 
 
         // create a y re-scalar value, this is needed because its going to iterate through fixed size array
         // and having tons of empty space isn't ideal since y will increase as program runs
