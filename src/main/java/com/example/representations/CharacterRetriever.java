@@ -1,11 +1,9 @@
 package com.example.representations;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Set;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 
-import com.example.utils.DoublePair;
+import com.example.utils.NumberGenerator;
 /**
  * A class containg a probabililty distribution for characters
  * Outputs characters based on this probability distribution
@@ -14,46 +12,67 @@ import com.example.utils.DoublePair;
 public class CharacterRetriever 
 {
     private final TreeMap<Double, ArrayList<Character>> character_probabilities = new TreeMap<>();
+    // Increase to pronounciate the directional strength
+    // Decrease to make direction more generalised
+    private final double CLOSENESS_SCALAR = 0.8;
 
     public CharacterRetriever(TreeMap<Double, ArrayList<Character>> tree_char_map, double search_angle)
     {
-        Set<Double> angles = tree_char_map.keySet();
-
-        // pairs of the offset angle with the original angle
-        final DoublePair[] adjusted_angles = new DoublePair[angles.size()];
-
-        int i = 0;
-        double total_offset = 0;
-        for (Double angle : angles)
+        if (tree_char_map.isEmpty())
         {
-            // option of adding a scalar like ^1.2 to make it prioritise closer angles more-so
-            final double offset = Math.abs(angle - search_angle);
-            total_offset += offset;
-            adjusted_angles[i] = new DoublePair(offset, angle);
-            ++i;
+            throw new RuntimeException("Character retriever initialised with empty map");
         }
 
-        // sort it by offset magnitude
-        Arrays.sort(adjusted_angles, Comparator.comparingDouble(p -> p.offset_magnitude()));
+        // Store. closeness stores in a treemap where keys are OG angles
+        TreeMap<Double, Double> closeness_scores = new TreeMap<>();
+        double total_closeness_score = 0;
 
-        double accumulated_percent = 0;
-        for (DoublePair double_pair : adjusted_angles)
+        // Calculate the closeness and total score
+        for (Double angle : tree_char_map.keySet())
         {
-            // To construct a discrete CDF effectively
-            // as accessing will be done through finding closest ceiling key of input
-            final double closeness_percent = 1 - double_pair.offset_magnitude() / total_offset;
-            accumulated_percent += closeness_percent;
-            character_probabilities.put(
-                accumulated_percent, 
-                tree_char_map.get(double_pair.original_angle()
-            ));
+            double offset = Math.abs(angle - search_angle);
+            // guard against a miraculous division by 0 I'm sure will happen
+            offset = (offset == 0.0) ? 1e-12 : offset;
+            offset = Math.pow(offset, CLOSENESS_SCALAR);
+
+            final double score = 1.0 / offset;
+            closeness_scores.put(angle, score);
+            total_closeness_score += score;
         }
 
-        // because floating point errors could lead to a key slightly less than 1
-        // manually put in a key of 1.0 using the last element as CDF sums to 1
-        character_probabilities.put(
-            1.0, 
-            tree_char_map.get(adjusted_angles[adjusted_angles.length - 1].original_angle())
-        );
+        // Build effectively a CDF but its a treemap
+        // where indexes are doubles starting at 0 to 1
+        double accumulated_probability = 0;
+        for (Entry<Double, Double> entry : closeness_scores.entrySet())
+        {
+            final double original_angle = entry.getKey();
+            final double score = entry.getValue();
+
+            // then normalise the score to get the actual ptob
+            final double probabililty = score / total_closeness_score;
+            accumulated_probability += probabililty;
+
+            character_probabilities.put(accumulated_probability, tree_char_map.get(original_angle));
+        }
+
+        // Make sure it sums to exactly 1 as floating point accuracies exist
+        // Without it getting the ceil entry could miss with bad luck
+        if (character_probabilities.lastKey() < 1.0)
+        {
+            ArrayList<Character> last_chars = character_probabilities.lastEntry().getValue();
+            character_probabilities.put(1.0, last_chars);
+        }
+    }
+
+    /**
+     * Gets a random character according to its initialised angle
+     * "CDF" is weighted so that close characters are preferred
+     * @return a random character from its initialised distribution
+     */
+    public Character getCharacter()
+    {
+        final double percent = NumberGenerator.getRandomNumber();
+        final ArrayList<Character> characters = character_probabilities.ceilingEntry(percent).getValue();
+        return characters.get(NumberGenerator.getIntNumber(0, characters.size() - 1));
     }
 }

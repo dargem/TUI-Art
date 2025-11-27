@@ -1,5 +1,9 @@
 package com.example.rendering;
+import java.util.AbstractMap;
+import java.util.Map.Entry;
+
 import com.example.representations.AngleTreeMap;
+import com.example.representations.CharacterRetriever;
 import com.example.representations.Tile;
 import com.example.utils.Colour;
 import com.example.utils.NumberGenerator;
@@ -9,14 +13,15 @@ public class TileProvider
     /**
      * A class for providing tiles to the renderer
      */
-    final int minimum_z_score;
-    final int maximum_z_score;
-    final Colour primary_colour;
-    Colour background_colour;
+    private final int minimum_z_score;
+    private final int maximum_z_score;
+    private final Colour primary_colour;
+    private Colour background_colour;
     // to allow some variation in outputted colours
-    double colour_blend = 0; 
+    private double colour_blend = 0; 
 
-    final AngleTreeMap angle_char_map;
+    private final AngleTreeMap angle_char_map;
+    private Entry<Double, CharacterRetriever> retriever_cache =  new AbstractMap.SimpleEntry<>(Double.NEGATIVE_INFINITY, null);
 
     // Ideally want some complex angle based 
 
@@ -30,7 +35,12 @@ public class TileProvider
 
     public Tile getTile(double angle)
     {
-        char character = angle_char_map.getCharacter(angle);
+        if (retriever_cache.getKey() != angle)
+        {
+            retriever_cache = new AbstractMap.SimpleEntry<>(angle, angle_char_map.getCharacterRetriever(angle));
+        }
+
+        char character = retriever_cache.getValue().getCharacter();
 
         if (background_colour == null)
         {
