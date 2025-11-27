@@ -2,14 +2,13 @@ package com.example;
 
 import java.util.ArrayList;
 
-import com.example.utils.Bound;
 import com.example.models.ModelFactory;
-import com.example.rendering.BasicRasterizerStrategy;
-import com.example.rendering.OutlineRasterizerStrategy;
+import com.example.rendering.FillRasterizerStrategy;
 import com.example.rendering.SegmentRasterizerContext;
 import com.example.rendering.World;
 import com.example.representations.Board;
 import com.example.representations.DirectedSegment;
+import com.example.utils.Bound;
 
 /**
  * Controls a world
@@ -30,7 +29,7 @@ public class Controller
     
     public Controller()
     {
-        rasterizer = new SegmentRasterizerContext(new OutlineRasterizerStrategy());
+        rasterizer = new SegmentRasterizerContext(new FillRasterizerStrategy());
     }
 
     public void addModelFactory(ModelFactory model_factory)

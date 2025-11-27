@@ -1,4 +1,5 @@
 package com.example.rendering;
+import java.util.Arrays;
 
 import com.example.representations.Board;
 import com.example.representations.Coord;
@@ -9,11 +10,6 @@ public class FillRasterizerStrategy implements SegmentRasterizerStrategy{
     // https://playtechs.blogspot.com/2007/03/raytracing-on-grid.html
     // java implementation of this modified bresenham line algorihtm for floating points
     // then modified using edges of a constructed rectangle
-
-    // names for the switch statements to avoid magic numbers
-    private static final int INCREASING = 0;
-    private static final int DECREASING = 1;
-    private static final int CONSTANT = 2;
 
     @Override
     public void rasterizeSegment(DirectedSegment segment, Board board)
@@ -75,8 +71,10 @@ public class FillRasterizerStrategy implements SegmentRasterizerStrategy{
             )
         );
 
-        Integer[] buf_min_x = new Integer[y_range];
-        Integer[] buf_max_x = new Integer[y_range];
+        int[] buf_min_x = new int[y_range];
+        int[] buf_max_x = new int[y_range];
+        Arrays.fill(buf_min_x, Integer.MAX_VALUE);
+        Arrays.fill(buf_max_x, Integer.MIN_VALUE);
         
         for (CoordPair coord_pair : coord_pairs)
         {
@@ -94,7 +92,6 @@ public class FillRasterizerStrategy implements SegmentRasterizerStrategy{
             int n = 1;
             int x_inc, y_inc;
             double error;
-            int rate;
 
             if (dx == 0)
             {
@@ -112,19 +109,6 @@ public class FillRasterizerStrategy implements SegmentRasterizerStrategy{
                 x_inc = -1;
                 n += x - (int) Math.floor(x1);
                 error = (x0 - Math.floor(x0)) * dy;
-            }
-
-            if (dy > 0)
-            {
-                rate = INCREASING;
-            }
-            else if (dy < 0)
-            {
-                rate = DECREASING;
-            }
-            else
-            {
-                rate = CONSTANT;
             }
 
             if (dy == 0)
@@ -147,29 +131,18 @@ public class FillRasterizerStrategy implements SegmentRasterizerStrategy{
 
             for (; n>0; --n)
             {
-                if (x <= 0 || y<= 0)
+                if (x < 0 || y< 0)
                 {
-                    continue;
+                    //continue;
                 }
                 //System.out.println(x + " " + y);
-                switch (rate)
-                {
-                    case DECREASING:
-                        buf_min_x[y] = x;
-                        break;
-                    case INCREASING:
-                        buf_max_x[y] = x;
-                        break;
-                    case CONSTANT:
-                        if (buf_min_x[y] == null || x < buf_min_x[y])
-                            buf_min_x[y] = x;
-                        if (buf_max_x[y] == null || x > buf_max_x[y])
-                            buf_max_x[y] = x;
-                        break;
-                    default:
-                        throw new RuntimeException("rate not proper initialised in fill rasteriser strategy");
+                if (x < buf_min_x[y]) {
+                    buf_min_x[y] = x;
                 }
 
+                if (x > buf_max_x[y]) {
+                    buf_max_x[y] = x;
+                }
                 //board.addTile(x, y, segment.getTile());
                 //System.out.println("added tile");
 
@@ -183,9 +156,17 @@ public class FillRasterizerStrategy implements SegmentRasterizerStrategy{
                     x += x_inc;
                     error += dy;
                 }
-            }       
-            
+            }   
             //System.out.println("finished rasterising line");
+        }
+
+        for (int y_indice = 0; y_indice < y_range; y_indice++)
+        {
+            //System.out.println(y_indice);
+            for (int x_indice = buf_min_x[y_indice]; x_indice <= buf_max_x[y_indice]; x_indice++)
+            {
+                board.addTile(x_indice, y_indice + y_displacement, segment.getTile());
+            }
         }
     }
 }
