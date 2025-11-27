@@ -133,7 +133,7 @@ public class FillRasterizerStrategy implements SegmentRasterizerStrategy{
             {
                 if (x < 0 || y< 0)
                 {
-                    //continue;
+                    continue;
                 }
                 //System.out.println(x + " " + y);
                 if (x < buf_min_x[y]) {
