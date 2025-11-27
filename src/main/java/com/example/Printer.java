@@ -24,8 +24,7 @@ public class Printer
     {
         AnsiConsole.systemInstall();
         System.out.print(HIDE_CURSOR);
-        System.out.print(CLEAR_SCREEN);
-        
+        System.out.print(CLEAR_SCREEN);    
     }
 
 
@@ -65,5 +64,7 @@ public class Printer
         System.out.print(MOVE_TO_TOP_LEFT);
         System.out.print(INSERT_LINE);
         System.out.print(output.toString());
+        // flush output immediately once written
+        System.out.flush();
     }
 }
