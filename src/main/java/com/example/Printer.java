@@ -13,7 +13,6 @@ import com.example.utils.TerminalStatus;
 public class Printer 
 {
     private static final String HIDE_CURSOR = "\u001b[?25l";
-    private static final String SHOW_CURSOR = "\u001b[?25h";
     private static final String CLEAR_SCREEN = "\u001b[2J";
     private static final String MOVE_TO_TOP_LEFT = "\u001b[1;1H";
     private static final String INSERT_LINE = "\u001b[L";
@@ -33,7 +32,7 @@ public class Printer
     public void printLine(int round, Board board)
     {
         //System.out.println("getting ready to print");
-        String output = "";
+        StringBuilder output = new StringBuilder();
         ArrayList<Tile> output_row = board.getRow(round);
 
         if (output_row == null)
@@ -52,16 +51,19 @@ public class Printer
             if (tile == null)
             {
                 // empty space for tiles not containing anything
-                output += " ";
+                output.append(" ");
                 continue;
             }
 
-            output += tile.getForeground().foreground();
-            output += tile.getCharacter();
+            output.append(tile.getForeground().foreground());
+            output.append(tile.getCharacter());
         }
+        // Reset colors at the end of the line
+        output.append("\u001b[0m");
+        
         //System.out.println("printed line");
         System.out.print(MOVE_TO_TOP_LEFT);
         System.out.print(INSERT_LINE);
-        System.out.print(output);
+        System.out.print(output.toString());
     }
 }

@@ -24,6 +24,7 @@ public class TreeFactory implements ModelFactory{
     private static final int NUM_STARTUP_RENDERS = 0;
 
     private final TileProvider trunk_tile_provider;
+    private final TileProvider branch_tile_provider;
 
     public TreeFactory(BranchParams branch_params, TrunkParams trunk_params)
     {
@@ -32,6 +33,7 @@ public class TreeFactory implements ModelFactory{
         final AngleMap trunk_char_map = new AngleMap();
 
         // --- VERTICAL (0 degrees) ---
+        // For the Trunk
         // Added '!' and '1' for variation, ':' for texture
         trunk_char_map.put(
             0.0,
@@ -95,46 +97,21 @@ public class TreeFactory implements ModelFactory{
             -Math.PI/2, // -90 deg (Pure West)
             new ArrayList<>(List.of('-', '_', '~', '=', '<'))
         );
-
-        /*
-        // --- DOWNWARD SLOPES (If your tree droops/weeps) ---
-        trunk_char_map.put(
-            Math.PI * 0.75, // 135 deg (Down-Right)
-            new ArrayList<>(List.of('\\', '.', ','))
-        );
-
-        trunk_char_map.put(
-            -Math.PI * 0.75, // -135 deg (Down-Left)
-            new ArrayList<>(List.of('/', '\'', '`'))
-        );
-        */
-        /*
-        trunk_char_map.put(
-            0.0,
-            new ArrayList<>(List.of('|', '[', ']', 'I'))
-        );
-
-        trunk_char_map.put(
-            Math.PI/8,
-            new ArrayList<>(List.of('/', '[', 'P'))
-        );
-
-        trunk_char_map.put(
-            -Math.PI/8,
-            new ArrayList<>(List.of('\\', ']', 'J')) // only one backslash its just escape
-        );
-
-        trunk_char_map.put(
-            Math.PI/2,
-            new ArrayList<>(List.of('-', '_'))
-        );
-        */
+        
         this.trunk_tile_provider = new TileProvider(
-            0,
+            4,
+            5,
+            Colour.BROWN_LIGHT,
+            trunk_char_map
+        );
+
+        this.branch_tile_provider = new TileProvider(
+            0, 
             1,
             Colour.BROWN_LIGHT,
             trunk_char_map
         );
+
         
 
         //final AngleMap branch_char_map = new AngleMap();
@@ -146,7 +123,7 @@ public class TreeFactory implements ModelFactory{
     {
         // Potential for a treetype in the future
         final Coord start_location = new Coord(NumberGenerator.getRandomNumber(LEFT_MIN, RIGHT_MAX), GROUND_LEVEL);
-        final BranchPropogator propogator = new BranchPropogator(branch_params, trunk_tile_provider);
+        final BranchPropogator propogator = new BranchPropogator(branch_params, branch_tile_provider);
         final BranchFactory branch_factory = new BranchFactory(propogator);
         final Trunk trunk = new Trunk(trunk_params, start_location, branch_factory, trunk_tile_provider);
         return new Tree(trunk);

@@ -1,13 +1,9 @@
 package com.example;
-import static org.fusesource.jansi.Ansi.ansi;
 import org.fusesource.jansi.AnsiConsole;
-import org.jline.terminal.Terminal;
 
 import com.example.config.BranchParams;
 import com.example.config.TrunkParams;
 import com.example.models.tree_model.TreeFactory;
-import com.example.rendering.World;
-import com.example.utils.TerminalStatus;
 
 
 public class Main 

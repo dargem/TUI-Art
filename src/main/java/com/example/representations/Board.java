@@ -1,7 +1,7 @@
 package com.example.representations;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.ArrayList;
 
 public class Board {
     final Map<Integer, ArrayList<Tile>> tileMapArrayList = new HashMap<>();
@@ -29,7 +29,7 @@ public class Board {
         final Tile existing_tile;
         if ((existing_tile = array_list.get(x)) == null || existing_tile.checkOverwritable(tile.getZScore()))
         {
-            array_list.add(x, tile);
+            array_list.set(x, tile);
         }
     }
 }
