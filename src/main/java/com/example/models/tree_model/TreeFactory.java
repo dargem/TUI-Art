@@ -8,7 +8,7 @@ import com.example.config.TrunkParams;
 import com.example.models.ModelFactory;
 import com.example.rendering.LineBasedRenderable;
 import com.example.rendering.TileProvider;
-import com.example.representations.AngleMap;
+import com.example.representations.AngleTreeMap;
 import com.example.representations.Coord;
 import com.example.utils.Colour;
 import com.example.utils.NumberGenerator;
@@ -30,7 +30,7 @@ public class TreeFactory implements ModelFactory{
     {
         this.branch_params = branch_params;
         this.trunk_params = trunk_params;
-        final AngleMap trunk_char_map = new AngleMap();
+        final AngleTreeMap trunk_char_map = new AngleTreeMap();
 
         // --- VERTICAL (0 degrees) ---
         // For the Trunk

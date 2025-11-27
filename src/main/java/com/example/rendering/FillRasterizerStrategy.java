@@ -26,7 +26,7 @@ public class FillRasterizerStrategy implements SegmentRasterizerStrategy{
         final double y_shift = half_width * Math.cos(segment.getAngle() + (Math.PI / 2));
 
         /* 
-        Create points
+        Create points, needs to iterate in a cycle around shape
 
             B
                 C

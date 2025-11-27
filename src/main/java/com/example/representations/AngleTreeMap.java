@@ -11,11 +11,10 @@ import com.example.utils.NumberGenerator;
  * Retrieves by closest bearing (w. potential rotation)
  * Inputted by bearing
  */
-public class AngleMap 
+public class AngleTreeMap 
 {
-
     final TreeMap<Double, ArrayList<Character>> tree_char_map = new TreeMap<>();
-
+    
     /**
      * Puts an array list of characters into the map, keyed by value
      * Requires bearing to be between -Math.PI/2 rad and Math.PI/2 rad

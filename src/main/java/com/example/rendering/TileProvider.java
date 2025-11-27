@@ -1,7 +1,7 @@
 package com.example.rendering;
-import com.example.utils.Colour;
-import com.example.representations.AngleMap;
+import com.example.representations.AngleTreeMap;
 import com.example.representations.Tile;
+import com.example.utils.Colour;
 import com.example.utils.NumberGenerator;
 
 public class TileProvider 
@@ -16,11 +16,11 @@ public class TileProvider
     // to allow some variation in outputted colours
     double colour_blend = 0; 
 
-    final AngleMap angle_char_map;
+    final AngleTreeMap angle_char_map;
 
     // Ideally want some complex angle based 
 
-    public TileProvider(int minimum_z_score, int maximum_z_score, Colour primary_colour, AngleMap angle_char_map)
+    public TileProvider(int minimum_z_score, int maximum_z_score, Colour primary_colour, AngleTreeMap angle_char_map)
     {
         this.minimum_z_score = minimum_z_score;
         this.maximum_z_score = maximum_z_score;
