@@ -47,9 +47,19 @@ public class TileProvider
             background_colour = Colour.BLACK;
         }
 
-        // think about how to implement colour blend later, breaks my enum rn
+        // Apply colour blending (if set). Blend primary towards background by colour_blend fraction.
+        Colour fg = primary_colour;
+        if (colour_blend > 0) {
+            try {
+                fg = primary_colour.blendWith(background_colour, colour_blend);
+            } catch (Exception e) {
+                // fallback to primary if something unexpected happens
+                fg = primary_colour;
+            }
+        }
+
         double z_score = NumberGenerator.getRandomNumber(minimum_z_score, maximum_z_score);
-        return new Tile(primary_colour, background_colour, character, z_score);
+        return new Tile(fg, background_colour, character, z_score);
     }
 
     public void setColourBlend(double blend_amount)

@@ -1,7 +1,6 @@
 com/example/representations/Coord.class
 com/example/utils/Bound.class
 com/example/rendering/TileProvider.class
-com/example/representations/AngleMap.class
 com/example/rendering/SegmentRasterizerContext.class
 com/example/representations/CoordPair.class
 com/example/utils/Colour.class

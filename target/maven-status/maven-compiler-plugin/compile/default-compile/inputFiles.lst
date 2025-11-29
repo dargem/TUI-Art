@@ -3,6 +3,7 @@
 /Users/td/Documents/GitHub/demo/src/main/java/com/example/Printer.java
 /Users/td/Documents/GitHub/demo/src/main/java/com/example/config/BranchParams.java
 /Users/td/Documents/GitHub/demo/src/main/java/com/example/config/TrunkParams.java
+/Users/td/Documents/GitHub/demo/src/main/java/com/example/models/DynamicModelFactory.java
 /Users/td/Documents/GitHub/demo/src/main/java/com/example/models/ModelFactory.java
 /Users/td/Documents/GitHub/demo/src/main/java/com/example/models/tree_model/Branch.java
 /Users/td/Documents/GitHub/demo/src/main/java/com/example/models/tree_model/BranchFactory.java
@@ -11,14 +12,17 @@
 /Users/td/Documents/GitHub/demo/src/main/java/com/example/models/tree_model/TreeFactory.java
 /Users/td/Documents/GitHub/demo/src/main/java/com/example/models/tree_model/Trunk.java
 /Users/td/Documents/GitHub/demo/src/main/java/com/example/rendering/BasicRasterizerStrategy.java
+/Users/td/Documents/GitHub/demo/src/main/java/com/example/rendering/CharacterBasedRenderable.java
+/Users/td/Documents/GitHub/demo/src/main/java/com/example/rendering/FillRasterizerStrategy.java
 /Users/td/Documents/GitHub/demo/src/main/java/com/example/rendering/LineBasedRenderable.java
 /Users/td/Documents/GitHub/demo/src/main/java/com/example/rendering/OutlineRasterizerStrategy.java
 /Users/td/Documents/GitHub/demo/src/main/java/com/example/rendering/SegmentRasterizerContext.java
 /Users/td/Documents/GitHub/demo/src/main/java/com/example/rendering/SegmentRasterizerStrategy.java
 /Users/td/Documents/GitHub/demo/src/main/java/com/example/rendering/TileProvider.java
 /Users/td/Documents/GitHub/demo/src/main/java/com/example/rendering/World.java
-/Users/td/Documents/GitHub/demo/src/main/java/com/example/representations/AngleMap.java
+/Users/td/Documents/GitHub/demo/src/main/java/com/example/representations/AngleTreeMap.java
 /Users/td/Documents/GitHub/demo/src/main/java/com/example/representations/Board.java
+/Users/td/Documents/GitHub/demo/src/main/java/com/example/representations/CharacterRetriever.java
 /Users/td/Documents/GitHub/demo/src/main/java/com/example/representations/Coord.java
 /Users/td/Documents/GitHub/demo/src/main/java/com/example/representations/CoordPair.java
 /Users/td/Documents/GitHub/demo/src/main/java/com/example/representations/DirectedSegment.java
