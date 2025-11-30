@@ -28,12 +28,12 @@ public class DirectedSegment
         return tile_provider.getTile(angle);
     }
 
-    public Coord getStartLocation()
+    public Coord getStartCoord()
     {
         return start_location;
     }
 
-    public Coord getEndLocation()
+    public Coord getEndCoord()
     {
         return end_location;
     }

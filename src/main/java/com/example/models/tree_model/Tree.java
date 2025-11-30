@@ -1,11 +1,10 @@
 package  com.example.models.tree_model;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 
+import com.example.rendering.LineBasedRenderable;
 import com.example.representations.DirectedSegment;
 import com.example.utils.Bound;
-import com.example.rendering.LineBasedRenderable;
 
 public class Tree implements LineBasedRenderable
 {
@@ -23,15 +22,6 @@ public class Tree implements LineBasedRenderable
         final ArrayList<DirectedSegment> segments = new ArrayList<>();
 
         segments.addAll(trunk.growAndFetchRenderable(bound));
-        
-        // collect any new branches created during trunk growth
-        final LinkedList<Branch> new_branches = trunk.fetchAndClearPendingBranches();
-        //System.out.println("fetched branches");
-        for (Branch branch : new_branches)
-        {
-            //System.out.println("growing a branch");
-            segments.addAll(branch.growAndFetchRenderable(bound));
-        }
         
         return segments;
     }

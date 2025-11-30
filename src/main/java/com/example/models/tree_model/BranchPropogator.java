@@ -33,7 +33,7 @@ public class BranchPropogator {
         angle += NumberGenerator.getRandomNumber(-1, 1) * parameters.angle_variance();
 
         final double length = parameters.initial_length();
-        final Coord start_location = trunk_segment.getEndLocation();
+        final Coord start_location = trunk_segment.getEndCoord();
         final double width = trunk_segment.getWidth() * 0.8; // branches start slightly thinner
         
         return new DirectedSegment(start_location, length, angle, width, tile_provider);
@@ -45,7 +45,7 @@ public class BranchPropogator {
         final double angle = branch_section.getAngle();
         final double length = branch_section.getLength();
         
-        final Coord next_location = branch_section.getEndLocation();
+        final Coord next_location = branch_section.getEndCoord();
         final double next_length = findNextLength(length);
         final double next_angle = findNextAngle(angle);
         final double next_width = findNextWidth(branch_section.getWidth());

@@ -12,10 +12,10 @@ public class BasicRasterizerStrategy implements SegmentRasterizerStrategy
     public void rasterizeSegment(DirectedSegment segment, Board board)
     {
         //System.out.println("rasterising line");
-        final double x0 = segment.getStartLocation().x();
-        final double x1 = segment.getEndLocation().x();
-        final double y0 = segment.getStartLocation().y();
-        final double y1 = segment.getEndLocation().y();
+        final double x0 = segment.getStartCoord().x();
+        final double x1 = segment.getEndCoord().x();
+        final double y0 = segment.getStartCoord().y();
+        final double y1 = segment.getEndCoord().y();
 
         double dx = Math.abs(x1-x0);
         double dy = Math.abs(y1-y0);

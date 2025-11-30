@@ -1,7 +1,7 @@
 package com.example.utils;
 
-import com.example.representations.DirectedSegment;
 import com.example.representations.Coord;
+import com.example.representations.DirectedSegment;
 
 
 public class Bound {
@@ -30,8 +30,8 @@ public class Bound {
      */
     public boolean checkLowerTrimmable(DirectedSegment segment)
     {
-        return checkLowerTrimmable(segment.getEndLocation())
-            && checkLowerTrimmable(segment.getStartLocation());
+        return checkLowerTrimmable(segment.getEndCoord())
+            && checkLowerTrimmable(segment.getStartCoord());
     }
 
     private boolean checkLowerTrimmable(Coord point)
@@ -43,8 +43,8 @@ public class Bound {
 
     public boolean checkIsInXBound(DirectedSegment segment)
     {
-        return checkIsInXBound(segment.getStartLocation())
-            || checkIsInXBound(segment.getEndLocation());
+        return checkIsInXBound(segment.getStartCoord())
+            || checkIsInXBound(segment.getEndCoord());
     }
 
     private boolean checkIsInXBound(Coord point)
@@ -59,14 +59,14 @@ public class Bound {
      */
     public boolean checkIsInBound(DirectedSegment segment)
     {
-        return checkIsInBound(segment.getStartLocation())
-            || checkIsInBound(segment.getEndLocation());
+        return checkIsInBound(segment.getStartCoord())
+            || checkIsInBound(segment.getEndCoord());
     }
 
     public boolean checkIsInLooseBound(DirectedSegment segment)
     {
-        return checkIsInLooseBound(segment.getStartLocation())
-            || checkIsInLooseBound(segment.getEndLocation());
+        return checkIsInLooseBound(segment.getStartCoord())
+            || checkIsInLooseBound(segment.getEndCoord());
     }
 
     private boolean checkIsInBound(Coord point)

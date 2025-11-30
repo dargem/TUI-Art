@@ -21,6 +21,7 @@ public class AngleTreeMap
      */
     public void put(double bearing, ArrayList<Character> characters)
     {
+        
         if (bearing < -Math.PI/2 || bearing > Math.PI/2)
         {
             throw new IllegalArgumentException("Angle bearing should be between -pi/2 and pi/2 radians to maintain search angle logic");

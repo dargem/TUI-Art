@@ -13,8 +13,8 @@ public class OutlineRasterizerStrategy implements SegmentRasterizerStrategy{
     public void rasterizeSegment(DirectedSegment segment, Board board)
     {
         // split a segment into 4 lines
-        Coord start_point = segment.getStartLocation();
-        Coord end_point = segment.getEndLocation();
+        Coord start_point = segment.getStartCoord();
+        Coord end_point = segment.getEndCoord();
 
 
         // the magnitude offset wanted

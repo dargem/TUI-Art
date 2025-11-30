@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import com.example.rendering.LineBasedRenderable;
+import com.example.representations.Coord;
 import com.example.representations.DirectedSegment;
 import com.example.utils.Bound;
 
@@ -20,6 +21,12 @@ public class Branch implements LineBasedRenderable{
         // initialize the branch with its first segment
         final DirectedSegment first_segment = branch_propogator.createFirstBranch(trunk_segment);
         segment_list.add(first_segment);
+    }
+
+
+    public Coord getFinalCoord()
+    {
+        return segment_list.getLast().getEndCoord();
     }
 
     public boolean getAlive()

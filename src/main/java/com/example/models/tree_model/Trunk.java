@@ -19,7 +19,6 @@ public class Trunk implements LineBasedRenderable
     private final LinkedList<DirectedSegment> trunk_list;
     private double start_x;
     private final BranchFactory branch_factory;
-    private final LinkedList<Branch> pending_branches;
     private final TileProvider tile_provider;
 
     public Trunk(TrunkParams params, Coord location, BranchFactory branch_factory, TileProvider tile_provider)
@@ -29,7 +28,6 @@ public class Trunk implements LineBasedRenderable
         //this.start_x = location.x();
         this.start_x = TerminalStatus.getWidth()/2;
         this.branch_factory = branch_factory;
-        this.pending_branches = new LinkedList<>();
         this.tile_provider = tile_provider;
 
         trunk_list.add(
@@ -47,7 +45,7 @@ public class Trunk implements LineBasedRenderable
     {
         // find parameters for the next branch section
         final DirectedSegment branch_section = trunk_list.getLast();
-        final Coord next_point = branch_section.getEndLocation();
+        final Coord next_point = branch_section.getEndCoord();
         final double next_angle = find_angle(next_point.x(), branch_section.getAngle());
 
         // add the next branch section to the top
@@ -58,26 +56,11 @@ public class Trunk implements LineBasedRenderable
                 tile_provider
             )
         );
-
-        // check if a branch should be created
-        if (shouldCreateBranch())
-        {
-            //System.out.println("branch made");
-            final Branch new_branch = branch_factory.getBranch(trunk_list.getLast());
-            pending_branches.add(new_branch);
-        }
     }
 
     private boolean shouldCreateBranch()
     {
         return NumberGenerator.getRandomNumber() < parameters.branch_chance();
-    }
-
-    public LinkedList<Branch> fetchAndClearPendingBranches()
-    {
-        final LinkedList<Branch> branches_to_return = new LinkedList<>(pending_branches);
-        pending_branches.clear();
-        return branches_to_return;
     }
 
     private double find_angle(double current_x, Double current_angle)
@@ -110,6 +93,15 @@ public class Trunk implements LineBasedRenderable
         {
             extendTrunk();
             bound_segments.add(trunk_list.getLast());
+
+            // Check if a branch should be created
+            if (shouldCreateBranch())
+            {
+                final Branch new_branch = branch_factory.getBranch(trunk_list.getLast());
+                // fully grows the new branch
+                new_branch.growAndFetchRenderable(bound);
+            }
+            
         }
 
         return bound_segments;
