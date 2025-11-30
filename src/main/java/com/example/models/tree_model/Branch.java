@@ -6,26 +6,32 @@ import com.example.rendering.LineBasedRenderable;
 import com.example.representations.Coord;
 import com.example.representations.DirectedSegment;
 import com.example.utils.Bound;
+import com.example.utils.Direction;
 
 public class Branch implements LineBasedRenderable{
     private boolean alive;
     private final ArrayList<DirectedSegment> segment_list;
     private final BranchPropogator branch_propogator;
 
-    public Branch(BranchPropogator branch_propogator, DirectedSegment trunk_segment)
+    public Branch(BranchPropogator branch_propogator, DirectedSegment trunk_segment, Direction direction)
     {
         this.alive = true;
         this.branch_propogator = branch_propogator;
         this.segment_list = new ArrayList<>();
         
         // initialize the branch with its first segment
-        final DirectedSegment first_segment = branch_propogator.createFirstBranch(trunk_segment);
+        final DirectedSegment first_segment = branch_propogator.createFirstBranch(trunk_segment, direction);
         segment_list.add(first_segment);
     }
 
     public Coord getFinalCoord()
     {
         return segment_list.getLast().getEndCoord();
+    }
+
+    public Coord getStartCoord()
+    {
+        return segment_list.getFirst().getStartCoord();
     }
 
     public boolean getAlive()

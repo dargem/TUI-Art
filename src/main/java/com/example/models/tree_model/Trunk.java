@@ -9,6 +9,7 @@ import com.example.rendering.TileProvider;
 import com.example.representations.Coord;
 import com.example.representations.DirectedSegment;
 import com.example.utils.Bound;
+import com.example.utils.Direction;
 import com.example.utils.EndPointFinder;
 import com.example.utils.NumberGenerator;
 import com.example.utils.TerminalStatus;
@@ -16,6 +17,7 @@ import com.example.utils.TerminalStatus;
 public class Trunk implements LineBasedRenderable
 {
     private static final double GROUND_HEIGHT = 0;
+    private static final double BUFFER = 0;
     private final TrunkParams parameters;
     private final LinkedList<DirectedSegment> trunk_list;
     private double start_x;
@@ -63,13 +65,14 @@ public class Trunk implements LineBasedRenderable
 
     private boolean shouldCreateBranch(double last_branch_y, double current_y)
     {
-        return(
-            current_y > last_branch_y ?
-            NumberGenerator.getRandomNumber() < parameters.branch_chance() * 4:
-            NumberGenerator.getRandomNumber() < parameters.branch_chance() / 4
-        );
-    }
+        if (current_y < last_branch_y + BUFFER)
+        {
+            return false;
+        }
 
+        return NumberGenerator.getRandomNumber() < parameters.branch_chance();
+    }
+    
     private double find_angle(double current_x, Double current_angle)
     {
         if (current_angle.isNaN())
@@ -103,21 +106,22 @@ public class Trunk implements LineBasedRenderable
             extendTrunk();
             bound_segments.add(trunk_list.getLast());
             //System.out.println("printing branches");
-            // Check if a left branch should be created
+
+            // Check if a left/right branch should be created
             if (shouldCreateBranch(last_left_branch_y, last_trunk_seg.getRandomIntersection().y()))
             {
-                final Branch new_branch = branch_factory.getBranch(trunk_list.getLast());
+                final Branch new_branch = branch_factory.getBranch(trunk_list.getLast(), Direction.LEFT);
                 // fully grows the new branch
                 bound_segments.addAll(new_branch.growAndFetchRenderable(bound));
-                last_left_branch_y = new_branch.getFinalCoord().y();
+                last_left_branch_y = Math.max(new_branch.getFinalCoord().y(), new_branch.getStartCoord().y());
             }
 
             if (shouldCreateBranch(last_right_branch_y, last_trunk_seg.getRandomIntersection().y()))
             {
-                final Branch new_branch = branch_factory.getBranch(trunk_list.getLast());
+                final Branch new_branch = branch_factory.getBranch(trunk_list.getLast(), Direction.RIGHT);
                 // fully grows the new branch
                 bound_segments.addAll(new_branch.growAndFetchRenderable(bound));
-                last_right_branch_y = new_branch.getFinalCoord().y();
+                last_right_branch_y = Math.max(new_branch.getFinalCoord().y(), new_branch.getStartCoord().y());
             }
         }
         return bound_segments;

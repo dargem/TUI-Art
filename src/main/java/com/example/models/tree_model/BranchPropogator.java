@@ -4,9 +4,12 @@ import com.example.config.BranchParams;
 import com.example.rendering.TileProvider;
 import com.example.representations.Coord;
 import com.example.representations.DirectedSegment;
+import com.example.utils.Direction;
 import com.example.utils.NumberGenerator;
 
 public class BranchPropogator {
+    private final double START_VARIATION = 0.5;
+    private final double START_WIDTH_SCALAR = 0.6;
     private final BranchParams parameters;
     private final TileProvider tile_provider;
     // y = x^(1/3), then *1.2 just for a bit more variation, need 1.0 or its int division
@@ -24,17 +27,24 @@ public class BranchPropogator {
         return NumberGenerator.getRandomNumber() < adjusted_death_chance;
     }
 
-    public DirectedSegment createFirstBranch(DirectedSegment trunk_segment)
+    public DirectedSegment createFirstBranch(DirectedSegment trunk_segment, Direction direction)
     {
-        // choose whether its a left/right branch, setting it to be an offset off the trunk
         double angle = trunk_segment.getAngle();
-        angle += NumberGenerator.getRandomNumber() < 0.5 ? BASE_BRANCH_ANGLE : -BASE_BRANCH_ANGLE;   
+
+        // choose whether its a left/right branch, setting it to be an offset off the trunk
+        switch(direction)
+        {
+            case LEFT -> angle -= BASE_BRANCH_ANGLE;
+            case RIGHT -> angle += BASE_BRANCH_ANGLE;
+            default -> throw new RuntimeException("Direction " + direction + " not implemented in switch");
+        }
+
         // add a random angle for variation
-        angle += NumberGenerator.getRandomNumber(-1, 1) * parameters.angle_variance();
+        angle += NumberGenerator.getRandomNumber(-1, 1) * parameters.angle_variance() * START_VARIATION;
 
         final double length = parameters.initial_length();
         final Coord start_location = trunk_segment.getEndCoord();
-        final double width = trunk_segment.getWidth() * 0.8; // branches start slightly thinner
+        final double width = trunk_segment.getWidth() * START_WIDTH_SCALAR; // branches start slightly thinner
         
         return new DirectedSegment(start_location, length, angle, width, tile_provider);
     }
