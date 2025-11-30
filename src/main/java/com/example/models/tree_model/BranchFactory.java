@@ -3,6 +3,7 @@ package com.example.models.tree_model;
 import com.example.representations.DirectedSegment;
 
 public class BranchFactory {
+    
     private final BranchPropogator branch_propogator;
 
     public BranchFactory(BranchPropogator branch_propogator)

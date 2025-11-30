@@ -23,7 +23,6 @@ public class Branch implements LineBasedRenderable{
         segment_list.add(first_segment);
     }
 
-
     public Coord getFinalCoord()
     {
         return segment_list.getLast().getEndCoord();

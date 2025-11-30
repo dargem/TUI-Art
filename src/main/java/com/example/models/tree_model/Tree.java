@@ -20,7 +20,6 @@ public class Tree implements LineBasedRenderable
     public ArrayList<DirectedSegment> growAndFetchRenderable(Bound bound)
     {
         final ArrayList<DirectedSegment> segments = new ArrayList<>();
-
         segments.addAll(trunk.growAndFetchRenderable(bound));
         
         return segments;

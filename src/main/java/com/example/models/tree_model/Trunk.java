@@ -15,11 +15,14 @@ import com.example.utils.TerminalStatus;
 
 public class Trunk implements LineBasedRenderable
 {
+    private static final double GROUND_HEIGHT = 0;
     private final TrunkParams parameters;
     private final LinkedList<DirectedSegment> trunk_list;
     private double start_x;
     private final BranchFactory branch_factory;
     private final TileProvider tile_provider;
+    private double last_left_branch_y = GROUND_HEIGHT;
+    private double last_right_branch_y = GROUND_HEIGHT;
 
     public Trunk(TrunkParams params, Coord location, BranchFactory branch_factory, TileProvider tile_provider)
     {
@@ -58,9 +61,13 @@ public class Trunk implements LineBasedRenderable
         );
     }
 
-    private boolean shouldCreateBranch()
+    private boolean shouldCreateBranch(double last_branch_y, double current_y)
     {
-        return NumberGenerator.getRandomNumber() < parameters.branch_chance();
+        return(
+            current_y > last_branch_y ?
+            NumberGenerator.getRandomNumber() < parameters.branch_chance() * 4:
+            NumberGenerator.getRandomNumber() < parameters.branch_chance() / 4
+        );
     }
 
     private double find_angle(double current_x, Double current_angle)
@@ -89,21 +96,30 @@ public class Trunk implements LineBasedRenderable
         final ArrayList<DirectedSegment> bound_segments = new ArrayList<>();
         start_x = TerminalStatus.getWidth()/2;
 
+
         while (bound.checkIsInBound(trunk_list.getLast()))
         {
+            DirectedSegment last_trunk_seg = trunk_list.getLast();
             extendTrunk();
             bound_segments.add(trunk_list.getLast());
-
-            // Check if a branch should be created
-            if (shouldCreateBranch())
+            //System.out.println("printing branches");
+            // Check if a left branch should be created
+            if (shouldCreateBranch(last_left_branch_y, last_trunk_seg.getRandomIntersection().y()))
             {
                 final Branch new_branch = branch_factory.getBranch(trunk_list.getLast());
                 // fully grows the new branch
-                new_branch.growAndFetchRenderable(bound);
+                bound_segments.addAll(new_branch.growAndFetchRenderable(bound));
+                last_left_branch_y = new_branch.getFinalCoord().y();
             }
-            
-        }
 
+            if (shouldCreateBranch(last_right_branch_y, last_trunk_seg.getRandomIntersection().y()))
+            {
+                final Branch new_branch = branch_factory.getBranch(trunk_list.getLast());
+                // fully grows the new branch
+                bound_segments.addAll(new_branch.growAndFetchRenderable(bound));
+                last_right_branch_y = new_branch.getFinalCoord().y();
+            }
+        }
         return bound_segments;
     }
 

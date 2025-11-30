@@ -7,11 +7,18 @@ public final class NumberGenerator {
 
     private NumberGenerator() {}
 
+    /**
+     * @return a double between 0 and 1
+     */
     public static double getRandomNumber()
     {
         return random.nextDouble();
     }
 
+    /**
+     * Samples from a uniform distribution between two points
+     * @return a double between the min and max
+     */
     public static double getRandomNumber(double min, double max)
     {
         double random_number = random.nextDouble();
@@ -22,6 +29,13 @@ public final class NumberGenerator {
         return random_number;
     }
 
+    /**
+     * Generates an int value between the specified min (inclusive)
+     * And the specified max (exclusive)
+     * @param min the inclusive minimum value
+     * @param max the exclusive maximum value
+     * @return a random int between min and max
+     */
     public static int getIntNumber(int min, int max)
     {
         return random.nextInt(min, max);

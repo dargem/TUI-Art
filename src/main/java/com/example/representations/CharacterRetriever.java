@@ -73,6 +73,6 @@ public class CharacterRetriever
     {
         final double percent = NumberGenerator.getRandomNumber();
         final ArrayList<Character> characters = character_probabilities.ceilingEntry(percent).getValue();
-        return characters.get(NumberGenerator.getIntNumber(0, characters.size() - 1));
+        return characters.get(NumberGenerator.getIntNumber(0, characters.size()));
     }
 }

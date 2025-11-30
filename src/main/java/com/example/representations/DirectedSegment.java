@@ -2,7 +2,7 @@ package com.example.representations;
 
 import com.example.rendering.TileProvider;
 import com.example.utils.EndPointFinder;
-
+import com.example.utils.NumberGenerator;
 
 public class DirectedSegment 
 {
@@ -31,6 +31,19 @@ public class DirectedSegment
     public Coord getStartCoord()
     {
         return start_location;
+    }
+
+    /**
+     * Finds a random coord along the segments length
+     * @return a coord along the segment
+     */
+    public Coord getRandomIntersection()
+    {
+        final double hypotenuse_length = NumberGenerator.getRandomNumber() * length;
+        return new Coord(
+            start_location.x() + Math.sin(angle) * hypotenuse_length,
+            start_location.y() + Math.cos(angle) * hypotenuse_length
+        );
     }
 
     public Coord getEndCoord()
