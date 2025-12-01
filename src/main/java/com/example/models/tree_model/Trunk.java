@@ -90,7 +90,12 @@ public class Trunk implements LineBasedRenderable
 
         final double expected_x = EndPointFinder.findEndX(current_x, random_angle, parameters.section_length());
         final double wanted_offset = (start_x - expected_x) * parameters.centralness();
-        return Math.asin(wanted_offset / parameters.section_length()) + random_angle;
+        
+        double asin_arg = wanted_offset / parameters.section_length();
+        // Clamp to [-1, 1] to avoid NaN
+        asin_arg = Math.max(-1.0, Math.min(1.0, asin_arg));
+        
+        return Math.asin(asin_arg) + random_angle;
     }
 
     @Override

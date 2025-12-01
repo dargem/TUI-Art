@@ -13,8 +13,8 @@ public class CharacterRetriever
 {
     private final TreeMap<Double, ArrayList<Character>> character_probabilities = new TreeMap<>();
     // Increase to pronounciate the directional strength
-    // Decrease to make direction more generalised
-    private final double CLOSENESS_SCALAR = 0.8;
+    // Decrease to make direction more generalised, bugs out with too high a number
+    private final double CLOSENESS_SCALAR = 1.2;
 
     public CharacterRetriever(TreeMap<Double, ArrayList<Character>> tree_char_map, double search_angle)
     {
@@ -32,7 +32,8 @@ public class CharacterRetriever
         {
             double offset = Math.abs(angle - search_angle);
             // guard against a miraculous division by 0 I'm sure will happen
-            offset = (offset == 0.0) ? 1e-12 : offset;
+            // Also guard against extremely small offsets that cause underflow when powered
+            offset = Math.max(offset, 1e-9);
             offset = Math.pow(offset, CLOSENESS_SCALAR);
 
             final double score = 1.0 / offset;
