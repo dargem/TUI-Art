@@ -78,14 +78,27 @@ public class Beam implements Shape
         return width;
     }
 
+    /**
+     * Accepts a visitor, allowing it to perform an operation on the shape
+     * Used as part of visitor pattern
+     * @param visitor The visitor to accept
+     * @param <T> The return type of the visitor's operation
+     * @return The result of the visitor's operation on this
+     */
     @Override
     public <T> T acceptVisitor(ShapeVisitor<T> visitor) 
     {
         return visitor.visitBeam(this);
     }
 
+    /**
+     * Creates a new beam that is the translated version of this one
+     * @param dx the x translation needed
+     * @param dy the y translation needed
+     * @return The new translated shape
+     */
     @Override
-    public Shape translate(double dx, double dy) 
+    public Beam translate(double dx, double dy) 
     {
         return new Beam(
             start_location.translate(dx, dy), 
