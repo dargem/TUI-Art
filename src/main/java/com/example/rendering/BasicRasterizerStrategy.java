@@ -1,15 +1,13 @@
 package com.example.rendering;
 
 import com.example.representations.Board;
-import com.example.representations.DirectedSegment;
-// https://playtechs.blogspot.com/2007/03/raytracing-on-grid.html
-// java implementation of this modified bresenham line algorihtm for floating points
+import com.example.representations.shapes.Beam;
 
 public class BasicRasterizerStrategy implements SegmentRasterizerStrategy   
 {
 
     @Override
-    public void rasterizeSegment(DirectedSegment segment, Board board)
+    public void rasterizeSegment(Beam segment, Board board)
     {
         //System.out.println("rasterising line");
         final double x0 = segment.getStartCoord().x();

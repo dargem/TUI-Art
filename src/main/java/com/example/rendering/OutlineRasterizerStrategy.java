@@ -3,14 +3,14 @@ package com.example.rendering;
 import com.example.representations.Board;
 import com.example.representations.Coord;
 import com.example.representations.CoordPair;
-import com.example.representations.DirectedSegment;
+import com.example.representations.shapes.Beam;
 
 public class OutlineRasterizerStrategy implements SegmentRasterizerStrategy{
     // https://playtechs.blogspot.com/2007/03/raytracing-on-grid.html
     // java implementation of this modified bresenham line algorihtm for floating points
     // then modified using left/right edges of a constructed rectangle
     @Override
-    public void rasterizeSegment(DirectedSegment segment, Board board)
+    public void rasterizeSegment(Beam segment, Board board)
     {
         // split a segment into 4 lines
         Coord start_point = segment.getStartCoord();

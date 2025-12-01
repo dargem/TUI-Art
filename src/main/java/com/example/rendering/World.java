@@ -3,7 +3,7 @@ package com.example.rendering;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-import com.example.representations.DirectedSegment;
+import com.example.representations.shapes.Beam;
 import com.example.utils.Bound;
 
 /**
@@ -21,9 +21,9 @@ public class World implements LineBasedRenderable
     }
 
     @Override
-    public ArrayList<DirectedSegment> growAndFetchRenderable(Bound bound)
+    public ArrayList<Beam> growAndFetchRenderable(Bound bound)
     {
-        final ArrayList<DirectedSegment> segment_list = new ArrayList<>();
+        final ArrayList<Beam> segment_list = new ArrayList<>();
         for (LineBasedRenderable model : model_list)
         {
             segment_list.addAll(model.growAndFetchRenderable(bound));

@@ -3,7 +3,7 @@ package  com.example.models.tree_model;
 import java.util.ArrayList;
 
 import com.example.rendering.LineBasedRenderable;
-import com.example.representations.DirectedSegment;
+import com.example.representations.shapes.Beam;
 import com.example.utils.Bound;
 
 public class Tree implements LineBasedRenderable
@@ -17,9 +17,9 @@ public class Tree implements LineBasedRenderable
     }
 
     @Override
-    public ArrayList<DirectedSegment> growAndFetchRenderable(Bound bound)
+    public ArrayList<Beam> growAndFetchRenderable(Bound bound)
     {
-        final ArrayList<DirectedSegment> segments = new ArrayList<>();
+        final ArrayList<Beam> segments = new ArrayList<>();
         segments.addAll(trunk.growAndFetchRenderable(bound));
         
         return segments;

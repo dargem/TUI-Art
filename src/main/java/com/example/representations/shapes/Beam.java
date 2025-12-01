@@ -1,10 +1,12 @@
-package com.example.representations;
+package com.example.representations.shapes;
 
 import com.example.rendering.TileProvider;
+import com.example.representations.Coord;
+import com.example.representations.Tile;
 import com.example.utils.EndPointFinder;
 import com.example.utils.NumberGenerator;
 
-public class DirectedSegment 
+public class Beam implements Shape
 {
     private final Coord start_location;
     private final Coord end_location;
@@ -13,13 +15,23 @@ public class DirectedSegment
     private final double width;
     private final TileProvider tile_provider;
 
-    public DirectedSegment(Coord location, double length, double angle, double width, TileProvider tile_provider)
+    public Beam(Coord location, double length, double angle, double width, TileProvider tile_provider)
     {
         this.start_location = location;
         this.length = length;
         this.angle = angle;
         this.width = width;
         this.end_location = EndPointFinder.findEnd(start_location, angle, length);
+        this.tile_provider = tile_provider;
+    }
+
+    public Beam(Coord start_location, Coord end_location, double length, double angle, double width, TileProvider tile_provider)
+    {
+        this.start_location = start_location;
+        this.length = length;
+        this.angle = angle;
+        this.width = width;
+        this.end_location = end_location;
         this.tile_provider = tile_provider;
     }
 
@@ -64,5 +76,33 @@ public class DirectedSegment
     public double getWidth()
     {
         return width;
+    }
+
+    @Override
+    public <T> T acceptVisitor(ShapeVisitor<T> visitor) 
+    {
+        return visitor.visitBeam(this);
+    }
+
+    @Override
+    public Shape translate(double dx, double dy) 
+    {
+        return new Beam(
+            start_location.translate(dx, dy), 
+            end_location.translate(dx, dy), 
+            length, angle, width, tile_provider
+        );
+    }
+
+    @Override
+    public double getMinY() 
+    {
+        return Math.min(start_location.y(), end_location.y());
+    }
+
+    @Override
+    public double getMaxY() 
+    {
+        return Math.max(start_location.y(), end_location.y());
     }
 }

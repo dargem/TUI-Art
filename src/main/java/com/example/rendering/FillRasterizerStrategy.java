@@ -4,7 +4,7 @@ import java.util.Arrays;
 import com.example.representations.Board;
 import com.example.representations.Coord;
 import com.example.representations.CoordPair;
-import com.example.representations.DirectedSegment;
+import com.example.representations.shapes.Beam;
 
 public class FillRasterizerStrategy implements SegmentRasterizerStrategy{
     // https://playtechs.blogspot.com/2007/03/raytracing-on-grid.html
@@ -12,7 +12,7 @@ public class FillRasterizerStrategy implements SegmentRasterizerStrategy{
     // then modified using edges of a constructed rectangle
 
     @Override
-    public void rasterizeSegment(DirectedSegment segment, Board board)
+    public void rasterizeSegment(Beam segment, Board board)
     {
         // split a segment into 4 lines
         Coord start_point = segment.getStartCoord();

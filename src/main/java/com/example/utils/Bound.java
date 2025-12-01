@@ -1,7 +1,7 @@
 package com.example.utils;
 
 import com.example.representations.Coord;
-import com.example.representations.DirectedSegment;
+import com.example.representations.shapes.Beam;
 
 
 public class Bound {
@@ -28,7 +28,7 @@ public class Bound {
      * @param segment inputted segment for checking
      * @return true if the whole segment is out of bounds
      */
-    public boolean checkLowerTrimmable(DirectedSegment segment)
+    public boolean checkLowerTrimmable(Beam segment)
     {
         return checkLowerTrimmable(segment.getEndCoord())
             && checkLowerTrimmable(segment.getStartCoord());
@@ -41,7 +41,7 @@ public class Bound {
             || point.x() > max_x;
     }
 
-    public boolean checkIsInXBound(DirectedSegment segment)
+    public boolean checkIsInXBound(Beam segment)
     {
         return checkIsInXBound(segment.getStartCoord())
             || checkIsInXBound(segment.getEndCoord());
@@ -57,13 +57,13 @@ public class Bound {
      * @param segment inputted segment for checking
      * @return true if any part is within bounds
      */
-    public boolean checkIsInBound(DirectedSegment segment)
+    public boolean checkIsInBound(Beam segment)
     {
         return checkIsInBound(segment.getStartCoord())
             || checkIsInBound(segment.getEndCoord());
     }
 
-    public boolean checkIsInLooseBound(DirectedSegment segment)
+    public boolean checkIsInLooseBound(Beam segment)
     {
         return checkIsInLooseBound(segment.getStartCoord())
             || checkIsInLooseBound(segment.getEndCoord());

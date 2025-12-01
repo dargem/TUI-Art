@@ -3,7 +3,7 @@ package com.example.models.tree_model;
 import com.example.config.BranchParams;
 import com.example.rendering.TileProvider;
 import com.example.representations.Coord;
-import com.example.representations.DirectedSegment;
+import com.example.representations.shapes.Beam;
 import com.example.utils.Direction;
 import com.example.utils.NumberGenerator;
 
@@ -21,13 +21,13 @@ public class BranchPropogator {
         this.tile_provider = tile_provider;
     }
 
-    public boolean checkDies(DirectedSegment last_segment)
+    public boolean checkDies(Beam last_segment)
     {
         final double adjusted_death_chance = parameters.death_chance() / last_segment.getWidth();
         return NumberGenerator.getRandomNumber() < adjusted_death_chance;
     }
 
-    public DirectedSegment createFirstBranch(DirectedSegment trunk_segment, Direction direction)
+    public Beam createFirstBranch(Beam trunk_segment, Direction direction)
     {
         double angle = trunk_segment.getAngle();
 
@@ -46,10 +46,10 @@ public class BranchPropogator {
         final Coord start_location = trunk_segment.getEndCoord();
         final double width = trunk_segment.getWidth() * START_WIDTH_SCALAR; // branches start slightly thinner
         
-        return new DirectedSegment(start_location, length, angle, width, tile_provider);
+        return new Beam(start_location, length, angle, width, tile_provider);
     }
 
-    public DirectedSegment extendBranch(final DirectedSegment branch_section)
+    public Beam extendBranch(final Beam branch_section)
     {
         // First calculate start branch of next using original
         final double angle = branch_section.getAngle();
@@ -60,7 +60,7 @@ public class BranchPropogator {
         final double next_angle = findNextAngle(angle);
         final double next_width = findNextWidth(branch_section.getWidth());
 
-        return new DirectedSegment(next_location, next_length, next_angle, next_width, tile_provider);
+        return new Beam(next_location, next_length, next_angle, next_width, tile_provider);
     }
 
     private double findNextLength(final double length)

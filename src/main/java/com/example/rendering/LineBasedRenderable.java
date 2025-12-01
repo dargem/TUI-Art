@@ -2,7 +2,7 @@ package com.example.rendering;
 
 import java.util.ArrayList;
 
-import com.example.representations.DirectedSegment;
+import com.example.representations.shapes.Beam;
 import com.example.utils.Bound;
 
 public interface LineBasedRenderable 
@@ -13,7 +13,7 @@ public interface LineBasedRenderable
      * @param bound A Bound object used for checking if points are within it
      * @return ArrayList of newly made DirectedSegment that conform to these input parameters
      */
-    public abstract ArrayList<DirectedSegment> growAndFetchRenderable(Bound bound);
+    public abstract ArrayList<Beam> growAndFetchRenderable(Bound bound);
 
     /**
      * Remove segments that are below a threshold to save memory

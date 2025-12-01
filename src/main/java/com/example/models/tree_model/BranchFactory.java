@@ -1,6 +1,6 @@
 package com.example.models.tree_model;
 
-import com.example.representations.DirectedSegment;
+import com.example.representations.shapes.Beam;
 import com.example.utils.Direction;
 
 public class BranchFactory {
@@ -12,7 +12,7 @@ public class BranchFactory {
         this.branch_propogator = branch_propogator;
     }
 
-    public Branch getBranch(DirectedSegment trunk_segment, Direction direction)
+    public Branch getBranch(Beam trunk_segment, Direction direction)
     {
         // option for adding later branch types
         return new Branch(branch_propogator, trunk_segment, direction);
