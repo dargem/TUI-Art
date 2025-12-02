@@ -2,13 +2,14 @@ package com.example.models.tree_model;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import com.example.rendering.LineBasedRenderable;
+import com.example.rendering.ShapeBasedRenderable;
 import com.example.representations.Coord;
 import com.example.representations.shapes.Beam;
+import com.example.representations.shapes.Shape;
 import com.example.utils.Bound;
 import com.example.utils.Direction;
 
-public class Branch implements LineBasedRenderable{
+public class Branch implements ShapeBasedRenderable{
     private boolean alive;
     private final ArrayList<Beam> segment_list;
     private final BranchPropogator branch_propogator;
@@ -52,19 +53,19 @@ public class Branch implements LineBasedRenderable{
     }
 
     @Override
-    public ArrayList<Beam> growAndFetchRenderable(Bound bound)
+    public ArrayList<Shape> growAndFetchRenderable(Bound bound)
     {
-        final ArrayList<Beam> bound_segments = new ArrayList<>();
+        final ArrayList<Shape> bound_shapes = new ArrayList<>();
 
         do
         {
             extendBranch();
-            bound_segments.add(segment_list.getLast());
+            bound_shapes.add(segment_list.getLast());
         }
         while (alive && bound.checkIsInXBound(segment_list.getLast()));
 
         //System.out.print(bound_segments.size());
-        return bound_segments;
+        return bound_shapes;
     }
 
     @Override

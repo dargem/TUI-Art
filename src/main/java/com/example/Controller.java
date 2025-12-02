@@ -7,7 +7,7 @@ import com.example.rendering.FillRasterizerStrategy;
 import com.example.rendering.SegmentRasterizerContext;
 import com.example.rendering.World;
 import com.example.representations.Board;
-import com.example.representations.shapes.Beam;
+import com.example.representations.shapes.Shape;
 import com.example.utils.Bound;
 
 /**
@@ -59,10 +59,10 @@ public class Controller
             }
         }
 
-        ArrayList<Beam> directed_segments = world.growAndFetchRenderable(new Bound(0, rounds + 30));
+        ArrayList<Shape> shapes = world.growAndFetchRenderable(new Bound(0, rounds + 30));
         //System.out.println(directed_segments.size());
         //System.out.println("starting rasterisation");
-        rasterizer.rasterizeSegments(directed_segments, board);
+        rasterizer.rasterizeSegments(shapes, board);
         //System.out.println("rasterisation done");
         //System.out.println(board.getRow(rounds).size());
         printer.printLine(rounds, board);

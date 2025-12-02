@@ -2,11 +2,11 @@ package  com.example.models.tree_model;
 
 import java.util.ArrayList;
 
-import com.example.rendering.LineBasedRenderable;
-import com.example.representations.shapes.Beam;
+import com.example.rendering.ShapeBasedRenderable;
+import com.example.representations.shapes.Shape;
 import com.example.utils.Bound;
 
-public class Tree implements LineBasedRenderable
+public class Tree implements ShapeBasedRenderable
 {
 
     private final Trunk trunk;
@@ -17,9 +17,9 @@ public class Tree implements LineBasedRenderable
     }
 
     @Override
-    public ArrayList<Beam> growAndFetchRenderable(Bound bound)
+    public ArrayList<Shape> growAndFetchRenderable(Bound bound)
     {
-        final ArrayList<Beam> segments = new ArrayList<>();
+        final ArrayList<Shape> segments = new ArrayList<>();
         segments.addAll(trunk.growAndFetchRenderable(bound));
         
         return segments;

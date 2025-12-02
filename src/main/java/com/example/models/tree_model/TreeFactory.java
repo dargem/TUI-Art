@@ -6,7 +6,7 @@ import java.util.List;
 import com.example.config.BranchParams;
 import com.example.config.TrunkParams;
 import com.example.models.ModelFactory;
-import com.example.rendering.LineBasedRenderable;
+import com.example.rendering.ShapeBasedRenderable;
 import com.example.rendering.TileProvider;
 import com.example.representations.AngleTreeMap;
 import com.example.representations.Coord;
@@ -119,7 +119,7 @@ public class TreeFactory implements ModelFactory{
     }
 
     @Override
-    public LineBasedRenderable getRenderable()
+    public ShapeBasedRenderable getRenderable()
     {
         // Potential for a treetype in the future
         final Coord start_location = new Coord(NumberGenerator.getRandomNumber(LEFT_MIN, RIGHT_MAX), GROUND_LEVEL);

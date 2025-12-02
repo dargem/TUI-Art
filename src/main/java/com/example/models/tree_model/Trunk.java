@@ -4,17 +4,18 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import com.example.config.TrunkParams;
-import com.example.rendering.LineBasedRenderable;
+import com.example.rendering.ShapeBasedRenderable;
 import com.example.rendering.TileProvider;
 import com.example.representations.Coord;
 import com.example.representations.shapes.Beam;
+import com.example.representations.shapes.Shape;
 import com.example.utils.Bound;
 import com.example.utils.Direction;
 import com.example.utils.EndPointFinder;
 import com.example.utils.NumberGenerator;
 import com.example.utils.TerminalStatus;
 
-public class Trunk implements LineBasedRenderable
+public class Trunk implements ShapeBasedRenderable
 {
     private static final double GROUND_HEIGHT = 0;
     private static final double BUFFER = 0;
@@ -99,9 +100,9 @@ public class Trunk implements LineBasedRenderable
     }
 
     @Override
-    public ArrayList<Beam> growAndFetchRenderable(Bound bound)
+    public ArrayList<Shape> growAndFetchRenderable(Bound bound)
     {
-        final ArrayList<Beam> bound_segments = new ArrayList<>();
+        final ArrayList<Shape> bound_segments = new ArrayList<>();
         start_x = TerminalStatus.getWidth()/2;
 
 
@@ -135,12 +136,12 @@ public class Trunk implements LineBasedRenderable
     @Override
     public void trimSegments(Bound bound)
     {
-        final Iterator<Beam> segment = trunk_list.iterator();
-        while (segment.hasNext()) 
+        final Iterator<Beam> beam = trunk_list.iterator();
+        while (beam.hasNext()) 
         {
-            if (bound.checkLowerTrimmable(segment.next())) 
+            if (bound.checkLowerTrimmable(beam.next())) 
             {
-                segment.remove(); // safe removal with iterator
+                beam.remove(); // safe removal with iterator
             }
         }
     }

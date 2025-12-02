@@ -26,7 +26,7 @@ public class FastFillRasterizerStrategy implements SegmentRasterizerStrategy{
     }
 
     @Override
-    public void rasterizeSegment(Beam segment, Board board)
+    public void rasterizeShape(Beam segment, Board board)
     {
         // split a segment into 4 lines
         Coord start_point = segment.getStartCoord();

@@ -10,7 +10,7 @@ public class OutlineRasterizerStrategy implements SegmentRasterizerStrategy{
     // java implementation of this modified bresenham line algorihtm for floating points
     // then modified using left/right edges of a constructed rectangle
     @Override
-    public void rasterizeSegment(Beam segment, Board board)
+    public void rasterizeShape(Shape segment, Board board)
     {
         // split a segment into 4 lines
         Coord start_point = segment.getStartCoord();

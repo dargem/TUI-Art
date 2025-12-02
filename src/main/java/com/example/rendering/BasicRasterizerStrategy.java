@@ -7,7 +7,7 @@ public class BasicRasterizerStrategy implements SegmentRasterizerStrategy
 {
 
     @Override
-    public void rasterizeSegment(Beam segment, Board board)
+    public void rasterizeShape(Beam segment, Board board)
     {
         //System.out.println("rasterising line");
         final double x0 = segment.getStartCoord().x();
