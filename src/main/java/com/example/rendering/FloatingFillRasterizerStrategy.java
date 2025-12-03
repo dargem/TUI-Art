@@ -5,27 +5,14 @@ import com.example.representations.Board;
 import com.example.representations.Coord;
 import com.example.representations.CoordPair;
 import com.example.representations.shapes.Beam;
+import com.example.representations.shapes.Polygon;
 
-public class FastFillRasterizerStrategy implements SegmentRasterizerStrategy{
+public class FillRasterizerStrategy implements RasterizerStrategy
+{
     // https://playtechs.blogspot.com/2007/03/raytracing-on-grid.html
     // java implementation of this modified bresenham line algorihtm for floating points
     // then modified using edges of a constructed rectangle
-    // optimised version of fill rasteriser strategy
 
-    // assume an object can't have a y range larger than this
-    private static final int OBJECT_HEIGHT_MAX = 200;
-
-    // Reused class variables
-    private final int[] buf_min_x = new int[OBJECT_HEIGHT_MAX];
-    private final int[] buf_max_x = new int[OBJECT_HEIGHT_MAX];
-
-    public FastFillRasterizerStrategy()
-    {
-        Arrays.fill(buf_min_x, Integer.MAX_VALUE);
-        Arrays.fill(buf_max_x, Integer.MIN_VALUE);
-    }
-
-    @Override
     public void rasterizeShape(Beam segment, Board board)
     {
         // split a segment into 4 lines
@@ -84,6 +71,11 @@ public class FastFillRasterizerStrategy implements SegmentRasterizerStrategy{
                 Math.max(C_y, D_y)
             )
         );
+
+        int[] buf_min_x = new int[y_range];
+        int[] buf_max_x = new int[y_range];
+        Arrays.fill(buf_min_x, Integer.MAX_VALUE);
+        Arrays.fill(buf_max_x, Integer.MIN_VALUE);
         
         for (CoordPair coord_pair : coord_pairs)
         {
@@ -177,8 +169,17 @@ public class FastFillRasterizerStrategy implements SegmentRasterizerStrategy{
                 board.addTile(x_indice, y_indice + y_displacement, segment.getTile());
             }
         }
+    }
 
-        Arrays.fill(buf_min_x, 0, y_range, Integer.MAX_VALUE);
-        Arrays.fill(buf_max_x, 0, y_range, Integer.MIN_VALUE);
+    @Override
+    public Void visitPolygon(Polygon polygon, Board context) 
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Void visitBeam(Beam beam, Board context) 
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

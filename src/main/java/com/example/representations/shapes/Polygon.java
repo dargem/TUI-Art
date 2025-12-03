@@ -3,6 +3,14 @@ import java.util.Arrays;
 
 import com.example.representations.Coord;
 
+/**
+ * A polygon represents a simple polygon
+ * It can be convex or concave
+ * It cannot intersect itself or have holes
+ * Consecutive vertices cannot be colinear
+ * Single unbroken line going from vertices to vertice
+ * In the same order as Coord[] vertices
+ */
 public class Polygon implements Shape
 {
     private final Coord[] vertices;

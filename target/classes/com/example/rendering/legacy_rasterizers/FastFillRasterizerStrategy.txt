@@ -1,17 +1,30 @@
-package com.example.rendering;
+package com.example.rendering.legacy_rasterizers;
 import java.util.Arrays;
 
+import com.example.rendering.RasterizerStrategy;
 import com.example.representations.Board;
 import com.example.representations.Coord;
 import com.example.representations.CoordPair;
 import com.example.representations.shapes.Beam;
-import com.example.representations.shapes.Polygon;
 
-public class FillRasterizerStrategy implements RasterizerStrategy
-{
+public class FastFillRasterizerStrategy implements RasterizerStrategy{
     // https://playtechs.blogspot.com/2007/03/raytracing-on-grid.html
     // java implementation of this modified bresenham line algorihtm for floating points
     // then modified using edges of a constructed rectangle
+    // optimised version of fill rasteriser strategy
+
+    // assume an object can't have a y range larger than this
+    private static final int OBJECT_HEIGHT_MAX = 200;
+
+    // Reused class variables
+    private final int[] buf_min_x = new int[OBJECT_HEIGHT_MAX];
+    private final int[] buf_max_x = new int[OBJECT_HEIGHT_MAX];
+
+    public FastFillRasterizerStrategy()
+    {
+        Arrays.fill(buf_min_x, Integer.MAX_VALUE);
+        Arrays.fill(buf_max_x, Integer.MIN_VALUE);
+    }
 
     @Override
     public void rasterizeShape(Beam segment, Board board)
@@ -72,11 +85,6 @@ public class FillRasterizerStrategy implements RasterizerStrategy
                 Math.max(C_y, D_y)
             )
         );
-
-        int[] buf_min_x = new int[y_range];
-        int[] buf_max_x = new int[y_range];
-        Arrays.fill(buf_min_x, Integer.MAX_VALUE);
-        Arrays.fill(buf_max_x, Integer.MIN_VALUE);
         
         for (CoordPair coord_pair : coord_pairs)
         {
@@ -170,23 +178,8 @@ public class FillRasterizerStrategy implements RasterizerStrategy
                 board.addTile(x_indice, y_indice + y_displacement, segment.getTile());
             }
         }
-    }
 
-    @Override
-    public Void visitPolygon(Polygon polygon) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'visitPolygon'");
-    }
-
-    @Override
-    public Void visitBeam(Beam beam) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'visitBeam'");
-    }
-
-    @Override
-    public void setBoard(Board board) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setBoard'");
+        Arrays.fill(buf_min_x, 0, y_range, Integer.MAX_VALUE);
+        Arrays.fill(buf_max_x, 0, y_range, Integer.MIN_VALUE);
     }
 }
