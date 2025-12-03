@@ -7,7 +7,8 @@ import com.example.representations.CoordPair;
 import com.example.representations.shapes.Beam;
 import com.example.representations.shapes.Polygon;
 
-public class FillRasterizerStrategy extends RasterizerStrategy{
+public class FillRasterizerStrategy implements RasterizerStrategy
+{
     // https://playtechs.blogspot.com/2007/03/raytracing-on-grid.html
     // java implementation of this modified bresenham line algorihtm for floating points
     // then modified using edges of a constructed rectangle

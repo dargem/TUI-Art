@@ -38,7 +38,7 @@ public class RasterizerContext
     {
         for (Shape shape : shape_list)
         {
-            shape.acceptVisitor(rasterizer_strategy);
+            shape.acceptVisitor(rasterizer_strategy, board);
         }
     }
 }
