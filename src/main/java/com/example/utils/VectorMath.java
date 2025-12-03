@@ -7,6 +7,9 @@ import com.example.representations.Vector2d;
  */
 public class VectorMath 
 {
+    // private constructor to stop instantiation
+    private VectorMath() {}
+
     /**
      * Find the dot product of 2 vectors
      * @param a the first vector
