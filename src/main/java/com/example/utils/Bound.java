@@ -4,7 +4,8 @@ import com.example.representations.Coord;
 import com.example.representations.shapes.Beam;
 
 
-public class Bound {
+public final class Bound 
+{
     private final double min_x;
     private final double max_x;
     private final double min_y;

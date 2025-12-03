@@ -11,7 +11,8 @@ package com.example.utils;
  * keeps the same named constants (e.g. Colour.BLACK) while adding dynamic
  * truecolour support and a blending helper.
  */
-public final class Colour {
+public final class Colour 
+{
 
     // --- Predefined constants (keeps previous API names) ---
     public static final Colour BLACK = new Colour("30", false, 0,0,0);

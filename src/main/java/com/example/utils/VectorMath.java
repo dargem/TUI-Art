@@ -5,7 +5,7 @@ import com.example.representations.Vector2d;
 /**
  * Utility class used for 2d vector math
  */
-public class VectorMath 
+public final class VectorMath 
 {
     // private constructor to stop instantiation
     private VectorMath() {}

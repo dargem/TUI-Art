@@ -3,7 +3,7 @@ package com.example;
 import java.util.ArrayList;
 
 import com.example.models.ModelFactory;
-import com.example.rendering.FillRasterizerStrategy;
+import com.example.rendering.FloatingFillRasterizerStrategy;
 import com.example.rendering.RasterizerContext;
 import com.example.rendering.World;
 import com.example.representations.Board;
@@ -29,7 +29,7 @@ public class Controller
     
     public Controller()
     {
-        rasterizer = new RasterizerContext(new FillRasterizerStrategy());
+        rasterizer = new RasterizerContext(new FloatingFillRasterizerStrategy());
     }
 
     public void addModelFactory(ModelFactory model_factory)
@@ -72,9 +72,9 @@ public class Controller
         {
             Thread.sleep(SLEEP_DURATION);
         }
-        catch(Exception e)
+        catch(InterruptedException e)
         {
-            throw new RuntimeException("Issue with sleep " + e);
+            throw new RuntimeException("Interrupted exception with sleep " + e);
         }
     }
 }

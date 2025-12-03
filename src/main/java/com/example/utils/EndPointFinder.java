@@ -2,7 +2,8 @@ package com.example.utils;
 
 import com.example.representations.Coord;
 
-public final class EndPointFinder {
+public final class EndPointFinder 
+{
     
     private EndPointFinder() {}
 

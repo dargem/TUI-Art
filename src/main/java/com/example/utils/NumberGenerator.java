@@ -1,7 +1,8 @@
 package com.example.utils;
 import java.util.Random;
 
-public final class NumberGenerator {
+public final class NumberGenerator 
+{
     
     private static final Random random = new Random();
 
