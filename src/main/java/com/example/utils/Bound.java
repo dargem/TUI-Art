@@ -24,6 +24,7 @@ public final class Bound
     {
         return max_y;
     }
+
     /**
      * Checks whether a segment is out of left/right/bottom bound, fine to be above
      * @param segment inputted segment for checking
@@ -53,6 +54,7 @@ public final class Bound
         return point.x() > min_x 
             && point.x() < max_x;
     }
+    
     /**
      * Checks whether a segment is within bounds
      * @param segment inputted segment for checking

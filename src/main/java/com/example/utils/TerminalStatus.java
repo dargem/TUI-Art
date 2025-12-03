@@ -31,11 +31,22 @@ public final class TerminalStatus {
         }
         return terminal;
     }
+
+    /**
+     * Find the width of the terminal in n.characters
+     * @return number of characters fit sideways in terminal
+     * @throws RuntimeException
+     */
     public static int getWidth() throws RuntimeException
     {
         return getTerminal().getWidth();
     }
 
+    /**
+     * Find the height of the terminal in n.characters
+     * @return number of characters that fit vertically in terminal
+     * @throws RuntimeException
+     */
     public static int getHeight() throws RuntimeException
     {
         return getTerminal().getHeight();
