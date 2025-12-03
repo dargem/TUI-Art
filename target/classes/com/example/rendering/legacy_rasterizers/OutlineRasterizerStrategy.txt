@@ -1,11 +1,12 @@
-package com.example.rendering;
+package com.example.rendering.legacy_rasterizers;
 
+import com.example.rendering.RasterizerStrategy;
 import com.example.representations.Board;
 import com.example.representations.Coord;
 import com.example.representations.CoordPair;
 import com.example.representations.shapes.Beam;
 
-public class OutlineRasterizerStrategy implements SegmentRasterizerStrategy{
+public class OutlineRasterizerStrategy implements RasterizerStrategy{
     // https://playtechs.blogspot.com/2007/03/raytracing-on-grid.html
     // java implementation of this modified bresenham line algorihtm for floating points
     // then modified using left/right edges of a constructed rectangle

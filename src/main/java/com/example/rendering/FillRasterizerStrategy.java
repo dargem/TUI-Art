@@ -5,8 +5,9 @@ import com.example.representations.Board;
 import com.example.representations.Coord;
 import com.example.representations.CoordPair;
 import com.example.representations.shapes.Beam;
+import com.example.representations.shapes.Polygon;
 
-public class FillRasterizerStrategy implements SegmentRasterizerStrategy{
+public class FillRasterizerStrategy extends RasterizerStrategy{
     // https://playtechs.blogspot.com/2007/03/raytracing-on-grid.html
     // java implementation of this modified bresenham line algorihtm for floating points
     // then modified using edges of a constructed rectangle
@@ -168,5 +169,23 @@ public class FillRasterizerStrategy implements SegmentRasterizerStrategy{
                 board.addTile(x_indice, y_indice + y_displacement, segment.getTile());
             }
         }
+    }
+
+    @Override
+    public Void visitPolygon(Polygon polygon) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'visitPolygon'");
+    }
+
+    @Override
+    public Void visitBeam(Beam beam) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'visitBeam'");
+    }
+
+    @Override
+    public void setBoard(Board board) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setBoard'");
     }
 }

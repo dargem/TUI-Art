@@ -79,16 +79,17 @@ public class Beam implements Shape
     }
 
     /**
-     * Accepts a visitor, allowing it to perform an operation on the shape
-     * Used as part of visitor pattern
-     * @param visitor The visitor to accept
-     * @param <T> The return type of the visitor's operation
-     * @return The result of the visitor's operation on this
+     * Accepts a visitor, allowing them to perform operations on Beam
+     * Used as part of the visitor pattern
+     * @param <C> The type of the visitor's context object
+     * @param <R> the return type of the visitor's operation
+     * @param visitor the visitor of the Beam
+     * @param context the visitor's context object
      */
     @Override
-    public <T> T acceptVisitor(ShapeVisitor<T> visitor) 
+    public <C, R> R acceptVisitor(ShapeVisitor<C, R> visitor, C context) 
     {
-        return visitor.visitBeam(this);
+        return visitor.visitBeam(this, context);
     }
 
     /**

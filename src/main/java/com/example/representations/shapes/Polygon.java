@@ -15,16 +15,18 @@ public class Polygon implements Shape
     }
     
     /**
-     * Accepts a visitor, allowing it to perform an operation on the shape
-     * Used as part of visitor pattern
-     * @param visitor The visitor to accept
-     * @param <T> The return type of the visitor's operation
-     * @return The result of the visitor's operation
+     * Accepts a visitor allowing it to perform an operation on the Polygon
+     * Used as part of the visitor pattern
+     * @param <C> the type of the visitor's context object
+     * @param <R> the return type of the visitor's operation
+     * @param visitor the visitor of the polygon
+     * @param context the visitor's context object
+     * @return the result of the visitor's operation
      */
     @Override
-    public <T> T acceptVisitor(ShapeVisitor<T> visitor)
+    public <C, R> R acceptVisitor(ShapeVisitor<C, R> visitor, C context)
     {
-        return visitor.visitPolygon(this);
+        return visitor.visitPolygon(this, context);
     }
 
     /**

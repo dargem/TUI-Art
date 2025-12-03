@@ -1,9 +1,10 @@
-package com.example.rendering;
+package com.example.rendering.legacy_rasterizers;
 
+import com.example.rendering.RasterizerStrategy;
 import com.example.representations.Board;
 import com.example.representations.shapes.Beam;
 
-public class BasicRasterizerStrategy implements SegmentRasterizerStrategy   
+public class BasicRasterizerStrategy implements RasterizerStrategy   
 {
 
     @Override

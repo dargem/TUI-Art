@@ -9,12 +9,14 @@ public interface Shape
 {
     /**
      * Accepts a visitor, allowing it to perform an operation on the shape
-     * Used as part of visitor pattern
+     * Used as part of the visitor pattern
+     * @param <C> The type of the visitor's context object
+     * @param <R> The return type of the visitor's operation
      * @param visitor The visitor to accept
-     * @param <T> The return type of the visitor's operation
-     * @return The result of the visitor's operation
+     * @param context The context passed to the visitor
+     * @return the result of the visitor's operation
      */
-    public abstract <T> T acceptVisitor(ShapeVisitor<T> visitor);
+    public abstract <C, R> R acceptVisitor(ShapeVisitor<C, R> visitor, C context);
 
     /**
      * Creates a new shape that is the translated version of this one

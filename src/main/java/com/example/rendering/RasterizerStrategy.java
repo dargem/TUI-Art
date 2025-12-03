@@ -8,10 +8,16 @@ import com.example.representations.shapes.ShapeVisitor;
  * Inherits abstract methods from ShapeVisitor
  * Used to create different rasterisation strategies for drawing shapes
  */
-public interface RasterizerStrategy extends ShapeVisitor<Void>
+public abstract class RasterizerStrategy implements ShapeVisitor<Void>
 {
     // Inherits abstract methods from ShapeVisitor
+    private Board board;
 
+    public RasterizerStrategy(Board board)
+    {
+        this.board = board;
+    }
+    
     /**
      * Give a board to the drawing strategy
      * @param board the board for the strategy to draw on
