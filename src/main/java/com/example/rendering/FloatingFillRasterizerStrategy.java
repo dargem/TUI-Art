@@ -1,19 +1,32 @@
 package com.example.rendering;
 import java.util.Arrays;
 
+import com.example.rendering.polygon_decomposer.PolygonDecomposerStrategy;
 import com.example.representations.Board;
 import com.example.representations.Coord;
 import com.example.representations.CoordPair;
 import com.example.representations.shapes.Beam;
 import com.example.representations.shapes.Polygon;
 
-public class FillRasterizerStrategy implements RasterizerStrategy
+public class FloatingFillRasterizerStrategy implements RasterizerStrategy
 {
     // https://playtechs.blogspot.com/2007/03/raytracing-on-grid.html
     // java implementation of this modified bresenham line algorihtm for floating points
     // then modified using edges of a constructed rectangle
+    private PolygonDecomposerStrategy triangle_decomposer;
 
-    public void rasterizeShape(Beam segment, Board board)
+    public FloatingFillRasterizerStrategy(PolygonDecomposerStrategy triangle_decomposer)
+    {
+        this.triangle_decomposer = triangle_decomposer;
+    }
+
+    public void setPolygonDecomposerStrategy(PolygonDecomposerStrategy triangle_decomposer)
+    {
+        this.triangle_decomposer = triangle_decomposer;
+    }
+
+    @Override
+    public Void visitBeam(Beam segment, Board board)
     {
         // split a segment into 4 lines
         Coord start_point = segment.getStartCoord();
@@ -169,16 +182,12 @@ public class FillRasterizerStrategy implements RasterizerStrategy
                 board.addTile(x_indice, y_indice + y_displacement, segment.getTile());
             }
         }
+
+        return null;
     }
 
     @Override
     public Void visitPolygon(Polygon polygon, Board context) 
-    {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public Void visitBeam(Beam beam, Board context) 
     {
         throw new UnsupportedOperationException("Not supported yet.");
     }
