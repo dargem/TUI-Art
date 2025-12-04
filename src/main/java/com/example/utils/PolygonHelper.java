@@ -7,9 +7,10 @@ import com.example.representations.Coord;
 import com.example.representations.Vector2d;
 public final class PolygonHelper
 {
+    // threshold for removing colinear vertices
+    private static final double EPSILON_THRESHOLD = 1e-3;
     // private constructor to stop instantiation
     private PolygonHelper() {}
-
     /**
      * Decomposes a simple polygon into triangles
      * Returns an array, of an array of 3 Coord objects
@@ -20,8 +21,9 @@ public final class PolygonHelper
      */
     public static Coord[][] triangleDecompose(Coord[] vertices)
     {
+
         // validate inputs
-        if (vertices == null || vertices.length < 3)
+        if (vertices == null)
         {
             return new Coord[0][0];
         }
@@ -38,16 +40,19 @@ public final class PolygonHelper
             case INVALID -> throw new RuntimeException("Polygon has invalid winding order");
         }
 
+        // don't want to select from colinear vertices or ear clipping doesn't help
+        ArrayList<Integer> index_list = PolygonHelper.findNonColinearVertexIndices(vertices);
+        
+        // make sure its >= 3 so traingles can be formed
+        if (index_list.size() < 3)
+        {
+            return new Coord[0][0];
+        }
+
         // there are (n.edges - 2) triangles in a polygon
-        final int num_triangles = vertices.length - 2;
+        final int num_triangles = index_list.size() - 2;
         int triangle_count = 0;
         Coord[][] triangles = new Coord[num_triangles][3];
-
-        ArrayList<Integer> index_list = new ArrayList<>();
-        for (int i = 0; i < vertices.length; ++i)
-        {
-            index_list.add((i));
-        }
 
         while (index_list.size() > 3)
         {
@@ -129,13 +134,31 @@ public final class PolygonHelper
     }
 
     /**
-     * Returns true if it contains any colinear edges
+     * Returns an array of colinear indices
      * @param vertices vertices of polygon
-     * @return true if it has any colinear, false if it doesn't
+     * @return array of indices if that corresponding vertice is colinear
      */
-    private static boolean containsColinearEdges(Coord[] vertices)
+    private static ArrayList<Integer> findNonColinearVertexIndices(Coord[] vertices)
     {
-        throw new UnsupportedOperationException("not implemented contains colinear edges");
+        ArrayList<Integer> non_colinear_indices = new ArrayList<>();
+        for (int i = 0; i < vertices.length; i++)
+        {
+            Coord a = vertices[i];
+            Coord b = ArrayUtils.getItem(vertices, i-1);
+            Coord c = ArrayUtils.getItem(vertices, i+1);
+
+            Vector2d a_to_b = new Vector2d(a, b);
+            Vector2d a_to_c = new Vector2d(a, c);
+
+            double cross = VectorMath.crossProduct(a_to_b, a_to_c);
+
+            // if the area is larger than the req threshold its fine and can be added
+            if (Math.abs(cross) > EPSILON_THRESHOLD)
+            {
+                non_colinear_indices.add(i);
+            }
+        }
+        return non_colinear_indices;
     }
 
     /**
@@ -145,6 +168,7 @@ public final class PolygonHelper
      */
     private static WindingOrder findWindingOrder(Coord[] vertices)
     {
+        
         throw new UnsupportedOperationException("not implemented");
     }
 
