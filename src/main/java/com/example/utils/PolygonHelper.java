@@ -8,7 +8,7 @@ import com.example.representations.Vector2d;
 public final class PolygonHelper
 {
     // threshold for removing colinear vertices
-    private static final double EPSILON_THRESHOLD = 1e-3;
+    private static final double EPSILON_THRESHOLD = 1e-4;
     // private constructor to stop instantiation
     private PolygonHelper() {}
     /**
@@ -33,12 +33,6 @@ public final class PolygonHelper
             throw new RuntimeException("Polygon is not simple, vertices are: " + Arrays.toString(vertices));
         }
 
-        switch(PolygonHelper.findWindingOrder(vertices))
-        {
-            case CLOCKWISE -> {}
-            case COUNTERCLOCKWISE -> Collections.reverse(Arrays.asList(vertices));
-            case INVALID -> throw new RuntimeException("Polygon has invalid winding order");
-        }
 
         // don't want to select from colinear vertices or ear clipping doesn't help
         ArrayList<Integer> index_list = PolygonHelper.findNonColinearVertexIndices(vertices);
@@ -47,6 +41,12 @@ public final class PolygonHelper
         if (index_list.size() < 3)
         {
             return new Coord[0][0];
+        }
+
+        switch(PolygonHelper.findWindingOrder(index_list, vertices))
+        {
+            case CLOCKWISE -> {}
+            case COUNTERCLOCKWISE -> Collections.reverse(Arrays.asList(vertices));
         }
 
         // there are (n.edges - 2) triangles in a polygon
@@ -60,8 +60,8 @@ public final class PolygonHelper
             {
                 // getItem manages wrap around
                 final int a = index_list.get(i);
-                final int b = ArrayUtils.getItem(index_list, i - 1);
-                final int c = ArrayUtils.getItem(index_list, i + 1);
+                final int b = IterationUtils.getItem(index_list, i - 1);
+                final int c = IterationUtils.getItem(index_list, i + 1);
 
                 final Coord coord_a = vertices[a];
                 final Coord coord_b = vertices[b];
@@ -144,8 +144,8 @@ public final class PolygonHelper
         for (int i = 0; i < vertices.length; i++)
         {
             Coord a = vertices[i];
-            Coord b = ArrayUtils.getItem(vertices, i-1);
-            Coord c = ArrayUtils.getItem(vertices, i+1);
+            Coord b = IterationUtils.getItem(vertices, i-1);
+            Coord c = IterationUtils.getItem(vertices, i+1);
 
             Vector2d a_to_b = new Vector2d(a, b);
             Vector2d a_to_c = new Vector2d(a, c);
@@ -166,10 +166,18 @@ public final class PolygonHelper
      * @param vertices vertices of polygon
      * @return WindingOrder of the polygon
      */
-    private static WindingOrder findWindingOrder(Coord[] vertices)
+    private static WindingOrder findWindingOrder(ArrayList<Integer> indices, Coord[] vertices)
     {
-        
-        throw new UnsupportedOperationException("not implemented");
+        double area = 0;
+        for (int i = 0; i < indices.size(); i++)
+        {
+            Coord current = vertices[indices.get(i)];
+
+            Coord next = vertices[IterationUtils.getItem(indices, i+1)];
+            area += VectorMath.crossProductOfCoordinates(current, next);
+        }
+
+        return area > 0 ? WindingOrder.COUNTERCLOCKWISE : WindingOrder.CLOCKWISE;
     }
 
     private static boolean isPointInTriangle(Coord a, Coord b, Coord c, Coord p)

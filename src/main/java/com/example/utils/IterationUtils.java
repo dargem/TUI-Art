@@ -5,10 +5,10 @@ import java.util.ArrayList;
 /**
  * Utility class for some 
  */
-public final class ArrayUtils 
+public final class IterationUtils 
 {
     // private class to stop instantiation
-    private ArrayUtils() {}
+    private IterationUtils() {}
 
     /**
      * Get an element from an array with additional wrapping features
