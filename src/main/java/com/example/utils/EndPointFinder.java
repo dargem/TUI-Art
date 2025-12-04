@@ -26,7 +26,7 @@ public final class EndPointFinder
      * @param start_x the initial x starting coordinate
      * @param angle the bearing of the line
      * @param length the length of the line
-     * @return end coordinate
+     * @return end coordinate   
      */
     public static double findEndX(final double start_x, final double angle, final double length)
     {

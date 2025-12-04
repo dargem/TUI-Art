@@ -22,6 +22,11 @@ public class Polygon implements Shape
         this.vertices = coords;
     }
     
+    public Coord[] getVertices()
+    {
+        return vertices;
+    }
+
     /**
      * Accepts a visitor allowing it to perform an operation on the Polygon
      * Used as part of the visitor pattern

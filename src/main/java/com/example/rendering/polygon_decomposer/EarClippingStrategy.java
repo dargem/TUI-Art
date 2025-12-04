@@ -1,4 +1,4 @@
-package com.example.representations.polygon_decomposer;
+package com.example.rendering.polygon_decomposer;
 
 import java.util.ArrayList;
 import java.util.Arrays;

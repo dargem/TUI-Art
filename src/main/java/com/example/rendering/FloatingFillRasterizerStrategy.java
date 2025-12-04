@@ -4,9 +4,9 @@ import java.util.Arrays;
 import com.example.rendering.polygon_decomposer.PolygonDecomposerStrategy;
 import com.example.representations.Board;
 import com.example.representations.Coord;
-import com.example.representations.CoordPair;
 import com.example.representations.shapes.Beam;
 import com.example.representations.shapes.Polygon;
+import com.example.utils.IterationUtils;
 
 public class FloatingFillRasterizerStrategy implements RasterizerStrategy
 {
@@ -19,6 +19,7 @@ public class FloatingFillRasterizerStrategy implements RasterizerStrategy
     {
         this.triangle_decomposer = triangle_decomposer;
     }
+
 
     public void setPolygonDecomposerStrategy(PolygonDecomposerStrategy triangle_decomposer)
     {
@@ -65,17 +66,14 @@ public class FloatingFillRasterizerStrategy implements RasterizerStrategy
         );
 
         // for each coord shift its y downwards so its y value is centered around 0
-        Coord A = new Coord(start_point.x() - x_shift, A_y - y_displacement);
-        Coord B = new Coord(end_point.x() - x_shift, B_y - y_displacement);
-        Coord C = new Coord(end_point.x() + x_shift, C_y - y_displacement);
-        Coord D = new Coord(start_point.x() + x_shift, D_y - y_displacement);
+        // filling out the vertices to iterate around
+        final Coord[] vertices = {
+            new Coord(start_point.x() - x_shift, A_y - y_displacement),
+            new Coord(end_point.x() - x_shift, B_y - y_displacement),
+            new Coord(end_point.x() + x_shift, C_y - y_displacement),
+            new Coord(start_point.x() + x_shift, D_y - y_displacement)
+        };
 
-        // create array for the rasterisation loop going around 4 points
-        CoordPair[] coord_pairs = new CoordPair[4];
-        coord_pairs[0] = new CoordPair(A, B);
-        coord_pairs[1] = new CoordPair(B, C);
-        coord_pairs[2] = new CoordPair(C, D);
-        coord_pairs[3] = new CoordPair(D, A);
 
         // Then find the range of y's needed, allows sizing the min x / min y arrays
         final int y_range = -y_displacement + (int) Math.ceil(
@@ -90,13 +88,13 @@ public class FloatingFillRasterizerStrategy implements RasterizerStrategy
         Arrays.fill(buf_min_x, Integer.MAX_VALUE);
         Arrays.fill(buf_max_x, Integer.MIN_VALUE);
         
-        for (CoordPair coord_pair : coord_pairs)
+        for (int i = 0; i < vertices.length; i++)
         {
             //System.out.println("rasterising line");
-            final double x0 = coord_pair.start().x();
-            final double x1 = coord_pair.end().x();
-            final double y0 = coord_pair.start().y();
-            final double y1 = coord_pair.end().y();
+            final double x0 = vertices[i].x();
+            final double x1 = IterationUtils.getItem(vertices, i + 1).x();
+            final double y0 = vertices[i].y();
+            final double y1 = IterationUtils.getItem(vertices, i + 1).y();
 
             double dx = Math.abs(x1-x0);
             double dy = Math.abs(y1-y0);
@@ -189,6 +187,8 @@ public class FloatingFillRasterizerStrategy implements RasterizerStrategy
     @Override
     public Void visitPolygon(Polygon polygon, Board context) 
     {
+        // where triangle is an array of 3 long coord array
+        Coord[][] triangles = triangle_decomposer.decomposePolygon(polygon.getVertices());
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

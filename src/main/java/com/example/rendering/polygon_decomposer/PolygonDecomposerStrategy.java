@@ -1,4 +1,4 @@
-package com.example.representations.polygon_decomposer;
+package com.example.rendering.polygon_decomposer;
 
 import com.example.representations.Coord;
 

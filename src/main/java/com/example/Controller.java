@@ -6,6 +6,7 @@ import com.example.models.ModelFactory;
 import com.example.rendering.FloatingFillRasterizerStrategy;
 import com.example.rendering.RasterizerContext;
 import com.example.rendering.World;
+import com.example.rendering.polygon_decomposer.EarClippingStrategy;
 import com.example.representations.Board;
 import com.example.representations.shapes.Shape;
 import com.example.utils.Bound;
@@ -29,7 +30,7 @@ public class Controller
     
     public Controller()
     {
-        rasterizer = new RasterizerContext(new FloatingFillRasterizerStrategy());
+        rasterizer = new RasterizerContext(new FloatingFillRasterizerStrategy(new EarClippingStrategy()));
     }
 
     public void addModelFactory(ModelFactory model_factory)
