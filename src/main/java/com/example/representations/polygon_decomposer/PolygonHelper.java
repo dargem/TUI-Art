@@ -1,135 +1,26 @@
-package com.example.utils;
+package com.example.representations.polygon_decomposer;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 
 import com.example.representations.Coord;
 import com.example.representations.Vector2d;
+import com.example.utils.IterationUtils;
+import com.example.utils.VectorMath;
+import com.example.utils.WindingOrder;
 public final class PolygonHelper
 {
     // threshold for removing colinear vertices
     private static final double EPSILON_THRESHOLD = 1e-4;
     // private constructor to stop instantiation
     private PolygonHelper() {}
-    /**
-     * Decomposes a simple polygon into triangles
-     * Returns an array, of an array of 3 Coord objects
-     * Uses an ear clipping implementation
-     * https://www.youtube.com/watch?v=hTJFcHutls8&list=PLSlpr6o9vURx4vjomFuwrFhvhV1nhJ_Jc&index=1
-     * @param vertices vertices of the polygon (in order)
-     * @return An array of array of coords, in form Coord[n][3];
-     */
-    public static Coord[][] triangleDecompose(Coord[] vertices)
-    {
-
-        // validate inputs
-        if (vertices == null)
-        {
-            return new Coord[0][0];
-        }
-
-        if (!isSimplePolygon(vertices))
-        {
-            throw new RuntimeException("Polygon is not simple, vertices are: " + Arrays.toString(vertices));
-        }
-
-
-        // don't want to select from colinear vertices or ear clipping doesn't help
-        ArrayList<Integer> index_list = PolygonHelper.findNonColinearVertexIndices(vertices);
-        
-        // make sure its >= 3 so traingles can be formed
-        if (index_list.size() < 3)
-        {
-            return new Coord[0][0];
-        }
-
-        switch(PolygonHelper.findWindingOrder(index_list, vertices))
-        {
-            case CLOCKWISE -> {}
-            case COUNTERCLOCKWISE -> Collections.reverse(Arrays.asList(vertices));
-        }
-
-        // there are (n.edges - 2) triangles in a polygon
-        final int num_triangles = index_list.size() - 2;
-        int triangle_count = 0;
-        Coord[][] triangles = new Coord[num_triangles][3];
-
-        while (index_list.size() > 3)
-        {
-            for (int i = 0; i < index_list.size(); i++)
-            {
-                // getItem manages wrap around
-                final int a = index_list.get(i);
-                final int b = IterationUtils.getItem(index_list, i - 1);
-                final int c = IterationUtils.getItem(index_list, i + 1);
-
-                final Coord coord_a = vertices[a];
-                final Coord coord_b = vertices[b];
-                final Coord coord_c = vertices[c];
-
-                final Vector2d va_to_vb = new Vector2d(coord_a, coord_b);
-                final Vector2d va_to_vc = new Vector2d(coord_a, coord_c);
-
-                // if the cross product is negative, it is reflexive
-                // > PI/2 So a triangle can't be made here
-                if (VectorMath.crossProduct(va_to_vc, va_to_vb) < 0)
-                {
-                    continue;
-                }
-
-                // so its convex vertex, therefore a triangle can be made
-                // Assuming the proposed one isn't containing a vertex
-                boolean is_ear = true;
-                for (int j = 0; j < index_list.size(); ++j)
-                {
-                    final int indice = index_list.get(j);
-                    if (indice == a || indice == b || indice == c)
-                    {
-                        continue;
-                    }
-                    
-                    if (PolygonHelper.isPointInTriangle(coord_a, coord_b, coord_c, vertices[indice]))
-                    {
-                        is_ear = false;
-                        break;
-                    }
-
-                }
-
-                if (is_ear)
-                {
-                    // this is an ear so a triangle can be made
-                    triangles[triangle_count++] = new Coord[]
-                    {
-                        vertices[b],
-                        vertices[a],
-                        vertices[c]
-                    };
-
-                    index_list.remove(i);
-                    break;
-                }
-            }
-        }
-
-        // now add the final triangle
-        triangles[triangle_count] = new Coord[]
-        {
-            vertices[index_list.get(0)],
-            vertices[index_list.get(1)],
-            vertices[index_list.get(2)]
-        };
-
-        return triangles;
-    }
 
     /**
      * Checkes if polygon meets simple polygon requirements
      * @param vertices vertices of the polygon
      * @return true if it is simple, false if not
      */
-    private static boolean isSimplePolygon(Coord[] vertices)
+    public static boolean isSimplePolygon(Coord[] vertices)
     {
         // potentially implement bentley ottman in the future
         // for now just a lazy loop through
@@ -147,7 +38,7 @@ public final class PolygonHelper
                 Coord d = IterationUtils.getItem(vertices, i + 1);
 
                 // Skip neighboring edges that share endpoints
-                if (neighbours.contains(Math.abs( i - j)))
+                if (neighbours.contains(Math.abs(i - j)))
                 {
                     continue;
                 }
@@ -158,7 +49,7 @@ public final class PolygonHelper
                 }
             }
         }
-        
+
         return true;
     }
 
@@ -172,7 +63,7 @@ public final class PolygonHelper
      * @param r vector
      * @return the cross product if p_to_q and r
      */
-    private static double orient(Coord p, Coord q, Coord r)
+    public static double orient(Coord p, Coord q, Coord r)
     {
         return (q.x() - p.x())*(r.y() - p.y()) - (q.y() - p.y())*(r.x() - p.x());
     }
@@ -185,7 +76,7 @@ public final class PolygonHelper
      * @param r 
      * @return
      */
-    private static boolean isOnSegment(Coord p, Coord q, Coord r)
+    public static boolean isOnSegment(Coord p, Coord q, Coord r)
     {
         return (
             Math.min(p.x(), r.x()) <= q.x() &&
@@ -203,7 +94,7 @@ public final class PolygonHelper
      * @param d end of 2nd line
      * @return whether line 1 and 2 are intersecting
      */
-    private static boolean isIntersectingSegment(Coord a, Coord b, Coord c, Coord d)
+    public static boolean isIntersectingSegment(Coord a, Coord b, Coord c, Coord d)
     {
         // https://www.youtube.com/watch?v=bbTqI0oqL5U
         double o1 = PolygonHelper.orient(a, b, c);
@@ -231,7 +122,7 @@ public final class PolygonHelper
      * @param vertices vertices of polygon
      * @return array of indices if that corresponding vertice is colinear
      */
-    private static ArrayList<Integer> findNonColinearVertexIndices(Coord[] vertices)
+    public static ArrayList<Integer> findNonColinearVertexIndices(Coord[] vertices)
     {
         ArrayList<Integer> non_colinear_indices = new ArrayList<>();
         for (int i = 0; i < vertices.length; i++)
@@ -259,7 +150,7 @@ public final class PolygonHelper
      * @param vertices vertices of polygon
      * @return WindingOrder of the polygon
      */
-    private static WindingOrder findWindingOrder(ArrayList<Integer> indices, Coord[] vertices)
+    public static WindingOrder findWindingOrder(ArrayList<Integer> indices, Coord[] vertices)
     {
         double area = 0;
         for (int i = 0; i < indices.size(); i++)
@@ -273,7 +164,7 @@ public final class PolygonHelper
         return area > 0 ? WindingOrder.COUNTERCLOCKWISE : WindingOrder.CLOCKWISE;
     }
 
-    private static boolean isPointInTriangle(Coord a, Coord b, Coord c, Coord p)
+    public static boolean isPointInTriangle(Coord a, Coord b, Coord c, Coord p)
     {
         final Vector2d va_to_vb = new Vector2d(a, b);
         final Vector2d vb_to_vc = new Vector2d(b, c);
