@@ -14,12 +14,16 @@ public class FloatingFillRasterizerStrategy implements RasterizerStrategy
     // java implementation of this modified bresenham line algorihtm for floating points
     // then modified using edges of a constructed rectangle
     private PolygonDecomposerStrategy triangle_decomposer;
+    private final int DEFAULT_MAX_SHAPE_SIZE = 200;
+    private final int[] buf_min_x = new int[DEFAULT_MAX_SHAPE_SIZE];
+    private final int[] buf_max_x = new int[DEFAULT_MAX_SHAPE_SIZE];
 
     public FloatingFillRasterizerStrategy(PolygonDecomposerStrategy triangle_decomposer)
     {
         this.triangle_decomposer = triangle_decomposer;
+        Arrays.fill(buf_min_x, Integer.MAX_VALUE);
+        Arrays.fill(buf_max_x, Integer.MIN_VALUE);
     }
-
 
     public void setPolygonDecomposerStrategy(PolygonDecomposerStrategy triangle_decomposer)
     {
@@ -27,18 +31,18 @@ public class FloatingFillRasterizerStrategy implements RasterizerStrategy
     }
 
     @Override
-    public Void visitBeam(Beam segment, Board board)
+    public Void visitBeam(Beam beam, Board board)
     {
         // split a segment into 4 lines
-        Coord start_point = segment.getStartCoord();
-        Coord end_point = segment.getEndCoord();
+        Coord start_point = beam.getStartCoord();
+        Coord end_point = beam.getEndCoord();
 
         // the magnitude offset wanted
-        double half_width = segment.getWidth() / 2.0;
+        double half_width = beam.getWidth() / 2.0;
 
         // magnitude of the shift, considering 0 degrees is upwards
-        final double x_shift = half_width * Math.sin(segment.getAngle() + (Math.PI / 2));
-        final double y_shift = half_width * Math.cos(segment.getAngle() + (Math.PI / 2));
+        final double x_shift = half_width * Math.sin(beam.getAngle() + (Math.PI / 2));
+        final double y_shift = half_width * Math.cos(beam.getAngle() + (Math.PI / 2));
 
         /* 
         Create points, needs to iterate in a cycle around shape
@@ -83,11 +87,35 @@ public class FloatingFillRasterizerStrategy implements RasterizerStrategy
             )
         );
 
-        int[] buf_min_x = new int[y_range];
-        int[] buf_max_x = new int[y_range];
-        Arrays.fill(buf_min_x, Integer.MAX_VALUE);
-        Arrays.fill(buf_max_x, Integer.MIN_VALUE);
-        
+        fillMinMaxArrays(vertices);
+
+        for (int y_indice = 0; y_indice < y_range; y_indice++)
+        {
+            //System.out.println(y_indice);
+            for (int x_indice = buf_min_x[y_indice]; x_indice <= buf_max_x[y_indice]; x_indice++)
+            {
+                board.addTile(x_indice, y_indice + y_displacement, beam.getTile());
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public Void visitPolygon(Polygon polygon, Board context) 
+    {
+        // where triangle is an array of 3 long coord array
+        double min = polygon.getMinY();
+        Coord[][] triangles = triangle_decomposer.decomposePolygon(polygon.getVertices());
+        for (Coord[] triangle : triangles)
+        {
+            Coord point_down = triangle[0].translate(0, min);
+        }
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    private void fillMinMaxArrays(Coord[] vertices)
+    {
         for (int i = 0; i < vertices.length; i++)
         {
             //System.out.println("rasterising line");
@@ -171,24 +199,5 @@ public class FloatingFillRasterizerStrategy implements RasterizerStrategy
             }   
             //System.out.println("finished rasterising line");
         }
-
-        for (int y_indice = 0; y_indice < y_range; y_indice++)
-        {
-            //System.out.println(y_indice);
-            for (int x_indice = buf_min_x[y_indice]; x_indice <= buf_max_x[y_indice]; x_indice++)
-            {
-                board.addTile(x_indice, y_indice + y_displacement, segment.getTile());
-            }
-        }
-
-        return null;
-    }
-
-    @Override
-    public Void visitPolygon(Polygon polygon, Board context) 
-    {
-        // where triangle is an array of 3 long coord array
-        Coord[][] triangles = triangle_decomposer.decomposePolygon(polygon.getVertices());
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

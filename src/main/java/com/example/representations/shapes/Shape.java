@@ -1,6 +1,5 @@
 package com.example.representations.shapes;
 
-
 /**
  * Represents a geometric shapein the world
  * A shape is defined by its geometry and is immutable
@@ -25,7 +24,6 @@ public interface Shape
      * @return The new translated shape
      */
     public abstract Shape translate(double dx, double dy);
-
 
     public abstract double getMinY();
     public abstract double getMaxY();
