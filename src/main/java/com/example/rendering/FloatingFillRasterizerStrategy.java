@@ -96,6 +96,8 @@ public class FloatingFillRasterizerStrategy implements RasterizerStrategy
             {
                 board.addTile(x_indice, y_indice + y_displacement, beam.getTile());
             }
+            buf_min_x[y_indice] = Integer.MAX_VALUE;
+            buf_max_x[y_indice] = Integer.MIN_VALUE;
         }
 
         return null;
