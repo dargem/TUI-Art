@@ -8,29 +8,29 @@ import org.jline.terminal.TerminalBuilder;
 
 public class TerminalPublisher 
 {
-    private final Terminal screen_terminal;
+    private final Terminal terminal;
     private final ArrayList<TerminalSubscriber> subscribers = new ArrayList<>();
-    private int x_width;
-    private int y_width;
+    private int width;
+    private int height;
 
     public TerminalPublisher()
     {
         try
         {
-            screen_terminal = TerminalBuilder.terminal();
+            terminal = TerminalBuilder.terminal();
         }
         catch (IOException e)
         {
             throw new RuntimeException("Terminal could not be built by the terminal builder: " + e);
         }
 
-        x_width = screen_terminal.getWidth();
-        y_width = screen_terminal.getHeight();
+        width = terminal.getWidth();
+        height = terminal.getHeight();
     }
 
     /**
-     * 
-     * @param terminal_subscriber
+     * Add a subscriber to the publisher's subscriber list
+     * @param terminal_subscriber the subscriber to add
      */
     public void addTerminalSubscriber(TerminalSubscriber terminal_subscriber)
     {
@@ -47,19 +47,26 @@ public class TerminalPublisher
         Iterator<TerminalSubscriber> subscriber_iterator = subscribers.iterator();
         while (subscriber_iterator.hasNext())
         {
-            if (subscriber_iterator.next() == terminal_subscriber)
+            if (subscriber_iterator.next().equals(terminal_subscriber))
             {
                 subscriber_iterator.remove();
                 return true;
             }
         }
-
         return false;
     }
 
-
+    /**
+     * Checks the size of the terminal.
+     * If it has changed vs prior, emits the new size out to subscribers.
+     */
     public void checkEmitTerminalSizeNews()
     {
-
+        if (width != terminal.getWidth() || height != terminal.getHeight())
+        {
+            width = terminal.getWidth();
+            height = terminal.getHeight();
+            subscribers.forEach(subscriber -> subscriber.updateTerminalSize(width, height));
+        }
     }
 }
