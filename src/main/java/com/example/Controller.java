@@ -37,7 +37,8 @@ public class Controller
     
     public Controller()
     {
-        terminal_publisher.addTerminalSubscriber(terminal_subscriber);
+        terminal_publisher.addTerminalSubscriber(printer);
+
     }
 
     public void addModelFactory(ModelFactory model_factory)
@@ -80,7 +81,7 @@ public class Controller
         {
             Thread.sleep(SLEEP_DURATION);
         }
-        catch(InterruptedException e)
+        catch (InterruptedException e)
         {
             throw new RuntimeException("Interrupted exception with sleep " + e);
         }

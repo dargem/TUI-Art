@@ -12,10 +12,10 @@ public final class Bound
     private final double max_y;
 
     
-    public Bound(double min_y, double max_y)
+    public Bound(double min_x, double max_x, double min_y, double max_y)
     {
-        this.min_x = 0;
-        this.max_x = TerminalStatus.getWidth();
+        this.min_x = min_x;
+        this.max_x = max_x;
         this.min_y = min_y;
         this.max_y = max_y;
     }
@@ -54,7 +54,7 @@ public final class Bound
         return point.x() > min_x 
             && point.x() < max_x;
     }
-    
+
     /**
      * Checks whether a segment is within bounds
      * @param segment inputted segment for checking

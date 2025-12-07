@@ -8,7 +8,6 @@ import com.example.representations.Tile;
 /**
  * Responsible for writing to the console
  */
-
 public class Printer implements TerminalSubscriber
 {
     private static final String HIDE_CURSOR = "\u001b[?25l";
