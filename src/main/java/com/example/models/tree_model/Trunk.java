@@ -13,7 +13,6 @@ import com.example.utils.Bound;
 import com.example.utils.Direction;
 import com.example.utils.EndPointFinder;
 import com.example.utils.NumberGenerator;
-import com.example.utils.TerminalStatus;
 
 public class Trunk implements ShapeBasedRenderable
 {

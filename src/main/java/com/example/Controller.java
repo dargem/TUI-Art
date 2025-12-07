@@ -11,7 +11,7 @@ import com.example.representations.Board;
 import com.example.representations.shapes.Shape;
 import com.example.terminal.Printer;
 import com.example.terminal.TerminalPublisher;
-import com.example.utils.Bound;
+import com.example.utils.BoundFactory;
 
 /**
  * Controls a world
@@ -26,6 +26,7 @@ public class Controller
     private final Printer printer = new Printer();
     private final TerminalPublisher terminal_publisher = new TerminalPublisher();
     private final ArrayList<ModelFactory> model_factory_list = new ArrayList<>();
+    private final BoundFactory bound_factory = new BoundFactory();
     private final RasterizerContext rasterizer  = new RasterizerContext(
         new FloatingFillRasterizerStrategy(
             new EarClippingStrategy()
@@ -37,8 +38,12 @@ public class Controller
     
     public Controller()
     {
+        // adds all the subscribers to the terminal
         terminal_publisher.addTerminalSubscriber(printer);
-
+        terminal_publisher.addTerminalSubscriber(bound_factory);
+        
+        // initial update of the terminal, checking size
+        terminal_publisher.checkEmitTerminalSizeNews();
     }
 
     public void addModelFactory(ModelFactory model_factory)
@@ -60,6 +65,9 @@ public class Controller
 
     public void runRound()
     {
+        // check for changes in the terminal
+        terminal_publisher.checkEmitTerminalSizeNews();
+
         for (ModelFactory model_factory : model_factory_list)
         {
             if (model_factory.checkShouldRender())
@@ -68,14 +76,14 @@ public class Controller
             }
         }
 
-        ArrayList<Shape> shapes = world.growAndFetchRenderable(new Bound(0, rounds + 30));
+        ArrayList<Shape> shapes = world.growAndFetchRenderable(bound_factory.createBound(0, rounds + 30));
         //System.out.println(directed_segments.size());
         //System.out.println("starting rasterisation");
         rasterizer.rasterizeShapes(shapes, board);
         //System.out.println("rasterisation done");
         //System.out.println(board.getRow(rounds).size());
         printer.printLine(rounds, board);
-        rounds += 1;
+        ++rounds;
 
         try
         {
