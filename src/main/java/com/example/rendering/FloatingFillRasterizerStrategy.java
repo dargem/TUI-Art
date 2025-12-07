@@ -104,16 +104,36 @@ public class FloatingFillRasterizerStrategy implements RasterizerStrategy
     }
 
     @Override
-    public Void visitPolygon(Polygon polygon, Board context) 
+    public Void visitPolygon(Polygon polygon, Board board) 
     {
+        int y_displacement = (int) Math.floor(polygon.getMinY());
+        int y_max = -y_displacement + (int) Math.floor(polygon.getMaxY());
+
         // where triangle is an array of 3 long coord array
-        double min = polygon.getMinY();
         Coord[][] triangles = triangle_decomposer.decomposePolygon(polygon.getVertices());
         for (Coord[] triangle : triangles)
         {
-            Coord point_down = triangle[0].translate(0, min);
+            // A triangle will always be made of a 3 length Coord[]
+            Coord[] coords = {
+                triangle[0].translate(0, -y_displacement),
+                triangle[1].translate(0, -y_displacement),
+                triangle[2].translate(0, -y_displacement)
+            };
+
+            fillMinMaxArrays(coords);
         }
-        throw new UnsupportedOperationException("Not supported yet.");
+
+        for (int y_indice = 0; y_indice < y_max; y_indice++)
+        {
+            //System.out.println(y_indice);
+            for (int x_indice = buf_min_x[y_indice]; x_indice <= buf_max_x[y_indice]; x_indice++)
+            {
+                //board.addTile(x_indice, y_indice + y_displacement, polygon.getTile());
+                // need an actual tile getting solution
+            }
+            buf_min_x[y_indice] = Integer.MAX_VALUE;
+            buf_max_x[y_indice] = Integer.MIN_VALUE;
+        }
     }
 
     private void fillMinMaxArrays(Coord[] vertices)
