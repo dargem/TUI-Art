@@ -47,6 +47,7 @@ public class TerminalPublisher
         if (!subscribers.contains(terminal_subscriber))
         {
             subscribers.add(terminal_subscriber);
+            terminal_subscriber.updateTerminalSize(width, height);
         }
     }
 

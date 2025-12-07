@@ -75,7 +75,7 @@ public class Controller
             }
         }
 
-        ArrayList<Shape> shapes = world.growAndFetchRenderable(bound_factory.createBound(0, rounds + 30));
+        ArrayList<Shape> shapes = world.growAndFetchRenderable(bound_factory.createBound(-1, rounds + 30));
         //System.out.println(directed_segments.size());
         //System.out.println("starting rasterisation");
         rasterizer.rasterizeShapes(shapes, board);
