@@ -1,7 +1,6 @@
 package com.example.terminal;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
@@ -31,29 +30,29 @@ public class TerminalPublisher
     /**
      * Add a subscriber to the publisher's subscriber list
      * @param terminal_subscriber the subscriber to add
+     * @throws IllegalArgumentException if subscriber is null
      */
     public void addTerminalSubscriber(TerminalSubscriber terminal_subscriber)
     {
-        subscribers.add(terminal_subscriber);
+        if (terminal_subscriber == null)
+        {
+            throw new IllegalArgumentException("A subscriber can't be null");
+        }
+
+        if (!subscribers.contains(terminal_subscriber))
+        {
+            subscribers.add(terminal_subscriber);
+        }
     }
 
     /**
      * Removes a subscriber from the publisher's subscriber list
-     * @param terminal_subscriber
+     * @param terminal_subscriber subscriber to remove
      * @return true if it was a subscriber, false if it wasn't a subscriber
      */
     public boolean removeTerminalSubscriber(TerminalSubscriber terminal_subscriber)
     {
-        Iterator<TerminalSubscriber> subscriber_iterator = subscribers.iterator();
-        while (subscriber_iterator.hasNext())
-        {
-            if (subscriber_iterator.next().equals(terminal_subscriber))
-            {
-                subscriber_iterator.remove();
-                return true;
-            }
-        }
-        return false;
+        return subscribers.remove(terminal_subscriber);
     }
 
     /**
@@ -62,10 +61,13 @@ public class TerminalPublisher
      */
     public void checkEmitTerminalSizeNews()
     {
-        if (width != terminal.getWidth() || height != terminal.getHeight())
+        int current_width = terminal.getWidth();
+        int current_height = terminal.getHeight();
+
+        if (width != current_width || height != current_height)
         {
-            width = terminal.getWidth();
-            height = terminal.getHeight();
+            width = current_height;
+            height = current_width;
             subscribers.forEach(subscriber -> subscriber.updateTerminalSize(width, height));
         }
     }
