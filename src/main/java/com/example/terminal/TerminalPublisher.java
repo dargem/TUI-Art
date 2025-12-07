@@ -5,6 +5,11 @@ import java.util.ArrayList;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
+/**
+ * A publisher for the size of the terminal.
+ * Tells each subscriber when terminal size changes.
+ * Designed to be shared as a shared source of truth
+ */
 public class TerminalPublisher 
 {
     private final Terminal terminal;

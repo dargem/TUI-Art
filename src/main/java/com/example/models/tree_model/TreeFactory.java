@@ -10,11 +10,12 @@ import com.example.rendering.ShapeBasedRenderable;
 import com.example.rendering.TileProvider;
 import com.example.representations.AngleTreeMap;
 import com.example.representations.Coord;
+import com.example.terminal.TerminalPublisher;
 import com.example.utils.Colour;
 import com.example.utils.NumberGenerator;
 
-public class TreeFactory implements ModelFactory{
-
+public class TreeFactory implements ModelFactory
+{
     private final BranchParams branch_params;
     private final TrunkParams trunk_params;
     private static final double LEFT_MIN = 40;
@@ -25,11 +26,14 @@ public class TreeFactory implements ModelFactory{
 
     private final TileProvider trunk_tile_provider;
     private final TileProvider branch_tile_provider;
+    private final TerminalPublisher terminal_publisher;
 
-    public TreeFactory(BranchParams branch_params, TrunkParams trunk_params)
+    public TreeFactory(BranchParams branch_params, TrunkParams trunk_params, TerminalPublisher terminal_publisher)
     {
         this.branch_params = branch_params;
         this.trunk_params = trunk_params;
+        this.terminal_publisher = terminal_publisher;
+
         final AngleTreeMap trunk_char_map = new AngleTreeMap();
 
         // --- VERTICAL (0 degrees) ---
@@ -126,6 +130,8 @@ public class TreeFactory implements ModelFactory{
         final BranchPropogator propogator = new BranchPropogator(branch_params, branch_tile_provider);
         final BranchFactory branch_factory = new BranchFactory(propogator);
         final Trunk trunk = new Trunk(trunk_params, start_location, branch_factory, trunk_tile_provider);
+        // make sure the trunk is subscribed to receive terminal size updates
+        terminal_publisher.addTerminalSubscriber(trunk);
         return new Tree(trunk);
     }
 

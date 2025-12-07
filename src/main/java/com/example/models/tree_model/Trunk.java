@@ -9,15 +9,17 @@ import com.example.rendering.TileProvider;
 import com.example.representations.Coord;
 import com.example.representations.shapes.Beam;
 import com.example.representations.shapes.Shape;
+import com.example.terminal.TerminalSubscriber;
 import com.example.utils.Bound;
 import com.example.utils.Direction;
 import com.example.utils.EndPointFinder;
 import com.example.utils.NumberGenerator;
 
-public class Trunk implements ShapeBasedRenderable
+public class Trunk implements ShapeBasedRenderable, TerminalSubscriber
 {
     private static final double GROUND_HEIGHT = 0;
     private static final double BUFFER = 0;
+    private static final double START_X_POS_RATIO = 0.5; // 0 would make it start at left, 1 at right
     private final TrunkParams parameters;
     private final LinkedList<Beam> trunk_list;
     private double start_x;
@@ -31,7 +33,6 @@ public class Trunk implements ShapeBasedRenderable
         this.parameters = params;
         this.trunk_list = new LinkedList<>();
         //this.start_x = location.x();
-        this.start_x = TerminalStatus.getWidth()/2;
         this.branch_factory = branch_factory;
         this.tile_provider = tile_provider;
 
@@ -102,8 +103,6 @@ public class Trunk implements ShapeBasedRenderable
     public ArrayList<Shape> growAndFetchRenderable(Bound bound)
     {
         final ArrayList<Shape> bound_segments = new ArrayList<>();
-        start_x = TerminalStatus.getWidth()/2;
-
 
         while (bound.checkIsInBound(trunk_list.getLast()))
         {
@@ -143,5 +142,14 @@ public class Trunk implements ShapeBasedRenderable
                 beam.remove(); // safe removal with iterator
             }
         }
+    }
+
+    /**
+     * an update is called when the publisher recognises terminal size has changed
+     */
+    @Override
+    public void updateTerminalSize(int x, int y) {
+        // y not needed
+        start_x = x * START_X_POS_RATIO;
     }
 }
