@@ -134,6 +134,8 @@ public class FloatingFillRasterizerStrategy implements RasterizerStrategy
             buf_min_x[y_indice] = Integer.MAX_VALUE;
             buf_max_x[y_indice] = Integer.MIN_VALUE;
         }
+
+        return null;
     }
 
     private void fillMinMaxArrays(Coord[] vertices)

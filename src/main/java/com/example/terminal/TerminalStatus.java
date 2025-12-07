@@ -1,4 +1,4 @@
-package com.example.utils;
+package com.example.terminal;
 import java.io.IOException;
 
 import org.jline.terminal.Terminal;

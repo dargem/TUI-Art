@@ -1,11 +1,10 @@
-package com.example;
+package com.example.terminal;
 import java.util.ArrayList;
 
 import org.fusesource.jansi.AnsiConsole;
 
 import com.example.representations.Board;
 import com.example.representations.Tile;
-import com.example.utils.TerminalStatus;
 /**
  * Responsible for writing to the console
  */
