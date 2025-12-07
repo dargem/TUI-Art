@@ -4,6 +4,7 @@ import org.fusesource.jansi.AnsiConsole;
 import com.example.config.BranchParams;
 import com.example.config.TrunkParams;
 import com.example.models.tree_model.TreeFactory;
+import com.example.terminal.TerminalPublisher;
 
 
 public class Main 
@@ -13,9 +14,12 @@ public class Main
 
     public static void main(String[] args)
     {
+        TerminalPublisher terminal_publisher = new TerminalPublisher();
+
         TreeFactory tree_factory = new TreeFactory(
             BranchParams.fromFile(),
-            TrunkParams.fromFile()
+            TrunkParams.fromFile(),
+            terminal_publisher
         );
 
         // 1. Make a shutdown hook to uninstall jansi and show cursor
@@ -25,7 +29,7 @@ public class Main
             AnsiConsole.systemUninstall();
         }));
 
-        Controller controller = new Controller();
+        Controller controller = new Controller(terminal_publisher);
         
         controller.addModelFactory(tree_factory);
         controller.startUp();

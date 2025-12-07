@@ -24,7 +24,7 @@ public class Controller
     private final Board board = new Board();
     private final World world = new World();
     private final Printer printer = new Printer();
-    private final TerminalPublisher terminal_publisher = new TerminalPublisher();
+    private final TerminalPublisher terminal_publisher;
     private final ArrayList<ModelFactory> model_factory_list = new ArrayList<>();
     private final BoundFactory bound_factory = new BoundFactory();
     private final RasterizerContext rasterizer  = new RasterizerContext(
@@ -36,14 +36,13 @@ public class Controller
 
     private final int SLEEP_DURATION = 100; // sleep duration of loops in ms
     
-    public Controller()
+    public Controller(TerminalPublisher terminal_publisher)
     {
-        // adds all the subscribers to the terminal
+        this.terminal_publisher = terminal_publisher;
+
+        // adds all the subscribers to the terminal publisher
         terminal_publisher.addTerminalSubscriber(printer);
         terminal_publisher.addTerminalSubscriber(bound_factory);
-        
-        // initial update of the terminal, checking size
-        terminal_publisher.checkEmitTerminalSizeNews();
     }
 
     public void addModelFactory(ModelFactory model_factory)
