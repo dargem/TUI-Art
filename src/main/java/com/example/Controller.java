@@ -9,6 +9,8 @@ import com.example.rendering.World;
 import com.example.rendering.polygon_decomposer.EarClippingStrategy;
 import com.example.representations.Board;
 import com.example.representations.shapes.Shape;
+import com.example.terminal.Printer;
+import com.example.terminal.TerminalPublisher;
 import com.example.utils.Bound;
 
 /**
@@ -22,15 +24,20 @@ public class Controller
     private final Board board = new Board();
     private final World world = new World();
     private final Printer printer = new Printer();
+    private final TerminalPublisher terminal_publisher = new TerminalPublisher();
     private final ArrayList<ModelFactory> model_factory_list = new ArrayList<>();
-    private final RasterizerContext rasterizer;
+    private final RasterizerContext rasterizer  = new RasterizerContext(
+        new FloatingFillRasterizerStrategy(
+            new EarClippingStrategy()
+        )
+    );
     private int rounds = 0;
 
     private final int SLEEP_DURATION = 100; // sleep duration of loops in ms
     
     public Controller()
     {
-        rasterizer = new RasterizerContext(new FloatingFillRasterizerStrategy(new EarClippingStrategy()));
+        terminal_publisher.addTerminalSubscriber(terminal_subscriber);
     }
 
     public void addModelFactory(ModelFactory model_factory)

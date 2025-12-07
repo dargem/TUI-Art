@@ -3,7 +3,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Board {
+public class Board
+{
     final Map<Integer, ArrayList<Tile>> tileMapArrayList = new HashMap<>();
     private final int ARRAY_BASE_SIZE = 100;
 

@@ -9,12 +9,13 @@ import com.example.representations.Tile;
  * Responsible for writing to the console
  */
 
-public class Printer 
+public class Printer implements TerminalSubscriber
 {
     private static final String HIDE_CURSOR = "\u001b[?25l";
     private static final String CLEAR_SCREEN = "\u001b[2J";
     private static final String MOVE_TO_TOP_LEFT = "\u001b[1;1H";
     private static final String INSERT_LINE = "\u001b[L";
+    private int terminal_width;
 
     /**
      * Install Jansi console and set it up
@@ -40,7 +41,7 @@ public class Printer
             return;
         }
 
-        int num_iterations = Math.min(TerminalStatus.getWidth(), output_row.size());
+        int num_iterations = Math.min(terminal_width, output_row.size());
 
         for (int i = 0; i < num_iterations; i++)
         {
@@ -65,5 +66,16 @@ public class Printer
         System.out.print(output.toString());
         // flush output immediately once written
         System.out.flush();
+    }
+
+    /**
+     * Printer implements TerminalSubscriber
+     * It will receive notifications when terminal size changes
+     */
+    @Override
+    public void updateTerminalSize(int x, int y) 
+    {
+        // printer has no need for terminal height
+        terminal_width = x;
     }
 }
