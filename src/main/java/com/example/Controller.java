@@ -25,6 +25,7 @@ public class Controller implements ReprintRequester
     private final Board board = new Board();
     private final World world = new World();
     private final Printer printer = new Printer(this);
+    @SuppressWarnings("unused")
     private final TerminalPublisher terminal_publisher;
     private final ArrayList<ModelFactory> model_factory_list = new ArrayList<>();
     private final BoundFactory bound_factory = new BoundFactory();
