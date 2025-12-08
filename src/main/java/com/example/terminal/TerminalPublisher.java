@@ -1,8 +1,11 @@
 package com.example.terminal;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.jline.terminal.Terminal;
+import org.jline.terminal.Terminal.Signal;
 import org.jline.terminal.TerminalBuilder;
 
 /**
@@ -16,6 +19,8 @@ public class TerminalPublisher
     private final ArrayList<TerminalSubscriber> subscribers = new ArrayList<>();
     private int width;
     private int height;
+    private int DEBOUNCE_DELAY_MS = 100;
+    private Timer debounce_timer;
 
     public TerminalPublisher()
     {
@@ -30,6 +35,28 @@ public class TerminalPublisher
 
         width = terminal.getWidth();
         height = terminal.getHeight();
+
+        terminal.handle(Signal.WINCH, (Signal signal) -> {
+            onTerminalResizeSignal();
+        });
+    }
+
+    private void onTerminalResizeSignal()
+    {
+        if (debounce_timer != null)
+        {
+            debounce_timer.cancel();
+        }
+
+        debounce_timer = new Timer();
+        debounce_timer.schedule(new TimerTask() 
+        {
+            @Override
+            public void run()
+            {
+                onTerminalResized();
+            }
+        }, DEBOUNCE_DELAY_MS);
     }
 
     /**
@@ -65,15 +92,15 @@ public class TerminalPublisher
      * Checks the size of the terminal.
      * If it has changed vs prior, emits the new size out to subscribers.
      */
-    public void checkEmitTerminalSizeNews()
+    public void onTerminalResized()
     {
         int current_width = terminal.getWidth();
         int current_height = terminal.getHeight();
 
         if (width != current_width || height != current_height)
         {
-            width = current_height;
-            height = current_width;
+            width = current_width;
+            height = current_height;
             subscribers.forEach(subscriber -> subscriber.updateTerminalSize(width, height));
         }
     }

@@ -10,6 +10,7 @@ import com.example.rendering.polygon_decomposer.EarClippingStrategy;
 import com.example.representations.Board;
 import com.example.representations.shapes.Shape;
 import com.example.terminal.Printer;
+import com.example.terminal.ReprintRequester;
 import com.example.terminal.TerminalPublisher;
 import com.example.utils.BoundFactory;
 
@@ -19,11 +20,11 @@ import com.example.utils.BoundFactory;
  * and issuing controls to it
  * rendering it
  */
-public class Controller 
+public class Controller implements ReprintRequester
 {
     private final Board board = new Board();
     private final World world = new World();
-    private final Printer printer = new Printer();
+    private final Printer printer = new Printer(this);
     private final TerminalPublisher terminal_publisher;
     private final ArrayList<ModelFactory> model_factory_list = new ArrayList<>();
     private final BoundFactory bound_factory = new BoundFactory();
@@ -34,7 +35,7 @@ public class Controller
     );
     private int rounds = 0;
 
-    private final int SLEEP_DURATION = 100; // sleep duration of loops in ms
+    private final int SLEEP_DURATION = 200; // sleep duration of loops in ms
     
     public Controller(TerminalPublisher terminal_publisher)
     {
@@ -65,7 +66,6 @@ public class Controller
     public void runRound()
     {
         // check for changes in the terminal
-        terminal_publisher.checkEmitTerminalSizeNews();
 
         for (ModelFactory model_factory : model_factory_list)
         {
@@ -91,6 +91,19 @@ public class Controller
         catch (InterruptedException e)
         {
             throw new RuntimeException("Interrupted exception with sleep " + e);
+        }
+    }
+
+    @Override
+    public void reprintBoard(int x, int y) 
+    {
+        printer.clearScreen();
+
+        int start_line = Math.max(0, rounds - y);
+
+        for (; start_line < rounds; start_line++)
+        {
+            printer.printLine(start_line, board);
         }
     }
 }

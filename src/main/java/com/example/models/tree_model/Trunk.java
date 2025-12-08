@@ -151,5 +151,7 @@ public class Trunk implements ShapeBasedRenderable, TerminalSubscriber
     public void updateTerminalSize(int x, int y) {
         // y not needed
         start_x = x * START_X_POS_RATIO;
+
+        
     }
 }

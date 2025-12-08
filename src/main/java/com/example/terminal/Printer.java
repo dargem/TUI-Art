@@ -11,21 +11,27 @@ import com.example.representations.Tile;
 public class Printer implements TerminalSubscriber
 {
     private static final String HIDE_CURSOR = "\u001b[?25l";
-    private static final String CLEAR_SCREEN = "\u001b[2J";
+    private static final String CLEAR_SCREEN = "\u001b[3J";
     private static final String MOVE_TO_TOP_LEFT = "\u001b[1;1H";
     private static final String INSERT_LINE = "\u001b[L";
+    private final ReprintRequester reprint_requester;
     private int terminal_width;
 
     /**
      * Install Jansi console and set it up
      */
-    public Printer()
+    public Printer(ReprintRequester reprint_requester)
     {
+        this.reprint_requester = reprint_requester;
         AnsiConsole.systemInstall();
         System.out.print(HIDE_CURSOR);
         System.out.print(CLEAR_SCREEN);    
     }
 
+    public void clearScreen()
+    {
+        System.out.print(CLEAR_SCREEN);  
+    }
 
     public void printLine(int round, Board board)
     {
@@ -33,12 +39,14 @@ public class Printer implements TerminalSubscriber
         StringBuilder output = new StringBuilder();
         ArrayList<Tile> output_row = board.getRow(round);
 
+        
         if (output_row == null)
         {
-            //System.out.print(MOVE_TO_TOP_LEFT);
-            //System.out.print(INSERT_LINE);
+            System.out.print(MOVE_TO_TOP_LEFT);
+            System.out.print(INSERT_LINE);
             return;
         }
+        
 
         int num_iterations = Math.min(terminal_width, output_row.size());
 
@@ -76,5 +84,7 @@ public class Printer implements TerminalSubscriber
     {
         // printer has no need for terminal height
         terminal_width = x;
+
+        reprint_requester.reprintBoard(x, y);
     }
 }
