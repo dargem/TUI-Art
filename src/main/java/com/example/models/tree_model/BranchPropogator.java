@@ -1,7 +1,7 @@
 package com.example.models.tree_model;
 
 import com.example.config.BranchParams;
-import com.example.rendering.TileProvider;
+import com.example.rendering.tile_providing.TileProvider;
 import com.example.representations.Coord;
 import com.example.representations.shapes.Beam;
 import com.example.utils.Direction;

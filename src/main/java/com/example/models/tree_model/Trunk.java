@@ -5,7 +5,7 @@ import java.util.LinkedList;
 
 import com.example.config.TrunkParams;
 import com.example.rendering.ShapeBasedRenderable;
-import com.example.rendering.TileProvider;
+import com.example.rendering.tile_providing.TileProvider;
 import com.example.representations.Coord;
 import com.example.representations.shapes.Beam;
 import com.example.representations.shapes.Shape;
@@ -152,6 +152,6 @@ public class Trunk implements ShapeBasedRenderable, TerminalSubscriber
         // y not needed
         start_x = x * START_X_POS_RATIO;
 
-        
+
     }
 }

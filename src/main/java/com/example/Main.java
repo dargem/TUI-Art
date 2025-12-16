@@ -14,6 +14,7 @@ public class Main
 
     public static void main(String[] args)
     {
+
         TerminalPublisher terminal_publisher = new TerminalPublisher();
 
         TreeFactory tree_factory = new TreeFactory(

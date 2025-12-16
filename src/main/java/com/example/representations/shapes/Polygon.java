@@ -1,7 +1,7 @@
 package com.example.representations.shapes;
 import java.util.Arrays;
 
-import com.example.rendering.TileProvider;
+import com.example.rendering.tile_providing.TileProvider;
 import com.example.representations.Coord;
 
 /**

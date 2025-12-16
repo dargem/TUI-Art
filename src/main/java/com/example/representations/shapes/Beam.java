@@ -1,6 +1,6 @@
 package com.example.representations.shapes;
 
-import com.example.rendering.TileProvider;
+import com.example.rendering.tile_providing.TileProvider;
 import com.example.representations.Coord;
 import com.example.representations.Tile;
 import com.example.utils.EndPointFinder;

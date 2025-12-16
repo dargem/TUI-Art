@@ -1,9 +1,7 @@
-package com.example.rendering;
+package com.example.rendering.tile_providing;
 import java.util.AbstractMap;
 import java.util.Map.Entry;
 
-import com.example.representations.AngleTreeMap;
-import com.example.representations.CharacterRetriever;
 import com.example.representations.Tile;
 import com.example.utils.Colour;
 import com.example.utils.NumberGenerator;

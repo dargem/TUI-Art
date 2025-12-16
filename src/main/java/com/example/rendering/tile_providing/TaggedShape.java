@@ -1,4 +1,4 @@
-package com.example.rendering;
+package com.example.rendering.tile_providing;
 
 import com.example.representations.shapes.Shape;
 

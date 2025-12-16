@@ -1,6 +1,6 @@
-package com.example.rendering;
+package com.example.rendering.tile_providing;
 
-public enum RenderType 
+public enum RenderableKind 
 {
     TRUNK,
     BRANCH,
