@@ -12,16 +12,16 @@ import com.example.utils.Direction;
 public class Branch implements ShapeBasedRenderable{
     private boolean alive;
     private final ArrayList<Beam> segment_list;
-    private final BranchPropogator branch_propogator;
+    private final BranchPropagator branch_propagator;
 
-    public Branch(BranchPropogator branch_propogator, Beam trunk_segment, Direction direction)
+    public Branch(BranchPropagator branch_propagator, Beam trunk_segment, Direction direction)
     {
         this.alive = true;
-        this.branch_propogator = branch_propogator;
+        this.branch_propagator = branch_propagator;
         this.segment_list = new ArrayList<>();
         
         // initialize the branch with its first segment
-        final Beam first_segment = branch_propogator.createFirstBranch(trunk_segment, direction);
+        final Beam first_segment = branch_propagator.createFirstBranch(trunk_segment, direction);
         segment_list.add(first_segment);
     }
 
@@ -42,13 +42,13 @@ public class Branch implements ShapeBasedRenderable{
 
     private void extendBranch()
     {
-        if (branch_propogator.checkDies(segment_list.getLast()))
+        if (branch_propagator.checkDies(segment_list.getLast()))
         {
             alive = false;
             return;
         }
         
-        final Beam new_segment = branch_propogator.extendBranch(segment_list.getLast());
+        final Beam new_segment = branch_propagator.extendBranch(segment_list.getLast());
         segment_list.add(new_segment);
     }
 
@@ -60,7 +60,7 @@ public class Branch implements ShapeBasedRenderable{
         do
         {
             extendBranch();
-            bound_shapes.add(new RenderableShape(segment_list.getLast(), branch_propogator.getTileProvider()));
+            bound_shapes.add(new RenderableShape(segment_list.getLast(), branch_propagator.getTileProvider()));
         }
         while (alive && bound.checkIsInXBound(segment_list.getLast()));
 

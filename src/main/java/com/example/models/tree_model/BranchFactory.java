@@ -3,18 +3,19 @@ package com.example.models.tree_model;
 import com.example.representations.shapes.Beam;
 import com.example.utils.Direction;
 
-public class BranchFactory {
+public class BranchFactory 
+{
 
-    private final BranchPropogator branch_propogator;
+    private final BranchPropagator branch_propagator;
 
-    public BranchFactory(BranchPropogator branch_propogator)
+    public BranchFactory(BranchPropagator branch_propagator)
     {
-        this.branch_propogator = branch_propogator;
+        this.branch_propagator = branch_propagator;
     }
 
     public Branch getBranch(Beam trunk_segment, Direction direction)
     {
         // option for adding later branch types
-        return new Branch(branch_propogator, trunk_segment, direction);
+        return new Branch(branch_propagator, trunk_segment, direction);
     }
 }

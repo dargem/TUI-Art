@@ -127,8 +127,8 @@ public class TreeFactory implements ModelFactory
     {
         // Potential for a treetype in the future
         final Coord start_location = new Coord(NumberGenerator.getRandomNumber(LEFT_MIN, RIGHT_MAX), GROUND_LEVEL);
-        final BranchPropogator propogator = new BranchPropogator(branch_params, branch_tile_provider);
-        final BranchFactory branch_factory = new BranchFactory(propogator);
+        final BranchPropagator propagator = new BranchPropagator(branch_params, branch_tile_provider);
+        final BranchFactory branch_factory = new BranchFactory(propagator);
         final Trunk trunk = new Trunk(trunk_params, start_location, branch_factory, trunk_tile_provider);
         // make sure the trunk is subscribed to receive terminal size updates
         terminal_publisher.addTerminalSubscriber(trunk);

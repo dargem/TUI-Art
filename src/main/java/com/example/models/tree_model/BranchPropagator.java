@@ -7,7 +7,7 @@ import com.example.representations.shapes.Beam;
 import com.example.utils.Direction;
 import com.example.utils.NumberGenerator;
 
-public class BranchPropogator {
+public class BranchPropagator {
     private final double START_VARIATION = 0.5;
     private final double START_WIDTH_SCALAR = 0.6;
     private final BranchParams parameters;
@@ -15,7 +15,7 @@ public class BranchPropogator {
     // y = x^(1/3), then *1.2 just for a bit more variation, need 1.0 or its int division
     private final double BASE_BRANCH_ANGLE = Math.PI/2.5;
 
-    public BranchPropogator(BranchParams params, TileProvider tile_provider)
+    public BranchPropagator(BranchParams params, TileProvider tile_provider)
     {
         this.parameters = params;
         this.tile_provider = tile_provider;
