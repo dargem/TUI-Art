@@ -1,7 +1,6 @@
 package com.example.representations.shapes;
 import java.util.Arrays;
 
-import com.example.rendering.tile_providing.TileProvider;
 import com.example.representations.Coord;
 
 /**
@@ -15,14 +14,12 @@ import com.example.representations.Coord;
 public class Polygon implements Shape
 {
     private final Coord[] vertices;
-    private final TileProvider tile_provider;
     private Double min_y = null;
     private Double max_y = null;
 
-    public Polygon(Coord[] coords, TileProvider tile_provider)
+    public Polygon(Coord[] coords)
     {
         this.vertices = coords;
-        this.tile_provider = tile_provider;
     }
     
     public Coord[] getVertices()
@@ -57,7 +54,7 @@ public class Polygon implements Shape
         Coord[] new_vertices = Arrays.stream(vertices)
                                 .map(d -> d.translate(dx, dy))
                                 .toArray(Coord[]::new);
-        return new Polygon(new_vertices, this.tile_provider);
+        return new Polygon(new_vertices);
     }
 
     /**

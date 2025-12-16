@@ -1,6 +1,5 @@
 package com.example.rendering;
 
-import com.example.representations.Board;
 import com.example.representations.shapes.ShapeVisitor;
 
 /**
@@ -9,7 +8,7 @@ import com.example.representations.shapes.ShapeVisitor;
  * Used to create different rasterisation strategies for drawing shapes
  * Void return type, Board context type
  */
-public interface RasterizerStrategy extends ShapeVisitor<Board, Void>
+public interface RasterizerStrategy extends ShapeVisitor<RasterizationContext, Void>
 {
     // for now a placeholder to decouple a rasterizer strategy more
     // gives the freedom to add more things to the rasterizer strategy contract later

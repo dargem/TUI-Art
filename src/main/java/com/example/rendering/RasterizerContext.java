@@ -2,7 +2,6 @@ package com.example.rendering;
 import java.util.ArrayList;
 
 import com.example.representations.Board;
-import com.example.representations.shapes.Shape;
 /**
  * Context object as part of the strategy pattern
  * Allows implementing multiple rasterization strategies
@@ -34,11 +33,12 @@ public class RasterizerContext
      * @param shape_list the segments to be rasterized (floating point to 2d)
      * @param board the board to be written on
      */
-    public void rasterizeShapes(ArrayList<Shape> shape_list, Board board)
+    public void rasterizeShapes(ArrayList<RenderableShape> shape_list, Board board)
     {
-        for (Shape shape : shape_list)
+        for (RenderableShape renderable : shape_list)
         {
-            shape.acceptVisitor(rasterizer_strategy, board);
+            RasterizationContext context = new RasterizationContext(board, renderable.provider());
+            renderable.shape().acceptVisitor(rasterizer_strategy, context);
         }
     }
 }

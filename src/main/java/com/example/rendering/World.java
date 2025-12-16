@@ -3,7 +3,6 @@ package com.example.rendering;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-import com.example.representations.shapes.Shape;
 import com.example.utils.Bound;
 
 /**
@@ -21,9 +20,9 @@ public class World implements ShapeBasedRenderable
     }
 
     @Override
-    public ArrayList<Shape> growAndFetchRenderable(Bound bound)
+    public ArrayList<RenderableShape> growAndFetchRenderable(Bound bound)
     {
-        final ArrayList<Shape> shape_list = new ArrayList<>();
+        final ArrayList<RenderableShape> shape_list = new ArrayList<>();
         for (ShapeBasedRenderable model : model_list)
         {
             shape_list.addAll(model.growAndFetchRenderable(bound));

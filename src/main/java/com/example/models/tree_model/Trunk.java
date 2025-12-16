@@ -4,11 +4,11 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import com.example.config.TrunkParams;
+import com.example.rendering.RenderableShape;
 import com.example.rendering.ShapeBasedRenderable;
 import com.example.rendering.tile_providing.TileProvider;
 import com.example.representations.Coord;
 import com.example.representations.shapes.Beam;
-import com.example.representations.shapes.Shape;
 import com.example.terminal.TerminalSubscriber;
 import com.example.utils.Bound;
 import com.example.utils.Direction;
@@ -41,8 +41,7 @@ public class Trunk implements ShapeBasedRenderable, TerminalSubscriber
                 location, 
                 parameters.section_length(), 
                 0, 
-                parameters.width(),
-                tile_provider
+                parameters.width()
             )
         );
     }
@@ -58,8 +57,7 @@ public class Trunk implements ShapeBasedRenderable, TerminalSubscriber
         trunk_list.add(new Beam(
                 next_point, 
                 parameters.section_length(), 
-                next_angle, parameters.width(),
-                tile_provider
+                next_angle, parameters.width()
             )
         );
     }
@@ -100,15 +98,15 @@ public class Trunk implements ShapeBasedRenderable, TerminalSubscriber
     }
 
     @Override
-    public ArrayList<Shape> growAndFetchRenderable(Bound bound)
+    public ArrayList<RenderableShape> growAndFetchRenderable(Bound bound)
     {
-        final ArrayList<Shape> bound_segments = new ArrayList<>();
+        final ArrayList<RenderableShape> bound_segments = new ArrayList<>();
 
         while (bound.checkIsInBound(trunk_list.getLast()))
         {
             Beam last_trunk_seg = trunk_list.getLast();
             extendTrunk();
-            bound_segments.add(trunk_list.getLast());
+            bound_segments.add(new RenderableShape(trunk_list.getLast(), tile_provider));
             //System.out.println("printing branches");
 
             // Check if a left/right branch should be created

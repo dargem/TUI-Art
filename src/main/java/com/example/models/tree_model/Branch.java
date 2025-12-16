@@ -2,10 +2,10 @@ package com.example.models.tree_model;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import com.example.rendering.RenderableShape;
 import com.example.rendering.ShapeBasedRenderable;
 import com.example.representations.Coord;
 import com.example.representations.shapes.Beam;
-import com.example.representations.shapes.Shape;
 import com.example.utils.Bound;
 import com.example.utils.Direction;
 
@@ -53,14 +53,14 @@ public class Branch implements ShapeBasedRenderable{
     }
 
     @Override
-    public ArrayList<Shape> growAndFetchRenderable(Bound bound)
+    public ArrayList<RenderableShape> growAndFetchRenderable(Bound bound)
     {
-        final ArrayList<Shape> bound_shapes = new ArrayList<>();
+        final ArrayList<RenderableShape> bound_shapes = new ArrayList<>();
 
         do
         {
             extendBranch();
-            bound_shapes.add(segment_list.getLast());
+            bound_shapes.add(new RenderableShape(segment_list.getLast(), branch_propogator.getTileProvider()));
         }
         while (alive && bound.checkIsInXBound(segment_list.getLast()));
 

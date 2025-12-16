@@ -46,7 +46,7 @@ public class BranchPropogator {
         final Coord start_location = trunk_segment.getEndCoord();
         final double width = trunk_segment.getWidth() * START_WIDTH_SCALAR; // branches start slightly thinner
         
-        return new Beam(start_location, length, angle, width, tile_provider);
+        return new Beam(start_location, length, angle, width);
     }
 
     public Beam extendBranch(final Beam branch_section)
@@ -60,7 +60,7 @@ public class BranchPropogator {
         final double next_angle = findNextAngle(angle);
         final double next_width = findNextWidth(branch_section.getWidth());
 
-        return new Beam(next_location, next_length, next_angle, next_width, tile_provider);
+        return new Beam(next_location, next_length, next_angle, next_width);
     }
 
     private double findNextLength(final double length)
@@ -80,5 +80,10 @@ public class BranchPropogator {
     {
         final double scale = NumberGenerator.getRandomNumber();
         return width * (1 - parameters.width_decay()*scale);
+    }
+
+    public TileProvider getTileProvider()
+    {
+        return tile_provider;
     }
 }

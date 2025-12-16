@@ -2,8 +2,8 @@ package  com.example.models.tree_model;
 
 import java.util.ArrayList;
 
+import com.example.rendering.RenderableShape;
 import com.example.rendering.ShapeBasedRenderable;
-import com.example.representations.shapes.Shape;
 import com.example.utils.Bound;
 
 public class Tree implements ShapeBasedRenderable
@@ -17,9 +17,9 @@ public class Tree implements ShapeBasedRenderable
     }
 
     @Override
-    public ArrayList<Shape> growAndFetchRenderable(Bound bound)
+    public ArrayList<RenderableShape> growAndFetchRenderable(Bound bound)
     {
-        final ArrayList<Shape> segments = new ArrayList<>();
+        final ArrayList<RenderableShape> segments = new ArrayList<>();
         segments.addAll(trunk.growAndFetchRenderable(bound));
         
         return segments;

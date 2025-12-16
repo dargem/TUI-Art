@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import com.example.models.ModelFactory;
 import com.example.rendering.FloatingFillRasterizerStrategy;
 import com.example.rendering.RasterizerContext;
+import com.example.rendering.RenderableShape;
 import com.example.rendering.World;
 import com.example.rendering.polygon_decomposer.EarClippingStrategy;
 import com.example.representations.Board;
-import com.example.representations.shapes.Shape;
 import com.example.terminal.Printer;
 import com.example.terminal.ReprintRequester;
 import com.example.terminal.TerminalPublisher;
@@ -76,7 +76,7 @@ public class Controller implements ReprintRequester
             }
         }
 
-        ArrayList<Shape> shapes = world.growAndFetchRenderable(bound_factory.createBound(-1, rounds + 30));
+        ArrayList<RenderableShape> shapes = world.growAndFetchRenderable(bound_factory.createBound(-1, rounds + 30));
         //System.out.println(directed_segments.size());
         //System.out.println("starting rasterisation");
         rasterizer.rasterizeShapes(shapes, board);

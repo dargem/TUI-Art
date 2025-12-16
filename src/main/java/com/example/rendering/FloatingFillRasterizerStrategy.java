@@ -31,8 +31,9 @@ public class FloatingFillRasterizerStrategy implements RasterizerStrategy
     }
 
     @Override
-    public Void visitBeam(Beam beam, Board board)
+    public Void visitBeam(Beam beam, RasterizationContext context)
     {
+        Board board = context.board();
         // split a segment into 4 lines
         Coord start_point = beam.getStartCoord();
         Coord end_point = beam.getEndCoord();
@@ -94,7 +95,7 @@ public class FloatingFillRasterizerStrategy implements RasterizerStrategy
             //System.out.println(y_indice);
             for (int x_indice = buf_min_x[y_indice]; x_indice <= buf_max_x[y_indice]; x_indice++)
             {
-                board.addTile(x_indice, y_indice + y_displacement, beam.getTile());
+                board.addTile(x_indice, y_indice + y_displacement, context.provider().getTile(beam.getAngle()));
             }
             buf_min_x[y_indice] = Integer.MAX_VALUE;
             buf_max_x[y_indice] = Integer.MIN_VALUE;
@@ -104,7 +105,7 @@ public class FloatingFillRasterizerStrategy implements RasterizerStrategy
     }
 
     @Override
-    public Void visitPolygon(Polygon polygon, Board board) 
+    public Void visitPolygon(Polygon polygon, RasterizationContext context) 
     {
         int y_displacement = (int) Math.floor(polygon.getMinY());
         int y_max = -y_displacement + (int) Math.floor(polygon.getMaxY());
