@@ -9,7 +9,7 @@ import com.example.terminal.TerminalPublisher;
 
 public class Main 
 {
-    // Define our ANSI escape codes as constants
+    // Define ANSI escape codes as constants
     private static final String SHOW_CURSOR = "\u001b[?25h";
 
     public static void main(String[] args)
