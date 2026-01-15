@@ -11,7 +11,6 @@ struct Style {
     Color fg{255, 255, 255};
     Color bg{0, 0, 0};
     bool bold = false;
-    bool underline = false;
 };
 
 struct Cell {
