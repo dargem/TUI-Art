@@ -1,4 +1,5 @@
 #include "tui/backend.hpp"
+#include "tui/print_constants.hpp"
 #include <thread>
 #include <chrono>
 
@@ -14,7 +15,7 @@ int main() {
     tui::TerminalBackend backend(WIDTH, HEIGHT, FRAME_SHIFT);
     
     // 2. Clear screen initially
-    std::cout << "\033[2J"; 
+    std::cout << tui::CLEAR_SCREEN; 
 
     // 3. Game Loop
     bool running = true;

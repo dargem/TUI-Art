@@ -11,4 +11,6 @@ namespace tui {
     constexpr std::string_view SET_FOREGROUND_RGB{ "\033[38;2;" };
     // Use before sending RGB of background colour
     constexpr std::string_view SET_BACKGROUND_RGB{ "\033[48;2;" };
+    // Clears the whole screen
+    constexpr std::string_view CLEAR_SCREEN{ "\033[2J" };
 };
