@@ -19,8 +19,8 @@ public:
     }
 
     [[nodiscard]] const Cell& getCell(int x, int y) const {
-        assert(x>=0 && x < width && "Out of x bounds write");
-        assert(y>=0 && y < height && "Out of y bounds write");
+        assert(x>=0 && x < width && "Out of x bounds read");
+        assert(y>=0 && y < height && "Out of y bounds read");
         return pixels[y * width + x];
     }
 

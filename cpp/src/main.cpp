@@ -1,4 +1,4 @@
-#include "renderer/backend.hpp"
+#include "tui/backend.hpp"
 #include <thread>
 #include <chrono>
 
@@ -7,9 +7,11 @@
  */
 int main() {
     // 1. Setup
-    const int WIDTH = 80;
-    const int HEIGHT = 24;
-    tui::TerminalBackend backend(WIDTH, HEIGHT);
+    constexpr int WIDTH{ 80 };
+    constexpr int HEIGHT{ 24 };
+    constexpr int FRAME_SHIFT{ 1 };
+
+    tui::TerminalBackend backend(WIDTH, HEIGHT, FRAME_SHIFT);
     
     // 2. Clear screen initially
     std::cout << "\033[2J"; 

@@ -1,5 +1,5 @@
 #pragma once
-#include "renderer/surface.hpp"
+#include "tui/surface.hpp"
 #include <iostream>
 
 namespace tui {
@@ -8,8 +8,10 @@ class TerminalBackend {
 public:
     TerminalBackend(int w, int h, int frameShift);
 
+    // gets the draw surface (the back buffer)
     [[nodiscard]] Surface& getDrawSurface();
 
+    // renders the back buffer
     void present();
 
 private:

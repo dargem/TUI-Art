@@ -1,6 +1,7 @@
-#include "renderer/backend.hpp"
-#include <iostream>
+#include "tui/backend.hpp"
+#include "tui/print_constants.hpp"
 
+#include <iostream>
 namespace tui {
 
 TerminalBackend::TerminalBackend(const int w, const int h, const int frameShift)
@@ -9,7 +10,7 @@ TerminalBackend::TerminalBackend(const int w, const int h, const int frameShift)
 
 void TerminalBackend::present() {
     // Standard ANSI escape to move cursor home
-    std::cout << "\033[H"; 
+    std::cout << tui::GO_HOME;
 
     for (int y = 0; y < backBuffer.height; ++y) {
         for (int x = 0; x < backBuffer.width; ++x) {
@@ -31,14 +32,14 @@ void TerminalBackend::present() {
                 std::cout << "\033[" << (y + 1) << ";" << (x + 1) << "H"; // Move to y,x (1-based)
                 
                 // Set color
-                std::cout << "\033[38;2;" 
-                          << (int)newPixel.style.fg.r << ";" 
-                          << (int)newPixel.style.fg.g << ";" 
-                          << (int)newPixel.style.fg.b << "m"; // FG
-                std::cout << "\033[48;2;" 
+                std::cout << SET_FOREGROUND_RGB 
+                          << (int)newPixel.style.fg.r << ";"
+                          << (int)newPixel.style.fg.g << ";"
+                          << (int)newPixel.style.fg.b << "m"; // FG RGB
+                std::cout << SET_BACKGROUND_RGB 
                           << (int)newPixel.style.bg.r << ";" 
                           << (int)newPixel.style.bg.g << ";" 
-                          << (int)newPixel.style.bg.b << "m"; // BG
+                          << (int)newPixel.style.bg.b << "m"; // BG RGB
 
                 std::cout << newPixel.character;
             }
@@ -46,13 +47,11 @@ void TerminalBackend::present() {
     }
     
     // Reset colors
-    std::cout << "\033[0m";
+    std::cout << RESET_COLOUR;
     std::cout.flush();
 
-    // Swap buffers
+    // Swap buffers then clear the back buffer
     frontBuffer = backBuffer;
-    // Clearing backbuffer might be optional if we overwrite everything, 
-    // but good for safety
     backBuffer.clear();
 }
 
