@@ -1,24 +1,30 @@
 #include "tui/backend.hpp"
-#include "tui/print_constants.hpp"
+#include "tui/ansi/ansi_constants.hpp"
 
 #include <iostream>
+
 namespace tui {
+
+using ansi::GO_HOME;
+using ansi::SET_BACKGROUND_RGB;
+using ansi::SET_FOREGROUND_RGB;
+using ansi::RESET_COLOUR;
 
 TerminalBackend::TerminalBackend(const int w, const int h, const int frameShift)
     : frontBuffer{ w, h }, backBuffer { w, h }, frameShift{ frameShift } 
 {}
 
 void TerminalBackend::present() {
-    // Standard ANSI escape to move cursor home
-    std::cout << tui::GO_HOME;
+    // Moves cursor home
+    std::cout << tui::ansi::GO_HOME;
 
     for (int y = 0; y < backBuffer.height; ++y) {
         for (int x = 0; x < backBuffer.width; ++x) {
             
-            const Cell& newPixel = backBuffer.getCell(x, y);
-            const Cell& oldPixel = frontBuffer.getCell(x, y);
+            const Cell& newCell = backBuffer.getCell(x, y);
+            const Cell& oldCell = frontBuffer.getCell(x, y);
 
-            if (newPixel != oldPixel) {
+            if (newCell != oldCell) {
                 // Determine movement strategy (simple optimization)
                 // In a real TUI engine, we'd batch cursor moves
                 
@@ -33,15 +39,15 @@ void TerminalBackend::present() {
                 
                 // Set color
                 std::cout << SET_FOREGROUND_RGB 
-                          << (int)newPixel.style.fg.r << ";"
-                          << (int)newPixel.style.fg.g << ";"
-                          << (int)newPixel.style.fg.b << "m"; // FG RGB
+                          << (int)newCell.style.fg.r << ";"
+                          << (int)newCell.style.fg.g << ";"
+                          << (int)newCell.style.fg.b << "m"; // FG RGB
                 std::cout << SET_BACKGROUND_RGB 
-                          << (int)newPixel.style.bg.r << ";" 
-                          << (int)newPixel.style.bg.g << ";" 
-                          << (int)newPixel.style.bg.b << "m"; // BG RGB
+                          << (int)newCell.style.bg.r << ";" 
+                          << (int)newCell.style.bg.g << ";" 
+                          << (int)newCell.style.bg.b << "m"; // BG RGB
 
-                std::cout << newPixel.character;
+                std::cout << newCell.character;
             }
         }
     }

@@ -1,7 +1,9 @@
 #include "tui/backend.hpp"
-#include "tui/print_constants.hpp"
+#include "tui/ansi/ansi_constants.hpp"
 #include <thread>
 #include <chrono>
+
+using tui::ansi::CLEAR_SCREEN;
 
 /*
  * Main Entry Point for TUI-Art C++ Rewrite
@@ -15,11 +17,11 @@ int main() {
     tui::TerminalBackend backend(WIDTH, HEIGHT, FRAME_SHIFT);
     
     // 2. Clear screen initially
-    std::cout << tui::CLEAR_SCREEN; 
+    std::cout << CLEAR_SCREEN; 
 
     // 3. Game Loop
-    bool running = true;
-    int frameCount = 0;
+    bool running{ true };
+    int frameCount{ 0 };
 
     while (running) {
         tui::Surface& surface = backend.getDrawSurface();
@@ -48,6 +50,7 @@ int main() {
         
         // Simple exit condition for demo
         if (frameCount > 200) running = false;
+
     }
 
     return 0;

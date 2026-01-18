@@ -13,7 +13,6 @@ public:
 
     // renders the back buffer
     void present();
-
 private:
     // the front buffer is the buffer that is currently displayed
     Surface frontBuffer;

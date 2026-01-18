@@ -153,29 +153,53 @@ src/main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/tui_art.dir/build.make CMakeFiles/tui_art.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
 
-src/renderer/backend.o: src/renderer/backend.cpp.o
-.PHONY : src/renderer/backend.o
+src/tui/ansi/ansi_printer.o: src/tui/ansi/ansi_printer.cpp.o
+.PHONY : src/tui/ansi/ansi_printer.o
 
 # target to build an object file
-src/renderer/backend.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/tui_art.dir/build.make CMakeFiles/tui_art.dir/src/renderer/backend.cpp.o
-.PHONY : src/renderer/backend.cpp.o
+src/tui/ansi/ansi_printer.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/tui_art.dir/build.make CMakeFiles/tui_art.dir/src/tui/ansi/ansi_printer.cpp.o
+.PHONY : src/tui/ansi/ansi_printer.cpp.o
 
-src/renderer/backend.i: src/renderer/backend.cpp.i
-.PHONY : src/renderer/backend.i
+src/tui/ansi/ansi_printer.i: src/tui/ansi/ansi_printer.cpp.i
+.PHONY : src/tui/ansi/ansi_printer.i
 
 # target to preprocess a source file
-src/renderer/backend.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/tui_art.dir/build.make CMakeFiles/tui_art.dir/src/renderer/backend.cpp.i
-.PHONY : src/renderer/backend.cpp.i
+src/tui/ansi/ansi_printer.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/tui_art.dir/build.make CMakeFiles/tui_art.dir/src/tui/ansi/ansi_printer.cpp.i
+.PHONY : src/tui/ansi/ansi_printer.cpp.i
 
-src/renderer/backend.s: src/renderer/backend.cpp.s
-.PHONY : src/renderer/backend.s
+src/tui/ansi/ansi_printer.s: src/tui/ansi/ansi_printer.cpp.s
+.PHONY : src/tui/ansi/ansi_printer.s
 
 # target to generate assembly for a file
-src/renderer/backend.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/tui_art.dir/build.make CMakeFiles/tui_art.dir/src/renderer/backend.cpp.s
-.PHONY : src/renderer/backend.cpp.s
+src/tui/ansi/ansi_printer.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/tui_art.dir/build.make CMakeFiles/tui_art.dir/src/tui/ansi/ansi_printer.cpp.s
+.PHONY : src/tui/ansi/ansi_printer.cpp.s
+
+src/tui/backend.o: src/tui/backend.cpp.o
+.PHONY : src/tui/backend.o
+
+# target to build an object file
+src/tui/backend.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/tui_art.dir/build.make CMakeFiles/tui_art.dir/src/tui/backend.cpp.o
+.PHONY : src/tui/backend.cpp.o
+
+src/tui/backend.i: src/tui/backend.cpp.i
+.PHONY : src/tui/backend.i
+
+# target to preprocess a source file
+src/tui/backend.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/tui_art.dir/build.make CMakeFiles/tui_art.dir/src/tui/backend.cpp.i
+.PHONY : src/tui/backend.cpp.i
+
+src/tui/backend.s: src/tui/backend.cpp.s
+.PHONY : src/tui/backend.s
+
+# target to generate assembly for a file
+src/tui/backend.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/tui_art.dir/build.make CMakeFiles/tui_art.dir/src/tui/backend.cpp.s
+.PHONY : src/tui/backend.cpp.s
 
 # Help Target
 help:
@@ -189,9 +213,12 @@ help:
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
-	@echo "... src/renderer/backend.o"
-	@echo "... src/renderer/backend.i"
-	@echo "... src/renderer/backend.s"
+	@echo "... src/tui/ansi/ansi_printer.o"
+	@echo "... src/tui/ansi/ansi_printer.i"
+	@echo "... src/tui/ansi/ansi_printer.s"
+	@echo "... src/tui/backend.o"
+	@echo "... src/tui/backend.i"
+	@echo "... src/tui/backend.s"
 .PHONY : help
 
 

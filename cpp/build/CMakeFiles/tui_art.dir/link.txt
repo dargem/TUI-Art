@@ -1,1 +1,1 @@
-/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/tui_art.dir/link.d CMakeFiles/tui_art.dir/src/main.cpp.o CMakeFiles/tui_art.dir/src/renderer/backend.cpp.o -o tui_art
+/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/tui_art.dir/link.d CMakeFiles/tui_art.dir/src/main.cpp.o CMakeFiles/tui_art.dir/src/tui/ansi/ansi_printer.cpp.o CMakeFiles/tui_art.dir/src/tui/backend.cpp.o -o tui_art

@@ -86,34 +86,50 @@ CMakeFiles/tui_art.dir/src/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/tui_art.dir/src/main.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/tristan/Documents/github/TUI-Art/cpp/src/main.cpp -o CMakeFiles/tui_art.dir/src/main.cpp.s
 
-CMakeFiles/tui_art.dir/src/renderer/backend.cpp.o: CMakeFiles/tui_art.dir/flags.make
-CMakeFiles/tui_art.dir/src/renderer/backend.cpp.o: /home/tristan/Documents/github/TUI-Art/cpp/src/renderer/backend.cpp
-CMakeFiles/tui_art.dir/src/renderer/backend.cpp.o: CMakeFiles/tui_art.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/tristan/Documents/github/TUI-Art/cpp/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/tui_art.dir/src/renderer/backend.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/tui_art.dir/src/renderer/backend.cpp.o -MF CMakeFiles/tui_art.dir/src/renderer/backend.cpp.o.d -o CMakeFiles/tui_art.dir/src/renderer/backend.cpp.o -c /home/tristan/Documents/github/TUI-Art/cpp/src/renderer/backend.cpp
+CMakeFiles/tui_art.dir/src/tui/ansi/ansi_printer.cpp.o: CMakeFiles/tui_art.dir/flags.make
+CMakeFiles/tui_art.dir/src/tui/ansi/ansi_printer.cpp.o: /home/tristan/Documents/github/TUI-Art/cpp/src/tui/ansi/ansi_printer.cpp
+CMakeFiles/tui_art.dir/src/tui/ansi/ansi_printer.cpp.o: CMakeFiles/tui_art.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/tristan/Documents/github/TUI-Art/cpp/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/tui_art.dir/src/tui/ansi/ansi_printer.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/tui_art.dir/src/tui/ansi/ansi_printer.cpp.o -MF CMakeFiles/tui_art.dir/src/tui/ansi/ansi_printer.cpp.o.d -o CMakeFiles/tui_art.dir/src/tui/ansi/ansi_printer.cpp.o -c /home/tristan/Documents/github/TUI-Art/cpp/src/tui/ansi/ansi_printer.cpp
 
-CMakeFiles/tui_art.dir/src/renderer/backend.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/tui_art.dir/src/renderer/backend.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/tristan/Documents/github/TUI-Art/cpp/src/renderer/backend.cpp > CMakeFiles/tui_art.dir/src/renderer/backend.cpp.i
+CMakeFiles/tui_art.dir/src/tui/ansi/ansi_printer.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/tui_art.dir/src/tui/ansi/ansi_printer.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/tristan/Documents/github/TUI-Art/cpp/src/tui/ansi/ansi_printer.cpp > CMakeFiles/tui_art.dir/src/tui/ansi/ansi_printer.cpp.i
 
-CMakeFiles/tui_art.dir/src/renderer/backend.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/tui_art.dir/src/renderer/backend.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/tristan/Documents/github/TUI-Art/cpp/src/renderer/backend.cpp -o CMakeFiles/tui_art.dir/src/renderer/backend.cpp.s
+CMakeFiles/tui_art.dir/src/tui/ansi/ansi_printer.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/tui_art.dir/src/tui/ansi/ansi_printer.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/tristan/Documents/github/TUI-Art/cpp/src/tui/ansi/ansi_printer.cpp -o CMakeFiles/tui_art.dir/src/tui/ansi/ansi_printer.cpp.s
+
+CMakeFiles/tui_art.dir/src/tui/backend.cpp.o: CMakeFiles/tui_art.dir/flags.make
+CMakeFiles/tui_art.dir/src/tui/backend.cpp.o: /home/tristan/Documents/github/TUI-Art/cpp/src/tui/backend.cpp
+CMakeFiles/tui_art.dir/src/tui/backend.cpp.o: CMakeFiles/tui_art.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/tristan/Documents/github/TUI-Art/cpp/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/tui_art.dir/src/tui/backend.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/tui_art.dir/src/tui/backend.cpp.o -MF CMakeFiles/tui_art.dir/src/tui/backend.cpp.o.d -o CMakeFiles/tui_art.dir/src/tui/backend.cpp.o -c /home/tristan/Documents/github/TUI-Art/cpp/src/tui/backend.cpp
+
+CMakeFiles/tui_art.dir/src/tui/backend.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/tui_art.dir/src/tui/backend.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/tristan/Documents/github/TUI-Art/cpp/src/tui/backend.cpp > CMakeFiles/tui_art.dir/src/tui/backend.cpp.i
+
+CMakeFiles/tui_art.dir/src/tui/backend.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/tui_art.dir/src/tui/backend.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/tristan/Documents/github/TUI-Art/cpp/src/tui/backend.cpp -o CMakeFiles/tui_art.dir/src/tui/backend.cpp.s
 
 # Object files for target tui_art
 tui_art_OBJECTS = \
 "CMakeFiles/tui_art.dir/src/main.cpp.o" \
-"CMakeFiles/tui_art.dir/src/renderer/backend.cpp.o"
+"CMakeFiles/tui_art.dir/src/tui/ansi/ansi_printer.cpp.o" \
+"CMakeFiles/tui_art.dir/src/tui/backend.cpp.o"
 
 # External object files for target tui_art
 tui_art_EXTERNAL_OBJECTS =
 
 tui_art: CMakeFiles/tui_art.dir/src/main.cpp.o
-tui_art: CMakeFiles/tui_art.dir/src/renderer/backend.cpp.o
+tui_art: CMakeFiles/tui_art.dir/src/tui/ansi/ansi_printer.cpp.o
+tui_art: CMakeFiles/tui_art.dir/src/tui/backend.cpp.o
 tui_art: CMakeFiles/tui_art.dir/build.make
 tui_art: CMakeFiles/tui_art.dir/compiler_depend.ts
 tui_art: CMakeFiles/tui_art.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/tristan/Documents/github/TUI-Art/cpp/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable tui_art"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/tristan/Documents/github/TUI-Art/cpp/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable tui_art"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/tui_art.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

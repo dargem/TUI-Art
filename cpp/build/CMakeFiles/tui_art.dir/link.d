@@ -3,7 +3,8 @@ tui_art: \
   /usr/lib/gcc/x86_64-pc-linux-gnu/15.2.1/../../../../lib/crti.o \
   /usr/lib/gcc/x86_64-pc-linux-gnu/15.2.1/crtbeginS.o \
   CMakeFiles/tui_art.dir/src/main.cpp.o \
-  CMakeFiles/tui_art.dir/src/renderer/backend.cpp.o \
+  CMakeFiles/tui_art.dir/src/tui/ansi/ansi_printer.cpp.o \
+  CMakeFiles/tui_art.dir/src/tui/backend.cpp.o \
   /usr/lib/gcc/x86_64-pc-linux-gnu/15.2.1/../../../../lib/libstdc++.so \
   /usr/lib/gcc/x86_64-pc-linux-gnu/15.2.1/../../../../lib/libm.so \
   /usr/lib/gcc/x86_64-pc-linux-gnu/15.2.1/../../../../lib/libm.so \
@@ -40,7 +41,9 @@ tui_art: \
 
 CMakeFiles/tui_art.dir/src/main.cpp.o:
 
-CMakeFiles/tui_art.dir/src/renderer/backend.cpp.o:
+CMakeFiles/tui_art.dir/src/tui/ansi/ansi_printer.cpp.o:
+
+CMakeFiles/tui_art.dir/src/tui/backend.cpp.o:
 
 /usr/lib/gcc/x86_64-pc-linux-gnu/15.2.1/../../../../lib/libstdc++.so:
 

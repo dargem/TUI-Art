@@ -9,7 +9,8 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/tristan/Documents/github/TUI-Art/cpp/src/main.cpp" "CMakeFiles/tui_art.dir/src/main.cpp.o" "gcc" "CMakeFiles/tui_art.dir/src/main.cpp.o.d"
-  "/home/tristan/Documents/github/TUI-Art/cpp/src/renderer/backend.cpp" "CMakeFiles/tui_art.dir/src/renderer/backend.cpp.o" "gcc" "CMakeFiles/tui_art.dir/src/renderer/backend.cpp.o.d"
+  "/home/tristan/Documents/github/TUI-Art/cpp/src/tui/ansi/ansi_printer.cpp" "CMakeFiles/tui_art.dir/src/tui/ansi/ansi_printer.cpp.o" "gcc" "CMakeFiles/tui_art.dir/src/tui/ansi/ansi_printer.cpp.o.d"
+  "/home/tristan/Documents/github/TUI-Art/cpp/src/tui/backend.cpp" "CMakeFiles/tui_art.dir/src/tui/backend.cpp.o" "gcc" "CMakeFiles/tui_art.dir/src/tui/backend.cpp.o.d"
   "" "tui_art" "gcc" "CMakeFiles/tui_art.dir/link.d"
   )
 

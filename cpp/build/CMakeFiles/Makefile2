@@ -85,12 +85,12 @@ clean: CMakeFiles/tui_art.dir/clean
 CMakeFiles/tui_art.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/tui_art.dir/build.make CMakeFiles/tui_art.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/tui_art.dir/build.make CMakeFiles/tui_art.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/tristan/Documents/github/TUI-Art/cpp/build/CMakeFiles --progress-num=1,2,3 "Built target tui_art"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/tristan/Documents/github/TUI-Art/cpp/build/CMakeFiles --progress-num=1,2,3,4 "Built target tui_art"
 .PHONY : CMakeFiles/tui_art.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/tui_art.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/tristan/Documents/github/TUI-Art/cpp/build/CMakeFiles 3
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/tristan/Documents/github/TUI-Art/cpp/build/CMakeFiles 4
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/tui_art.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/tristan/Documents/github/TUI-Art/cpp/build/CMakeFiles 0
 .PHONY : CMakeFiles/tui_art.dir/rule
@@ -102,7 +102,7 @@ tui_art: CMakeFiles/tui_art.dir/rule
 # codegen rule for target.
 CMakeFiles/tui_art.dir/codegen:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/tui_art.dir/build.make CMakeFiles/tui_art.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/tristan/Documents/github/TUI-Art/cpp/build/CMakeFiles --progress-num=1,2,3 "Finished codegen for target tui_art"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/tristan/Documents/github/TUI-Art/cpp/build/CMakeFiles --progress-num=1,2,3,4 "Finished codegen for target tui_art"
 .PHONY : CMakeFiles/tui_art.dir/codegen
 
 # clean rule for target.

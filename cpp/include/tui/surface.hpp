@@ -12,12 +12,14 @@ public:
 
     Surface(int w, int h) : width(w), height(h), pixels(w * h) {}
 
+    // Sets a cell on the surface to be equal to another
     void setCell(int x, int y, const Cell& cell) {
         assert(x>=0 && x < width && "Out of x bounds write");
         assert(y>=0 && y < height && "Out of y bounds write");
         pixels[y * width + x] = cell;
     }
 
+    // Returns a cell
     [[nodiscard]] const Cell& getCell(int x, int y) const {
         assert(x>=0 && x < width && "Out of x bounds read");
         assert(y>=0 && y < height && "Out of y bounds read");
