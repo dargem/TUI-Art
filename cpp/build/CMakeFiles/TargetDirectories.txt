@@ -1,3 +1,0 @@
-/home/tristan/Documents/github/TUI-Art/cpp/build/CMakeFiles/tui_art.dir
-/home/tristan/Documents/github/TUI-Art/cpp/build/CMakeFiles/edit_cache.dir
-/home/tristan/Documents/github/TUI-Art/cpp/build/CMakeFiles/rebuild_cache.dir
