@@ -1,10 +1,11 @@
 #include "tui/backend.hpp"
 #include "tui/ansi/ansi_constants.hpp"
-
+#include "tui/ansi/ansi_printer.hpp"
 #include <iostream>
 
 namespace tui {
 
+using ansi::Printer;
 using ansi::GO_HOME;
 using ansi::SET_BACKGROUND_RGB;
 using ansi::SET_FOREGROUND_RGB;
@@ -18,6 +19,10 @@ void TerminalBackend::present() {
     // Moves cursor home
     std::cout << tui::ansi::GO_HOME;
 
+    // Tracks where the terminal cursor is
+    int terminalCursorX{ -1 };
+    int terminalCursorY{ -1 };
+
     for (int y = 0; y < backBuffer.height; ++y) {
         for (int x = 0; x < backBuffer.width; ++x) {
             
@@ -25,29 +30,16 @@ void TerminalBackend::present() {
             const Cell& oldCell = frontBuffer.getCell(x, y);
 
             if (newCell != oldCell) {
-                // Determine movement strategy (simple optimization)
-                // In a real TUI engine, we'd batch cursor moves
+                // only move the cursor when in incorrect position
+                if (terminalCursorX != x || terminalCursorY != x) {
+                    std::cout << "\033[" << (y + 1) << ";" << (x + 1) << "H"; // Move to y, x (1-based)
+                    terminalCursorX = x;
+                    terminalCursorY = y;
+                }
                 
-                // Move cursor to x,y if needed (simplest for now is just linear print, 
-                // but for diffing we assume cursor is linear unless we skip)
-                // For proper diffing, we must position cursor if we skipped pixels.
-                // For this skeleton, we will validly reprint the line if changed, 
-                // or ideally use a library like ncurses. 
-                // Implementing raw ANSI diffing from scratch:
-                
-                std::cout << "\033[" << (y + 1) << ";" << (x + 1) << "H"; // Move to y,x (1-based)
-                
-                // Set color
-                std::cout << SET_FOREGROUND_RGB 
-                          << (int)newCell.style.fg.r << ";"
-                          << (int)newCell.style.fg.g << ";"
-                          << (int)newCell.style.fg.b << "m"; // FG RGB
-                std::cout << SET_BACKGROUND_RGB 
-                          << (int)newCell.style.bg.r << ";" 
-                          << (int)newCell.style.bg.g << ";" 
-                          << (int)newCell.style.bg.b << "m"; // BG RGB
-
-                std::cout << newCell.character;
+                // Print the cell, noting the cursor will advance by one automatically
+                Printer::printCell(newCell);
+                ++terminalCursorX;
             }
         }
     }
