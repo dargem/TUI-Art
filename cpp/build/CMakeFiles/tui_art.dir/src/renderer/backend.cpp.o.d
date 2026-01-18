@@ -99,6 +99,7 @@ CMakeFiles/tui_art.dir/src/renderer/backend.cpp.o: \
  /usr/include/c++/15.2.1/bits/ranges_algobase.h \
  /usr/include/c++/15.2.1/pstl/glue_algorithm_defs.h \
  /usr/include/c++/15.2.1/pstl/execution_defs.h \
+ /usr/include/c++/15.2.1/cassert /usr/include/assert.h \
  /usr/include/c++/15.2.1/iostream /usr/include/c++/15.2.1/ostream \
  /usr/include/c++/15.2.1/bits/ostream.h /usr/include/c++/15.2.1/ios \
  /usr/include/c++/15.2.1/iosfwd /usr/include/c++/15.2.1/bits/stringfwd.h \

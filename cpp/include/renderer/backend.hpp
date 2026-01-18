@@ -5,15 +5,22 @@
 namespace tui {
 
 class TerminalBackend {
-    Surface frontBuffer;
-    Surface backBuffer;
-
 public:
-    TerminalBackend(int w, int h) : frontBuffer(w, h), backBuffer(w, h) {}
+    TerminalBackend(int w, int h, int frameShift);
 
-    Surface& getDrawSurface() { return backBuffer; }
+    [[nodiscard]] Surface& getDrawSurface();
 
     void present();
+
+private:
+    // the front buffer is the buffer that is currently displayed
+    Surface frontBuffer;
+
+    // the back buffer is where the next frame is being rendered
+    Surface backBuffer;
+
+    // frame shift
+    const int frameShift;
 };
 
 }

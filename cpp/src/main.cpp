@@ -32,7 +32,7 @@ int main() {
                 tui::Cell c;
                 c.character = '#';
                 c.style.fg = {255, 0, 0}; // Red
-                surface.set(boxX + x, boxY + y, c);
+                surface.setCell(boxX + x, boxY + y, c);
             }
         }
         

@@ -3,6 +3,10 @@
 
 namespace tui {
 
+TerminalBackend::TerminalBackend(const int w, const int h, const int frameShift)
+    : frontBuffer{ w, h }, backBuffer { w, h }, frameShift{ frameShift } 
+{}
+
 void TerminalBackend::present() {
     // Standard ANSI escape to move cursor home
     std::cout << "\033[H"; 
@@ -10,8 +14,8 @@ void TerminalBackend::present() {
     for (int y = 0; y < backBuffer.height; ++y) {
         for (int x = 0; x < backBuffer.width; ++x) {
             
-            Cell& newPixel = backBuffer.get(x, y);
-            Cell& oldPixel = frontBuffer.get(x, y);
+            const Cell& newPixel = backBuffer.getCell(x, y);
+            const Cell& oldPixel = frontBuffer.getCell(x, y);
 
             if (newPixel != oldPixel) {
                 // Determine movement strategy (simple optimization)
@@ -22,7 +26,7 @@ void TerminalBackend::present() {
                 // For proper diffing, we must position cursor if we skipped pixels.
                 // For this skeleton, we will validly reprint the line if changed, 
                 // or ideally use a library like ncurses. 
-                // Implemening raw ANSI diffing from scratch:
+                // Implementing raw ANSI diffing from scratch:
                 
                 std::cout << "\033[" << (y + 1) << ";" << (x + 1) << "H"; // Move to y,x (1-based)
                 
@@ -51,5 +55,7 @@ void TerminalBackend::present() {
     // but good for safety
     backBuffer.clear();
 }
+
+Surface& TerminalBackend::getDrawSurface() { return backBuffer; }
 
 }
