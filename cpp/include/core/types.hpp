@@ -30,8 +30,8 @@ struct Cell {
 
 // Viewer of the screen
 struct Camera {
-    int x{ 0 };
-    int y{ 0 };
+    int x;
+    int y;
 };
 
 }

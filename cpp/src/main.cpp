@@ -16,7 +16,7 @@ int main() {
     constexpr int WIDTH{ 80 };
     constexpr int HEIGHT{ 24 };
     const Camera camera{0, 0};
-    
+
     tui::TerminalBackend backend(WIDTH, HEIGHT);
     
     // 2. Clear screen initially
@@ -24,7 +24,7 @@ int main() {
 
     // 3. Game Loop
     bool running{ true };
-    int frameCount{ 0 };
+    int frameCount{};
 
     while (running) {
         tui::Surface& surface = backend.getDrawSurface();

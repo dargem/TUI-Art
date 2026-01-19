@@ -13,7 +13,7 @@ using ansi::SET_FOREGROUND_RGB;
 using ansi::RESET_COLOUR;
 
 TerminalBackend::TerminalBackend(const size_t w, const size_t h)
-    : frontBuffer{ w, h }, backBuffer { w, h }
+    : frontBuffer{ w, h }, backBuffer { w, h }, frontBufferCamera{0, 0}
 {}
 
 // Presents the back buffer through overwriting the front buffer
@@ -25,21 +25,26 @@ TerminalBackend::TerminalBackend(const size_t w, const size_t h)
 // Back buffer and front buffer are not necessarily the same size if the users
 // terminal has resized, so checking for this is required as a special print case
 void TerminalBackend::present(const Camera backBufferCamera) {
+    // abort if the new camera is not equal or above the last in height
+    assert(backBufferCamera.y >= frontBufferCamera.y && "Downwards camera movement not supported currently");
+
     // Moves cursor home
     std::cout << tui::ansi::GO_HOME;
 
     // Tracks where the terminal cursor is
     Printer::moveTo(0, 0);
-    size_t terminalCursorX{ 0 };
-    size_t terminalCursorY{ 0 };
+    size_t terminalCursorX{};
+    size_t terminalCursorY{};
+
+
 
     // Expansion won't hurt layout, but compression will immediately break it
     if (frontBuffer.height == backBuffer.height && frontBuffer.width == backBuffer.width) {
 
     }
 
-    for (size_t y{ 0 }; y < backBuffer.height; ++y) {
-        for (size_t x{ 0 }; x < backBuffer.width; ++x) {
+    for (size_t y{}; y < backBuffer.height; ++y) {
+        for (size_t x{}; x < backBuffer.width; ++x) {
             
             const Cell& newCell = backBuffer.getCell(x, y);
             const Cell& oldCell = frontBuffer.getCell(x, y);

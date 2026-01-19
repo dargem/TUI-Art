@@ -23,11 +23,11 @@ private:
     // the front buffer is the buffer that is currently displayed
     Surface frontBuffer;
 
-    // the camera that was used in rendering the front buffer
-    Camera frontBufferCamera;
-
     // the back buffer is where the next frame is being rendered
     Surface backBuffer;
+
+    // the camera that was used in rendering the front buffer
+    Camera frontBufferCamera;
 };
 
 }
