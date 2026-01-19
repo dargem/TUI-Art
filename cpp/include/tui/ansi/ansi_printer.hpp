@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string_view>
+#include <cstddef>
 #include "core/types.hpp"
 
 namespace tui::ansi {
@@ -13,6 +14,9 @@ public:
     //     - Character in foreground colour
     //     - The background colour
     static void printCell(const Cell& cell);
+
+    // Moves the cursor to the x,y coordinate
+    static void moveTo(size_t x, size_t y);
 };
 
 };

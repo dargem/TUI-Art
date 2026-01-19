@@ -1,18 +1,22 @@
 #pragma once
 #include "tui/surface.hpp"
 #include <iostream>
+#include <cstddef>
 
 namespace tui {
 
 class TerminalBackend {
 public:
-    TerminalBackend(int w, int h, int frameShift);
+    TerminalBackend(size_t w, size_t h, int frameShift);
 
     // gets the draw surface (the back buffer)
     [[nodiscard]] Surface& getDrawSurface();
 
     // renders the back buffer
-    void present();
+    // y_shift is used to inform the renderer if the new back buffer
+    // is at least partially a y shifted version of the prior front buffer
+    // this allows large optimizations as the current displayed front buffer with a newline
+    void present(int y_shift);
 private:
     // the front buffer is the buffer that is currently displayed
     Surface frontBuffer;

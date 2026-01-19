@@ -42,7 +42,7 @@ int main() {
         }
         
         // --- Present ---
-        backend.present();
+        backend.present(0);
 
         // Timing
         std::this_thread::sleep_for(std::chrono::milliseconds(33)); // ~30 FPS

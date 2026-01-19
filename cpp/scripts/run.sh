@@ -1,3 +1,6 @@
+# Fail on any errors
+set -e
+
 # Go a directory up
 cd "$(dirname "$0")/.."
 
