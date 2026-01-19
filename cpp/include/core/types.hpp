@@ -28,9 +28,10 @@ struct Cell {
     }
 };
 
+// Viewer of the screen
 struct Camera {
-    float x = 0;
-    float y = 0;
+    int x{ 0 };
+    int y{ 0 };
 };
 
 }

@@ -1,9 +1,12 @@
-#include "tui/backend.hpp"
-#include "tui/ansi/ansi_constants.hpp"
 #include <thread>
 #include <chrono>
 
+#include "tui/backend.hpp"
+#include "tui/ansi/ansi_constants.hpp"
+#include "core/types.hpp"
+
 using tui::ansi::CLEAR_SCREEN;
+using tui::Camera;
 
 /*
  * Main Entry Point for TUI-Art C++ Rewrite
@@ -12,9 +15,8 @@ int main() {
     // 1. Setup
     constexpr int WIDTH{ 80 };
     constexpr int HEIGHT{ 24 };
-    constexpr int FRAME_SHIFT{ 1 };
-
-    tui::TerminalBackend backend(WIDTH, HEIGHT, FRAME_SHIFT);
+    const Camera camera{0, 0};
+    tui::TerminalBackend backend(WIDTH, HEIGHT);
     
     // 2. Clear screen initially
     std::cout << CLEAR_SCREEN; 
@@ -42,7 +44,7 @@ int main() {
         }
         
         // --- Present ---
-        backend.present(0);
+        backend.present(camera);
 
         // Timing
         std::this_thread::sleep_for(std::chrono::milliseconds(33)); // ~30 FPS
