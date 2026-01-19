@@ -5,6 +5,12 @@ namespace tui {
 
 struct Colour {
     uint8_t r, g, b;
+
+    inline bool operator!=(const Colour& other) const {
+        return r != other.r ||
+               g != other.g ||
+               b != other.b;
+    }
 };
 
 struct Style {
@@ -19,12 +25,8 @@ struct Cell {
 
     bool operator!=(const Cell& other) const {
         return character != other.character || 
-               style.fg.r != other.style.fg.r || 
-               style.fg.g != other.style.fg.g || 
-               style.fg.b != other.style.fg.b ||
-               style.bg.r != other.style.bg.r ||
-               style.bg.g != other.style.bg.g ||
-               style.bg.b != other.style.bg.b;
+               style.fg != other.style.fg ||
+               style.bg != other.style.bg;
     }
 };
 
