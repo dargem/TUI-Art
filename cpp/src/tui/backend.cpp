@@ -29,9 +29,9 @@ void TerminalBackend::present(const Camera backBufferCamera) {
     std::cout << tui::ansi::GO_HOME;
 
     // Tracks where the terminal cursor is
+    Printer::moveTo(0, 0);
     size_t terminalCursorX{ 0 };
     size_t terminalCursorY{ 0 };
-    Printer::moveTo(0, 0);
 
     // Expansion won't hurt layout, but compression will immediately break it
     if (frontBuffer.height == backBuffer.height && frontBuffer.width == backBuffer.width) {

@@ -16,6 +16,7 @@ int main() {
     constexpr int WIDTH{ 80 };
     constexpr int HEIGHT{ 24 };
     const Camera camera{0, 0};
+    
     tui::TerminalBackend backend(WIDTH, HEIGHT);
     
     // 2. Clear screen initially

@@ -22,6 +22,16 @@ void Printer::printCell(const Cell& cell) {
     std::cout << cell.character;
 }
 
+void Printer::insertCellRightShift(const Cell& cell) {
+    std::cout << INSERT_SPACE;
+    printCell(cell);
+}
+
+// Delete 1 character at cursor (shifts same left)
+void Printer::removeCellLeftShift() {
+    std::cout << REMOVE_CELL;
+}
+
 void Printer::moveTo(const size_t x, const size_t y) {
     std::cout << "\033[" << (y + 1) << ";" << (x + 1) << "H";
 }
