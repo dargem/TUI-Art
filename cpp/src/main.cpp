@@ -17,8 +17,8 @@ int main() {
     // 1. Setup
     constexpr int WIDTH{ 80 };
     constexpr int HEIGHT{ 24 };
-    const Camera camera{0, 0};
-
+    // const Camera camera{0, 0};
+    int y_count{};
     tui::TerminalBackend backend(WIDTH, HEIGHT);
     
     // 2. Clear screen initially
@@ -40,7 +40,7 @@ int main() {
         for (int y = 0; y < HEIGHT; ++y) {
             for (int x = 0; x < WIDTH; ++x) {
                 Cell c;
-                c.style.bg = {255, 255, 255};
+                c.style.bg = {0, 0, 0};
                 surface.setCell(x, y, c);
             } 
         }
@@ -56,14 +56,15 @@ int main() {
         }
         
         // --- Present ---
-        backend.present(camera);
-
+        
+        backend.present(Camera{ 0, y_count });
+        y_count++;
         // Timing
         std::this_thread::sleep_for(std::chrono::milliseconds(33)); // ~30 FPS
         frameCount++;
         
         // Simple exit condition for demo
-        if (frameCount > 200) running = false;
+        if (frameCount > 20000) running = false;
 
         Printer::getInstance().resetColour();
     }

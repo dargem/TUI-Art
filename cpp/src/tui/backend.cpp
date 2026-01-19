@@ -1,5 +1,4 @@
 #include "tui/backend.hpp"
-#include "tui/ansi/ansi_constants.hpp"
 #include "tui/ansi/ansi_printer.hpp"
 #include <iostream>
 #include <cstddef>
@@ -7,7 +6,6 @@
 namespace tui {
 
 using ansi::Printer;
-
 TerminalBackend::TerminalBackend(const size_t w, const size_t h)
     : frontBuffer{ w, h }, backBuffer { w, h }, frontBufferCamera{0, 0}
 {}
@@ -35,8 +33,22 @@ void TerminalBackend::present(const Camera backBufferCamera) {
     // This can always be converted to a size t because of the assertion above
     size_t y_increase{ static_cast<size_t>(backBufferCamera.y - frontBufferCamera.y) };
 
-    for (size_t i{}; i < y_increase; ++i) {
+    for (size_t y{}; y < y_increase; ++y) {
         printer.columnShiftDown(1);
+        for (size_t x{}; x < backBuffer.width; ++x) {
+            const Cell& newCell = backBuffer.getCell(x, y);
+
+            if (terminalCursorX != x || terminalCursorY != x) {
+                printer.moveTo(x, y);
+                // update x and y with reset positions
+                terminalCursorX = x;
+                terminalCursorY = y;
+            }
+            
+            // Print the cell, noting the cursor will advance by one automatically
+            printer.printCell(newCell);
+            ++terminalCursorX;
+        }
     }
 
     // Expansion won't hurt layout, but compression will immediately break it
@@ -44,11 +56,11 @@ void TerminalBackend::present(const Camera backBufferCamera) {
 
     }
 
-    for (size_t y{}; y < backBuffer.height; ++y) {
+    for (size_t y{ y_increase }; y < backBuffer.height; ++y) {
         for (size_t x{}; x < backBuffer.width; ++x) {
             
             const Cell& newCell = backBuffer.getCell(x, y);
-            const Cell& oldCell = frontBuffer.getCell(x, y);
+            const Cell& oldCell = frontBuffer.getCell(x, y - y_increase);
 
             if (newCell != oldCell) {
                 // only move the cursor when in incorrect position

@@ -12,6 +12,8 @@ Printer& Printer::getInstance() {
     return printer;
 }
 
+
+
 void Printer::printCell(const Cell& cell) {
     // Print new escape string colours only when required
     // If the last printed is the same assume no change is needed
@@ -60,6 +62,8 @@ void Printer::columnShiftDown(size_t shifts) {
     }
 }
 
+// Resets the printers colour, rewriting last colour to null to guarantee
+// the printer will always output the change colour ansi for the next one
 void Printer::resetColour() {
     std::cout << RESET_COLOUR;
     lastForegroundColour = std::nullopt;
