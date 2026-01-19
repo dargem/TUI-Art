@@ -7,6 +7,11 @@
 
 namespace tui::ansi {
 
+Printer& Printer::getInstance() {
+    static Printer printer;
+    return printer;
+}
+
 void Printer::printCell(const Cell& cell) {
     // foreground string
     std::cout << SET_FOREGROUND_RGB 
@@ -34,6 +39,16 @@ void Printer::removeCellLeftShift() {
 
 void Printer::moveTo(const size_t x, const size_t y) {
     std::cout << "\033[" << (y + 1) << ";" << (x + 1) << "H";
+}
+
+void Printer::columnShiftDown(size_t shifts) {
+    for (size_t i{}; i < shifts; ++i) {
+        std::cout << INSERT_LINE;
+    }
+}
+
+void Printer::resetColour() {
+    std::cout << RESET_COLOUR;
 }
 
 }

@@ -3,13 +3,13 @@
 
 namespace tui {
 
-struct Color {
+struct Colour {
     uint8_t r, g, b;
 };
 
 struct Style {
-    Color fg{255, 255, 255};
-    Color bg{0, 0, 0};
+    Colour fg{255, 255, 255};
+    Colour bg{0, 0, 0};
     bool bold = false;
 };
 

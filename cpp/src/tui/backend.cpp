@@ -7,10 +7,6 @@
 namespace tui {
 
 using ansi::Printer;
-using ansi::GO_HOME;
-using ansi::SET_BACKGROUND_RGB;
-using ansi::SET_FOREGROUND_RGB;
-using ansi::RESET_COLOUR;
 
 TerminalBackend::TerminalBackend(const size_t w, const size_t h)
     : frontBuffer{ w, h }, backBuffer { w, h }, frontBufferCamera{0, 0}
@@ -25,18 +21,23 @@ TerminalBackend::TerminalBackend(const size_t w, const size_t h)
 // Back buffer and front buffer are not necessarily the same size if the users
 // terminal has resized, so checking for this is required as a special print case
 void TerminalBackend::present(const Camera backBufferCamera) {
+
+    Printer& printer = Printer::getInstance();
+
     // abort if the new camera is not equal or above the last in height
     assert(backBufferCamera.y >= frontBufferCamera.y && "Downwards camera movement not supported currently");
 
-    // Moves cursor home
-    std::cout << tui::ansi::GO_HOME;
-
     // Tracks where the terminal cursor is
-    Printer::moveTo(0, 0);
+    printer.moveTo(0, 0);
     size_t terminalCursorX{};
     size_t terminalCursorY{};
 
+    // This can always be converted to a size t because of the assertion above
+    size_t y_increase{ static_cast<size_t>(backBufferCamera.y - frontBufferCamera.y) };
 
+    for (size_t i{}; i < y_increase; ++i) {
+        printer.columnShiftDown(1);
+    }
 
     // Expansion won't hurt layout, but compression will immediately break it
     if (frontBuffer.height == backBuffer.height && frontBuffer.width == backBuffer.width) {
@@ -52,21 +53,21 @@ void TerminalBackend::present(const Camera backBufferCamera) {
             if (newCell != oldCell) {
                 // only move the cursor when in incorrect position
                 if (terminalCursorX != x || terminalCursorY != x) {
-                    Printer::moveTo(x, y);
+                    printer.moveTo(x, y);
                     // update x and y with reset positions
                     terminalCursorX = x;
                     terminalCursorY = y;
                 }
                 
                 // Print the cell, noting the cursor will advance by one automatically
-                Printer::printCell(newCell);
+                printer.printCell(newCell);
                 ++terminalCursorX;
             }
         }
     }
     
     // Reset colors
-    std::cout << RESET_COLOUR;
+    printer.resetColour();
     std::cout.flush();
 
     // Swap buffers then clear the back buffer
