@@ -40,6 +40,7 @@ int main() {
                 tui::Cell c;
                 c.character = '#';
                 c.style.fg = {255, 0, 0}; // Red
+                c.style.bg = {255, 255, 255};
                 surface.setCell(boxX + x, boxY + y, c);
             }
         }
