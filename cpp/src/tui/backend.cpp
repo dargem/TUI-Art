@@ -66,8 +66,6 @@ void TerminalBackend::present(const Camera backBufferCamera) {
         }
     }
     
-    // Reset colors
-    printer.resetColour();
     std::cout.flush();
 
     // Swap buffers then clear the back buffer

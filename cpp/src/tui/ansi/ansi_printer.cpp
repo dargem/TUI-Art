@@ -62,6 +62,8 @@ void Printer::columnShiftDown(size_t shifts) {
 
 void Printer::resetColour() {
     std::cout << RESET_COLOUR;
+    lastForegroundColour = std::nullopt;
+    lastBackgroundColour = std::nullopt;
 }
 
 }
