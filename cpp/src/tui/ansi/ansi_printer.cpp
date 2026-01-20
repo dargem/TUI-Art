@@ -12,8 +12,6 @@ Printer& Printer::getInstance() {
     return printer;
 }
 
-
-
 void Printer::printCell(const Cell& cell) {
     // Print new escape string colours only when required
     // If the last printed is the same assume no change is needed

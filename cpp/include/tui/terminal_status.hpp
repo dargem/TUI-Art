@@ -1,8 +1,39 @@
 #pragma once
 
 #include <cstddef>
+#include "core/types.hpp"
 
-namespace ansi {
+namespace tui {
+
+struct TerminalDimension {
+
+    TerminalDimension(size_t x, size_t y)
+        : x{ x }, y{ y }
+    {}
+
+    size_t x;
+    size_t y;
+};
+
+struct CursorLocation {
+
+    CursorLocation(size_t x, size_t y)
+        : x{ x }, y{ y }
+    {}
+
+    size_t x;
+    size_t y;
+};
+
+struct LoadedColour {
+
+    LoadedColour(Colour fg, Colour bg)
+        : fg{ fg }, bg { bg }
+    {}
+
+    Colour fg;
+    Colour bg;
+};
 
 class TerminalStatus {
 public:
@@ -11,11 +42,15 @@ public:
     void operator=(const TerminalStatus& terminalStatus) = delete; // remove assignment
     TerminalStatus(const TerminalStatus& terminalStatus) = delete; // remove copy construction
 
-    // The terminal will not automatically get the most up to date info on size requests
-    void updateTerminalSize();
+    // Get a terminal dimension object holding 
+    // width/height in single width ASCII characters
+    TerminalDimension getTerminalDimension();
 
-    size_t getTerminalXSize();
-    size_t getTerminalYSize();
+    CursorLocation cursorLocation;
+
+    // Holds the last colour the terminal has printed
+    // Is updated when the terminal has printed something new
+    LoadedColour loadedColour;
 private:
     TerminalStatus();
 };
