@@ -26,20 +26,23 @@ void TerminalBackend::present(const Camera backBufferCamera) {
     assert(backBufferCamera.y >= frontBufferCamera.y && "Downwards camera movement not supported currently");
 
     // Tracks where the terminal cursor is
-    printer.moveTo(0, 0);
+    printer.moveTo(0, 0, backBuffer.height);
     size_t terminalCursorX{};
     size_t terminalCursorY{};
 
     // This can always be converted to a size t because of the assertion above
     size_t y_increase{ static_cast<size_t>(backBufferCamera.y - frontBufferCamera.y) };
 
+    // An initial loop is used to shift down the front buffer with empty lines
+    // It then prints in these empty lines the new back buffer
+    // As the empty lines are empty no diffing is needed for this
     for (size_t y{}; y < y_increase; ++y) {
         printer.columnShiftDown(1);
         for (size_t x{}; x < backBuffer.width; ++x) {
             const Cell& newCell = backBuffer.getCell(x, y);
 
             if (terminalCursorX != x || terminalCursorY != x) {
-                printer.moveTo(x, y);
+                printer.moveTo(x, y, backBuffer.height);
                 // update x and y with reset positions
                 terminalCursorX = x;
                 terminalCursorY = y;
@@ -51,21 +54,21 @@ void TerminalBackend::present(const Camera backBufferCamera) {
         }
     }
 
-    // Expansion won't hurt layout, but compression will immediately break it
-    if (frontBuffer.height == backBuffer.height && frontBuffer.width == backBuffer.width) {
-
-    }
-
+    // After the shift has been noted and overwritten, diffing behaviour can be implemented
+    // It starts iterating after what has already been printed from the back buffer (y up to y increase)
+    // to avoid needless diffing logic
     for (size_t y{ y_increase }; y < backBuffer.height; ++y) {
         for (size_t x{}; x < backBuffer.width; ++x) {
             
             const Cell& newCell = backBuffer.getCell(x, y);
+
+            // Includes the translation from the front buffer as its been shifted down by y_increase
             const Cell& oldCell = frontBuffer.getCell(x, y - y_increase);
 
             if (newCell != oldCell) {
                 // only move the cursor when in incorrect position
                 if (terminalCursorX != x || terminalCursorY != x) {
-                    printer.moveTo(x, y);
+                    printer.moveTo(x, y, backBuffer.height);
                     // update x and y with reset positions
                     terminalCursorX = x;
                     terminalCursorY = y;

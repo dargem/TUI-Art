@@ -32,7 +32,9 @@ public:
     void removeCellLeftShift();
 
     // Moves the cursor to the x,y coordinate
-    void moveTo(size_t x, size_t y);
+    // surfaceHeight is the height of the backbuffer, 
+    // needed to translate y dimensions into proper movement
+    void moveTo(size_t x, size_t y, size_t surfaceHeight);
 
     // Shift down cells by shift columns
     void columnShiftDown(size_t shifts);

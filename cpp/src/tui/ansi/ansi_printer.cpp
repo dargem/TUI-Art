@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string_view>
 #include <cstddef>
+#include <cassert>
 
 namespace tui::ansi {
 
@@ -50,8 +51,14 @@ void Printer::removeCellLeftShift() {
     std::cout << REMOVE_CELL;
 }
 
-void Printer::moveTo(const size_t x, const size_t y) {
-    std::cout << "\033[" << y << ";" << x << "H";
+// Y values are "inverted" when it comes to ANSI escape codes
+// A y value of 0 is going to be at the top not at the bottom
+// Rendering obviously expects 0, 0 to be at the bottom left though
+// So this must be inverted
+void Printer::moveTo(const size_t x, const size_t y, size_t surfaceHeight) {
+    assert(surfaceHeight > y && "surface height must be larger than y pos to move to");
+    std::cout << "\033[" << surfaceHeight - y << ";" << x << "H";
+    //std::cout << "\033[" << y << ";" << x << "H";
 }
 
 void Printer::columnShiftDown(size_t shifts) {
