@@ -55,9 +55,10 @@ void Printer::removeCellLeftShift() {
 // A y value of 0 is going to be at the top not at the bottom
 // Rendering obviously expects 0, 0 to be at the bottom left though
 // So this must be inverted
+// ANSI columns are also one based but input x is 0 based, so needs an offset by one
 void Printer::moveTo(const size_t x, const size_t y, size_t surfaceHeight) {
     assert(surfaceHeight > y && "surface height must be larger than y pos to move to");
-    std::cout << "\033[" << surfaceHeight - y << ";" << x << "H";
+    std::cout << "\033[" << surfaceHeight - y << ";" << x + 1 << "H";
     //std::cout << "\033[" << y << ";" << x << "H";
 }
 

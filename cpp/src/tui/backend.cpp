@@ -38,7 +38,7 @@ void TerminalBackend::present(const Camera backBufferCamera) {
     // As the empty lines are empty no diffing is needed for this
     // Note the number of iterations is not related to cursor y position
     // Because the cursor will always be on the top row
-    for (size_t i{}; i < y_increase; ++i) {
+    for (size_t i{}; i < y_increase && i < backBuffer.height; ++i) {
 
         const size_t y{ backBuffer.height - 1};
         size_t x{};
@@ -71,15 +71,18 @@ void TerminalBackend::present(const Camera backBufferCamera) {
     }
 
     // After the shift has been noted and overwritten, diffing behaviour can be implemented
-    // It starts iterating after what has already been printed from the back buffer (y up to y increase)
+    // It starts iterating after what has already been printed from the back buffer (top y_increase rows)
     // to avoid needless diffing logic
-    for (size_t y{ y_increase }; y < backBuffer.height; ++y) {
+    const size_t diffHeight{ backBuffer.height - y_increase };
+    for (size_t y{}; y < diffHeight; ++y) {
         for (size_t x{}; x < backBuffer.width; ++x) {
             
             const Cell& newCell = backBuffer.getCell(x, y);
 
             // Includes the translation from the front buffer as its been shifted down by y_increase
-            const Cell& oldCell = frontBuffer.getCell(x, y - y_increase);
+            // So the old front buffer at y = 1 with a shift of 1 goes down to y = 0, 
+            // so compare backBuffer with frontBuffer + y_increase
+            const Cell& oldCell = frontBuffer.getCell(x, y + y_increase);
 
             if (newCell != oldCell) {
                 // only move the cursor when in incorrect position
