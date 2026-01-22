@@ -36,8 +36,44 @@ void TerminalBackend::present(const Camera backBufferCamera) {
     // An initial loop is used to shift down the front buffer with empty lines
     // It then prints in these empty lines the new back buffer
     // As the empty lines are empty no diffing is needed for this
-    for (size_t y{}; y < y_increase; ++y) {
+    // Note the number of iterations is not related to cursor y position
+    // Because the cursor will always be on the top row
+    for (size_t i{}; i < y_increase; ++i) {
+
+        const size_t y{ backBuffer.height - 1};
+        size_t x{};
+
+        if (terminalCursorX != x || terminalCursorY != x) {
+            printer.moveTo(x, y, backBuffer.height);
+            // update x and y with reset positions
+            terminalCursorX = x;
+            terminalCursorY = y;
+        }
+
+        printer.printDebugHashCell();
+
+        printer.rowShiftDown(1);
+
+        for (; x < backBuffer.width; ++x) {
+            const Cell& newCell = backBuffer.getCell(x, y);
+
+            if (terminalCursorX != x || terminalCursorY != x) {
+                printer.moveTo(x, y, backBuffer.height);
+                // update x and y with reset positions
+                terminalCursorX = x;
+                terminalCursorY = y;
+            }
+            
+            // Print the cell, noting the cursor will advance by one automatically
+            //printer.printCell(newCell);
+            ++terminalCursorX;
+        }
+    }
+
+    /*
+    for (size_t y{ backBuffer.height }; y < y_increase; ++y) {
         printer.columnShiftDown(1);
+        
         for (size_t x{}; x < backBuffer.width; ++x) {
             const Cell& newCell = backBuffer.getCell(x, y);
 
@@ -52,7 +88,9 @@ void TerminalBackend::present(const Camera backBufferCamera) {
             printer.printCell(newCell);
             ++terminalCursorX;
         }
+        
     }
+    */
 
     // After the shift has been noted and overwritten, diffing behaviour can be implemented
     // It starts iterating after what has already been printed from the back buffer (y up to y increase)
@@ -63,7 +101,7 @@ void TerminalBackend::present(const Camera backBufferCamera) {
             const Cell& newCell = backBuffer.getCell(x, y);
 
             // Includes the translation from the front buffer as its been shifted down by y_increase
-            const Cell& oldCell = frontBuffer.getCell(x, y - y_increase);
+            const Cell& oldCell = frontBuffer.getCell(x, y);
 
             if (newCell != oldCell) {
                 // only move the cursor when in incorrect position

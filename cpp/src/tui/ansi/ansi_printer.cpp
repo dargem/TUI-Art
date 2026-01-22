@@ -61,7 +61,7 @@ void Printer::moveTo(const size_t x, const size_t y, size_t surfaceHeight) {
     //std::cout << "\033[" << y << ";" << x << "H";
 }
 
-void Printer::columnShiftDown(size_t shifts) {
+void Printer::rowShiftDown(size_t shifts) {
     for (size_t i{}; i < shifts; ++i) {
         std::cout << INSERT_LINE;
     }
@@ -73,6 +73,23 @@ void Printer::resetColour() {
     std::cout << RESET_COLOUR;
     lastForegroundColour = std::nullopt;
     lastBackgroundColour = std::nullopt;
+}
+
+void Printer::printDebugHashCell() {
+    Cell cell;
+
+    // Set cell's foreground to white
+    cell.style.fg.r = 255;
+    cell.style.fg.g = 255;
+    cell.style.fg.b = 255;
+    
+    cell.character = '#';
+
+    // Set cell's background to black
+    cell.style.bg.r = 0;
+    cell.style.bg.g = 0;
+    cell.style.bg.b = 1;
+    printCell(cell);
 }
 
 }

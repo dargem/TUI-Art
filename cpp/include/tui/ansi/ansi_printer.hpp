@@ -14,8 +14,10 @@ class Printer {
 public:
     static Printer& getInstance();
     // private
-    Printer(const Printer& printer) = delete; // don't implement copy constructor
-    void operator=(const Printer& printer) = delete; // don't implement assignment operator
+    Printer(const Printer&) = delete; // don't implement copy constructor
+    void operator=(const Printer&) = delete; // don't implement assignment operator
+    Printer(const Printer&&) = delete; // don't implement move constructor
+    void operator=(const Printer&&) = delete; // don't implement move assignment operator
 
     // Prints a cell at the cursor
     // This print outputs the:
@@ -36,10 +38,14 @@ public:
     // needed to translate y dimensions into proper movement
     void moveTo(size_t x, size_t y, size_t surfaceHeight);
 
-    // Shift down cells by shift columns
-    void columnShiftDown(size_t shifts);
+    // Shift down cells by shift rows
+    void rowShiftDown(size_t shifts);
 
+    // Reset the colour of the cursor
     void resetColour();
+
+    // Print a debug cell, which is just a white hash
+    void printDebugHashCell();
 private:
     // Private constructor to prevent creation
     Printer() {};

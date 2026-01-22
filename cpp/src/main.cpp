@@ -22,8 +22,7 @@ int main() {
     tui::TerminalBackend backend(WIDTH, HEIGHT);
     
     // 2. Clear screen initially
-    std::cout << CLEAR_SCREEN; 
-    
+    std::cout << CLEAR_SCREEN;
 
     // 3. Game Loop
     bool running{ true };
@@ -38,6 +37,7 @@ int main() {
         int boxX = frameCount % (WIDTH - 5);
         int boxY = (frameCount / 2) % (HEIGHT - 2);
         
+        /*
         for (int y = 0; y < HEIGHT; ++y) {
             for (int x = 0; x < WIDTH; ++x) {
                 Cell c;
@@ -46,6 +46,7 @@ int main() {
                 surface.setCell(x, y, c);
             } 
         }
+        */
 
         for(int y = 0; y < 3; ++y) {
             for(int x = 0; x < 5; ++x) {
@@ -59,7 +60,7 @@ int main() {
         
         // --- Present ---
         
-        backend.present(Camera{ 0, 0 });
+        backend.present(Camera{ 0, y_count });
         y_count++;
         // Timing
         std::this_thread::sleep_for(std::chrono::milliseconds(33)); // ~30 FPS
