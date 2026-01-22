@@ -14,6 +14,7 @@ using tui::ansi::Printer;
  * Main Entry Point for TUI-Art C++ Rewrite
  */
 int main() {
+
     // 1. Setup
     constexpr int WIDTH{ 80 };
     constexpr int HEIGHT{ 24 };
