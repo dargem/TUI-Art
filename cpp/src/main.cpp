@@ -64,7 +64,7 @@ int main() {
         backend.present(Camera{ 0, y_count });
         y_count++;
         // Timing
-        std::this_thread::sleep_for(std::chrono::milliseconds(250)); // ~30 FPS
+        std::this_thread::sleep_for(std::chrono::milliseconds(30)); // ~30 FPS
         frameCount++;
         
         // Simple exit condition for demo

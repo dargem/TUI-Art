@@ -40,7 +40,10 @@ public:
     static TerminalStatus& getInstance();
 
     void operator=(const TerminalStatus& terminalStatus) = delete; // remove assignment
-    TerminalStatus(const TerminalStatus& terminalStatus) = delete; // remove copy construction
+    void operator=(const TerminalStatus&& terminalStatus) = delete; // remove move assignment
+    TerminalStatus(const TerminalStatus& terminalStatus) = delete; // remove copy constructor
+    TerminalStatus(const TerminalStatus&& terminalStatus) = delete; // remove move constructor
+
 
     // Get a terminal dimension object holding 
     // width/height in single width ASCII characters
