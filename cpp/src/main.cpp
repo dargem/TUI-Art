@@ -6,51 +6,55 @@
 #include "tui/ansi/ansi_constants.hpp"
 #include "core/types.hpp"
 
-using tui::ansi::CLEAR_SCREEN;
 using tui::Camera;
 using tui::Cell;
+using tui::ansi::CLEAR_SCREEN;
 using tui::ansi::Printer;
 /*
  * Main Entry Point for TUI-Art C++ Rewrite
  */
-int main() {
+int main()
+{
 
     // 1. Setup
-    constexpr int WIDTH{ 80 };
-    constexpr int HEIGHT{ 24 };
+    constexpr int WIDTH{80};
+    constexpr int HEIGHT{24};
     // const Camera camera{0, 0};
     int y_count{};
     tui::TerminalBackend backend(WIDTH, HEIGHT);
-    
+
     // 2. Clear screen initially
     std::cout << CLEAR_SCREEN;
 
     // 3. Game Loop
-    bool running{ true };
+    bool running{true};
     int frameCount{};
 
-    while (running) {
-        tui::Surface& surface = backend.getDrawSurface();
-        
+    while (running)
+    {
+        tui::Surface &surface = backend.getDrawSurface();
+
         // --- Update & Render ---
-        
+
         // Example: Draw a moving box
         int boxX = frameCount % (WIDTH - 5);
         int boxY = (frameCount / 2) % (HEIGHT - 2);
-        
+
         /*
         for (int y = 0; y < HEIGHT; ++y) {
             for (int x = 0; x < WIDTH; ++x) {
                 Cell c;
-                c.style.bg = {0, 0, 1}; 
+                c.style.bg = {0, 0, 1};
                 // kitty defaults 0, 0, 0 black to the default terminal for some reason...
                 surface.setCell(x, y, c);
-            } 
+            }
         }
         */
 
-        for(int y = 0; y < 3; ++y) {
-            for(int x = 0; x < 5; ++x) {
+        for (int y = 0; y < 3; ++y)
+        {
+            for (int x = 0; x < 5; ++x)
+            {
                 Cell c;
                 c.character = '#';
                 c.style.fg = {255, 0, 0}; // Red
@@ -58,17 +62,18 @@ int main() {
                 surface.setCell(boxX + x, boxY + y, c);
             }
         }
-        
+
         // --- Present ---
-        
-        backend.present(Camera{ 0, y_count });
+
+        backend.present(Camera{0, y_count});
         y_count++;
         // Timing
         std::this_thread::sleep_for(std::chrono::milliseconds(30)); // ~30 FPS
         frameCount++;
-        
+
         // Simple exit condition for demo
-        if (frameCount > 20000) running = false;
+        if (frameCount > 20000)
+            running = false;
 
         Printer::getInstance().resetColour();
     }

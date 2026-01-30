@@ -1,39 +1,40 @@
 #include <gtest/gtest.h>
 #include "core/types.hpp"
 
-TEST(TypesTest, ColourEquality) {
-    tui::Colour c1{255, 0, 0};
-    tui::Colour c2{255, 0, 0};
-    tui::Colour c3{0, 255, 0};
-    
-    EXPECT_TRUE(c1 == c2);
-    EXPECT_FALSE(c1 == c3);
-    EXPECT_FALSE(c2 == c3);
+TEST(TypesTest, ColourEquality)
+{
+    tui::Colour red1{255, 0, 0};
+    tui::Colour red2{255, 0, 0};
+    tui::Colour green{0, 255, 0};
+
+    EXPECT_EQ(red1, red2) << "Colours with the same value even with different identity should be equal";
+    EXPECT_NE(red1, green) << "Colours with different value should be unequal";
 }
 
-TEST(TypesTest, StyleEquality) {
-    tui::Colour c1{255, 0, 0};
-    tui::Colour c2{255, 0, 0};
-    tui::Colour c3{0, 255, 0};
+TEST(TypesTest, StyleEquality)
+{
+    const tui::Colour red{255, 0, 0};
+    const tui::Colour green{0, 255, 0};
 
-    tui::Style style1{c1, c2, false};
-    tui::Style style2{c2, c1, false};
+    tui::Style base{red, green, false};
+    tui::Style duplicate{red, green, false};
+    tui::Style diffBold{red, green, true};
+    tui::Style diffFg{green, green, false};
+    tui::Style diffBg{red, red, false};
 
-    EXPECT_TRUE(style1 == style2);
+    EXPECT_EQ(base, duplicate) << "Identical styles should be equal";
+    EXPECT_NE(base, diffBold) << "Different bold attribute should make styles unequal";
+    EXPECT_NE(base, diffFg) << "Different foreground constant should make styles unequal";
+    EXPECT_NE(base, diffBg) << "Different background constant should make styles unequal";
+}
 
-    style2.bold = true;
+TEST(TypesTest, CellEquality)
+{
+    tui::Colour red{255, 0, 0};
+    tui::Colour green{0, 255, 0};
 
-    EXPECT_FALSE(style1 == style2);
+    tui::Style base{red, green, false};
+    tui::Style baseReversed{green, red, false};
 
-    style1.bold = true;
-
-    EXPECT_TRUE(style1 == style2);
-
-    style1.fg = c3;
-
-    EXPECT_FALSE(style1 == style2);
-
-    style2.fg = c3;
-
-    EXPECT_TRUE(style1 == style2);
+    tui::Cell cell{};
 }

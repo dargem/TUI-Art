@@ -47,7 +47,8 @@ FetchContent_MakeAvailable(googletest)
 
 include(GoogleTest)
 
-add_executable(unit_tests tests/core/types.cpp)
+file(GLOB_RECURSE TEST_SOURCES "tests/*.cpp")
+add_executable(unit_tests ${TEST_SOURCES})
 target_link_libraries(unit_tests tui_lib GTest::gtest_main)
 
 gtest_discover_tests(unit_tests)
