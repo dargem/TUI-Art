@@ -44,7 +44,6 @@ public:
     TerminalStatus(const TerminalStatus& terminalStatus) = delete; // remove copy constructor
     TerminalStatus(const TerminalStatus&& terminalStatus) = delete; // remove move constructor
 
-
     // Get a terminal dimension object holding 
     // width/height in single width ASCII characters
     TerminalDimension getTerminalDimension();
@@ -55,6 +54,7 @@ public:
     // Is updated when the terminal has printed something new
     LoadedColour loadedColour;
 private:
+
     TerminalStatus();
 };
 

@@ -6,28 +6,22 @@ namespace tui {
 struct Colour {
     uint8_t r, g, b;
 
-    inline bool operator!=(const Colour& other) const {
-        return r != other.r ||
-               g != other.g ||
-               b != other.b;
-    }
+    bool operator==(const Colour& other) const = default;
 };
 
 struct Style {
-    Colour fg{255, 255, 255};
-    Colour bg{0, 0, 0};
+    Colour fg;
+    Colour bg;
     bool bold = false;
+ 
+    bool operator==(const Style& other) const = default;
 };
 
 struct Cell {
     char character = ' ';
     Style style;
 
-    bool operator!=(const Cell& other) const {
-        return character != other.character || 
-               style.fg != other.style.fg ||
-               style.bg != other.style.bg;
-    }
+    bool operator==(const Cell& other) const = default;
 };
 
 // Viewer of the screen

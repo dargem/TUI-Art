@@ -6,6 +6,7 @@
 namespace tui {
 
 using ansi::Printer;
+
 TerminalBackend::TerminalBackend(const size_t w, const size_t h)
     : frontBuffer{ w, h }, backBuffer { w, h }, frontBufferCamera{0, 0}
 {}
