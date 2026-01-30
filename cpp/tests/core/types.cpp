@@ -33,8 +33,15 @@ TEST(TypesTest, CellEquality)
     tui::Colour red{255, 0, 0};
     tui::Colour green{0, 255, 0};
 
-    tui::Style base{red, green, false};
-    tui::Style baseReversed{green, red, false};
+    tui::Style style{red, green, false};
+    tui::Style diffStyleProps{green, red, false};
 
-    tui::Cell cell{};
+    tui::Cell base{' ', style};
+    tui::Cell duplicate{' ', style};
+    tui::Cell cellDiffStyle{' ', diffStyleProps};
+    tui::Cell cellDiffChar{'X', style};
+
+    EXPECT_EQ(base, duplicate) << "Identical cells should be equal";
+    EXPECT_NE(base, cellDiffStyle) << "Different styles should make them cells unequal";
+    EXPECT_NE(base, cellDiffChar) << "Different chars should make them need overwriting";
 }
