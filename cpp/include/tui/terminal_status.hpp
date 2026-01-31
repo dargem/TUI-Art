@@ -42,7 +42,7 @@ namespace tui
 
         // Get a terminal dimension object holding
         // width/height in single width ASCII characters
-        TerminalDimension getTerminalDimension();
+        TerminalDimension getTerminalDimension() const;
 
         GridLocation cursorLocation;
 

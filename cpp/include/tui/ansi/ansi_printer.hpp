@@ -18,10 +18,10 @@ namespace tui::ansi
     public:
         static Printer &getInstance();
         // private
-        Printer(const Printer &) = delete;        // don't implement copy constructor
-        void operator=(const Printer &) = delete; // don't implement assignment operator
-        Printer(Printer &&) = delete;             // don't implement move constructor
-        void operator=(Printer &&) = delete;      // don't implement move assignment operator
+        Printer(const Printer &) = delete;        // delete copy constructor
+        void operator=(const Printer &) = delete; // delete assignment operator
+        Printer(Printer &&) = delete;             // delete move constructor
+        void operator=(Printer &&) = delete;      // delete move assignment operator
 
         // Prints a cell at the GridLocation inputted, printing
         //     - Character in its foreground colour
