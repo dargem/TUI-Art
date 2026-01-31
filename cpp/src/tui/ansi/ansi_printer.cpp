@@ -1,5 +1,6 @@
 #include "tui/ansi/ansi_printer.hpp"
 #include "tui/ansi/ansi_constants.hpp"
+#include "tui/terminal_status.hpp"
 
 #include <iostream>
 #include <string_view>
@@ -15,7 +16,13 @@ namespace tui::ansi
         return printer;
     }
 
-    void Printer::printCell(const Cell &cell)
+    Printer::Printer()
+        : terminalStatus{TerminalStatus::getInstance()}
+    {
+        terminalStatus.cursorLocation = {0, 0};
+    }
+
+    void Printer::printCell(const Cell &cell, GridLocation insertionLocation)
     {
         // Print new escape string colours only when required
         // If the last printed is the same assume no change is needed

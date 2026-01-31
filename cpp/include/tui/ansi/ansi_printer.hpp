@@ -2,8 +2,10 @@
 
 #include <string_view>
 #include <cstddef>
-#include "core/types.hpp"
 #include <optional>
+
+#include "core/types.hpp"
+#include "tui/terminal_status.hpp"
 
 namespace tui::ansi
 {
@@ -16,31 +18,24 @@ namespace tui::ansi
     public:
         static Printer &getInstance();
         // private
-        Printer(const Printer &) = delete;         // don't implement copy constructor
-        void operator=(const Printer &) = delete;  // don't implement assignment operator
-        Printer(const Printer &&) = delete;        // don't implement move constructor
-        void operator=(const Printer &&) = delete; // don't implement move assignment operator
+        Printer(const Printer &) = delete;        // don't implement copy constructor
+        void operator=(const Printer &) = delete; // don't implement assignment operator
+        Printer(Printer &&) = delete;             // don't implement move constructor
+        void operator=(Printer &&) = delete;      // don't implement move assignment operator
 
-        // Prints a cell at the cursor
-        // This print outputs the:
+        // Prints a cell at the GridLocation inputted, printing
         //     - Character in its foreground colour
         //     - Background in the background colour
-        void printCell(const Cell &cell);
+        void printCell(const Cell &cell, GridLocation printLocation);
 
-        // Insert 1 cell at cursor
-        // Shifts same line cells right by one
-        void insertCellRightShift(const Cell &cell);
+        // Inserts a cell at the GridLocation, shifts same line cells right by one
+        void insertCellRightShift(const Cell &cell, GridLocation insertLocation);
 
-        // Delete 1 cell at cursor
-        // Shifts same line cells left by one
-        void removeCellLeftShift();
+        // Deletes 1 cell at the cellLocation,
+        // this shifts same line cells left by one
+        void removeCellLeftShift(GridLocation cellLocation);
 
-        // Moves the cursor to the x,y coordinate
-        // surfaceHeight is the height of the backbuffer,
-        // needed to translate y dimensions into proper movement
-        void moveTo(size_t x, size_t y, size_t surfaceHeight);
-
-        // Shift down cells by shift rows
+        // Shift down the whole display by shift rows
         void rowShiftDown(size_t shifts);
 
         // Reset the colour of the cursor
@@ -50,15 +45,14 @@ namespace tui::ansi
         void printDebugHashCell();
 
     private:
-        // Private constructor to prevent creation
-        Printer() {};
+        // Moves the cursor to the grid location
+        // surfaceHeight is the height of the backbuffer,
+        // needed to translate y dimensions into proper movement
+        void moveTo(GridLocation gridLocation, size_t surfaceHeight);
 
-        // Colour state of the last thing the printers printed
-        // and only one printer can exist so it is safe to reuse
-        // RGB colours for optimisation when possible rather than
-        // senselessly overwriting an identical past colour state
-        std::optional<Colour> lastForegroundColour;
-        std::optional<Colour> lastBackgroundColour;
+        // Private constructor to prevent creation
+        Printer();
+        TerminalStatus &terminalStatus;
     };
 
 };
