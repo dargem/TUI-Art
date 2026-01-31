@@ -2,7 +2,12 @@
 
 namespace tui
 {
-    
+    // lazy construct a publisher
+    TerminalDimensionPublisher &TerminalDimensionPublisher::getInstance()
+    {
+        static TerminalDimensionPublisher instance;
+        return instance;
+    }
 
     void TerminalDimensionPublisher::addListener(TerminalDimensionListener *newListener)
     {
@@ -17,4 +22,5 @@ namespace tui
             listener->receiveTerminalSize(terminalDimension);
         }
     }
+
 }

@@ -16,7 +16,9 @@ namespace tui
     class TerminalDimensionPublisher
     {
     public:
-        TerminalDimensionPublisher &getInstance();
+        // get a publisher instance
+        static TerminalDimensionPublisher &getInstance();
+
         void operator=(const TerminalDimensionPublisher &) = delete;             // delete copy assignment
         void operator=(TerminalDimensionPublisher &&) = delete;                  // delete move assignment
         TerminalDimensionPublisher(const TerminalDimensionPublisher &) = delete; // delete copy constructor
@@ -25,7 +27,7 @@ namespace tui
         // Add a listener to the size of the terminal
         // Listeners will be updated with the new terminal size if the terminal resized
         // It will only check for updates at the start of each frame
-        void addListener(TerminalDimensionListener *newListener);
+        void addListener(TerminalDimensionListener *);
 
         // Should be triggered at the start of each frame
         void publishTerminalSize();
