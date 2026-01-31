@@ -47,10 +47,10 @@ namespace tui
     public:
         static TerminalStatus &getInstance();
 
-        void operator=(const TerminalStatus &terminalStatus) = delete;  // remove assignment
-        void operator=(const TerminalStatus &&terminalStatus) = delete; // remove move assignment
-        TerminalStatus(const TerminalStatus &terminalStatus) = delete;  // remove copy constructor
-        TerminalStatus(const TerminalStatus &&terminalStatus) = delete; // remove move constructor
+        void operator=(const TerminalStatus &) = delete; // remove assignment
+        void operator=(TerminalStatus &&) = delete;      // remove move assignment
+        TerminalStatus(const TerminalStatus &) = delete; // remove copy constructor
+        TerminalStatus(TerminalStatus &&) = delete;      // remove move constructor
 
         // Get a terminal dimension object holding
         // width/height in single width ASCII characters
@@ -64,6 +64,7 @@ namespace tui
 
     private:
         TerminalStatus();
+        constexpr static size_t MAX_FAILED_QUERIES{10};
     };
 
 };

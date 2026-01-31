@@ -67,7 +67,6 @@ namespace tui::ansi
     {
         assert(surfaceHeight > y && "surface height must be larger than y pos to move to");
         std::cout << "\033[" << surfaceHeight - y << ";" << x + 1 << "H";
-        // std::cout << "\033[" << y << ";" << x << "H";
     }
 
     void Printer::rowShiftDown(size_t shifts)
