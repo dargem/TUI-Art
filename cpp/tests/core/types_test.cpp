@@ -45,3 +45,22 @@ TEST(TypesTest, CellEquality)
     EXPECT_NE(base, cellDiffStyle) << "Different styles should make them cells unequal";
     EXPECT_NE(base, cellDiffChar) << "Different chars should make them need overwriting";
 }
+
+TEST(TypesTest, CellSize)
+{
+    constexpr static size_t EIGHT_BYTES{8};
+    tui::Cell cell;
+
+    // A cell should be exactly eight bytes for good alignment
+    EXPECT_EQ(sizeof(cell), EIGHT_BYTES);
+}
+
+TEST(TypesTest, GridLocationEquality)
+{
+    tui::GridLocation base{5, 5};
+    tui::GridLocation copy{5, 5};
+    tui::GridLocation altered{5, 10};
+
+    EXPECT_EQ(base, copy) << "Identical locations by value should be equal";
+    EXPECT_NE(base, altered) << "Different locations should be not equal";
+}

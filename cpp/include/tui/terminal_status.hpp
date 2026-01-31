@@ -18,18 +18,6 @@ namespace tui
         size_t y;
     };
 
-    struct CursorLocation
-    {
-
-        CursorLocation(size_t x, size_t y)
-            : x{x}, y{y}
-        {
-        }
-
-        size_t x;
-        size_t y;
-    };
-
     struct LoadedColour
     {
 
@@ -56,7 +44,7 @@ namespace tui
         // width/height in single width ASCII characters
         TerminalDimension getTerminalDimension();
 
-        CursorLocation cursorLocation;
+        GridLocation cursorLocation;
 
         // Holds the last colour the terminal has printed
         // Is updated when the terminal has printed something new
@@ -64,7 +52,6 @@ namespace tui
 
     private:
         TerminalStatus();
-        constexpr static size_t MAX_FAILED_QUERIES{10};
     };
 
 };

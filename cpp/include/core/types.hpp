@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include <cstddef>
 
 namespace tui
 {
@@ -33,6 +34,19 @@ namespace tui
     {
         int x;
         int y;
+    };
+
+    struct GridLocation
+    {
+        GridLocation(size_t x, size_t y)
+            : x{x}, y{y}
+        {
+        }
+
+        size_t x;
+        size_t y;
+
+        bool operator==(const GridLocation &other) const = default;
     };
 
 }
