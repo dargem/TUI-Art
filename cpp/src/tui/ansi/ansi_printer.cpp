@@ -17,43 +17,59 @@ namespace tui::ansi
     }
 
     Printer::Printer()
-        : terminalStatus{TerminalStatus::getInstance()}
+        : terminalStatus{TerminalStatus::getInstance()},
+          currentTerminalDimension{0, 0} // default values
     {
+        // subscribes and publishes to this object setting the current terminal dimension
+        terminalStatus.addDimensionListener(this);
+        terminalStatus.publishTerminalSize();
+
+        // centre the cursor to a known position as its at an
+        // unknown position at the start of the application
+        // do an unchecked move
+        moveTo<false>(GridLocation{0, 0});
         terminalStatus.cursorLocation = {0, 0};
+
+        // resets the colour to something known
+        resetColour();
+    }
+
+    void Printer::receiveTerminalSize(TerminalDimension terminalDimension)
+    {
+        currentTerminalDimension = terminalDimension;
     }
 
     void Printer::printCell(const Cell &cell, GridLocation insertionLocation)
     {
         // Print new escape string colours only when required
-        // If the last printed is the same assume no change is needed
+        // If the last printed colour is the same no change is needed
 
-        // foreground string
-        if (lastForegroundColour != cell.style.fg || !lastForegroundColour.has_value())
+        if (terminalStatus.loadedColour.fg != cell.style.fg)
         {
             std::cout << SET_FOREGROUND_RGB
                       << (int)cell.style.fg.r << ";"
                       << (int)cell.style.fg.g << ";"
                       << (int)cell.style.fg.b << "m";
 
-            lastForegroundColour = cell.style.fg;
+            terminalStatus.loadedColour.fg = cell.style.fg;
         }
 
         // background string
-        if (lastBackgroundColour != cell.style.bg || !lastBackgroundColour.has_value())
+        if (terminalStatus.loadedColour.bg != cell.style.bg)
         {
             std::cout << SET_BACKGROUND_RGB
                       << (int)cell.style.bg.r << ";"
                       << (int)cell.style.bg.g << ";"
                       << (int)cell.style.bg.b << "m";
 
-            lastBackgroundColour = cell.style.bg;
+            terminalStatus.loadedColour.bg = cell.style.bg;
         }
 
         // actual character
         std::cout << cell.character;
     }
 
-    void Printer::insertCellRightShift(const Cell &cell)
+    void Printer::insertCellRightShift(const Cell &cell, const GridLocation insertLocation)
     {
         std::cout << INSERT_SPACE;
         printCell(cell);
@@ -68,12 +84,26 @@ namespace tui::ansi
     // Y values are "inverted" when it comes to ANSI escape codes
     // A y value of 0 is going to be at the top not at the bottom
     // Rendering obviously expects 0, 0 to be at the bottom left though
-    // So this must be inverted
-    // ANSI columns are also one based but input x is 0 based, so needs an offset by one
-    void Printer::moveTo(const size_t x, const size_t y, size_t surfaceHeight)
+    // So this must be inverted. ANSI columns are also one based but input
+    // x is 0 based, so needs an offset by one
+    template <bool checked = true>
+    void Printer::moveTo(const GridLocation gridLocation)
     {
-        assert(surfaceHeight > y && "surface height must be larger than y pos to move to");
-        std::cout << "\033[" << surfaceHeight - y << ";" << x + 1 << "H";
+        // option of an unchecked move for setup
+        if constexpr (checked)
+        {
+            // check if a movmement is actually needed, if the cursors in
+            // the right position already then it can just be skipped
+            if (terminalStatus.cursorLocation == gridLocation)
+            {
+                return;
+            }
+        }
+
+        size_t surfaceHeight{currentTerminalDimension.charHeight};
+
+        assert(surfaceHeight > gridLocation.y && "surface height must be larger than y pos to move to");
+        std::cout << "\033[" << surfaceHeight - gridLocation.y << ";" << gridLocation.x + 1 << "H";
     }
 
     void Printer::rowShiftDown(size_t shifts)
@@ -88,9 +118,17 @@ namespace tui::ansi
     // the printer will always output the change colour ansi for the next one
     void Printer::resetColour()
     {
-        std::cout << RESET_COLOUR;
-        lastForegroundColour = std::nullopt;
-        lastBackgroundColour = std::nullopt;
+        std::cout << SET_FOREGROUND_RGB
+                  << (int)FG_COLOUR_DEFAULT.r << ";"
+                  << (int)FG_COLOUR_DEFAULT.g << ";"
+                  << (int)FG_COLOUR_DEFAULT.b << "m";
+        terminalStatus.loadedColour.fg = FG_COLOUR_DEFAULT; // set to a known colour
+
+        std::cout << SET_BACKGROUND_RGB
+                  << (int)BG_COLOUR_DEFAULT.r << ";"
+                  << (int)BG_COLOUR_DEFAULT.g << ";"
+                  << (int)BG_COLOUR_DEFAULT.b << "m";
+        terminalStatus.loadedColour.bg = BG_COLOUR_DEFAULT; // set to a known colour
     }
 
     void Printer::printDebugHashCell()

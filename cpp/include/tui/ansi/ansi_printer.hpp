@@ -13,11 +13,11 @@ namespace tui::ansi
     // A printer used to print objects to screen
     // This is a singleton as only one terminal will be in use
     // and to prevent misuse with multiple printers
-    class Printer
+    class Printer : TerminalDimensionListener
     {
     public:
         static Printer &getInstance();
-        // private
+
         Printer(const Printer &) = delete;        // delete copy constructor
         void operator=(const Printer &) = delete; // delete assignment operator
         Printer(Printer &&) = delete;             // delete move constructor
@@ -44,15 +44,22 @@ namespace tui::ansi
         // Print a debug cell, which is just a white hash
         void printDebugHashCell();
 
+        // Receive a new terminal dimension size on update
+        void receiveTerminalSize(TerminalDimension) override;
+
     private:
         // Moves the cursor to the grid location
-        // surfaceHeight is the height of the backbuffer,
-        // needed to translate y dimensions into proper movement
-        void moveTo(GridLocation gridLocation, size_t surfaceHeight);
+        template <bool checked = true>
+        void moveTo(GridLocation gridLocation);
 
         // Private constructor to prevent creation
         Printer();
         TerminalStatus &terminalStatus;
+        TerminalDimension currentTerminalDimension;
+
+        // Not 0, 0, 0 due to kitty stuff defaulting to BG which can break diffing logic
+        constexpr static Colour FG_COLOUR_DEFAULT{255, 255, 255};
+        constexpr static Colour BG_COLOUR_DEFAULT{0, 0, 1};
     };
 
 };
