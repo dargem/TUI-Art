@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstddef>
+#include <vector>
 #include "core/types.hpp"
 
 namespace tui
@@ -9,13 +10,13 @@ namespace tui
     struct TerminalDimension
     {
 
-        TerminalDimension(size_t x, size_t y)
-            : x{x}, y{y}
+        TerminalDimension(size_t charWidth, size_t charHeight)
+            : charWidth{charWidth}, charHeight{charHeight}
         {
         }
 
-        size_t x;
-        size_t y;
+        size_t charWidth;
+        size_t charHeight;
     };
 
     struct LoadedColour
@@ -30,6 +31,12 @@ namespace tui
         Colour bg;
     };
 
+    class TerminalDimensionListener
+    {
+    public:
+        virtual void receiveTerminalSize(TerminalDimension) = 0;
+    };
+
     class TerminalStatus
     {
     public:
@@ -40,9 +47,13 @@ namespace tui
         TerminalStatus(const TerminalStatus &) = delete; // remove copy constructor
         TerminalStatus(TerminalStatus &&) = delete;      // remove move constructor
 
-        // Get a terminal dimension object holding
-        // width/height in single width ASCII characters
-        TerminalDimension getTerminalDimension() const;
+        // Add a listener to the size of the terminal
+        // Listeners will be updated with the new terminal size if the terminal resized
+        // It will only check for updates at the start of each frame
+        void addDimensionListener(TerminalDimensionListener *);
+
+        // Should be triggered at the start of each frame
+        void publishTerminalSize();
 
         GridLocation cursorLocation;
 
@@ -52,6 +63,12 @@ namespace tui
 
     private:
         TerminalStatus();
+
+        // check the dimension of the terminal
+        TerminalDimension getTerminalDimension();
+
+        // all the listeners for terminal size updates
+        std::vector<TerminalDimensionListener *> listeners;
     };
 
 };

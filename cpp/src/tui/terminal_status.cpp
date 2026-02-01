@@ -41,6 +41,20 @@ namespace tui
         loadedColour.fg.b = 0;
     }
 
+    void TerminalStatus::addDimensionListener(TerminalDimensionListener *newListener)
+    {
+        listeners.push_back(newListener);
+    }
+
+    void TerminalStatus::publishTerminalSize()
+    {
+        TerminalDimension terminalDimension{getTerminalDimension()};
+        for (TerminalDimensionListener *listener : listeners)
+        {
+            listener->receiveTerminalSize(terminalDimension);
+        }
+    }
+
     // Checks the current size of the terminal
     TerminalDimension TerminalStatus::getTerminalDimension()
     {
