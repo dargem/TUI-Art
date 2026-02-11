@@ -1,7 +1,6 @@
 # Terminal Art
 
 Some work in progress terminal art
-Uses a modified version of bresenham's line formula for floating points
 
 # Credits
 

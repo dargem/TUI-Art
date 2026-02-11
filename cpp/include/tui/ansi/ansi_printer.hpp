@@ -33,7 +33,7 @@ namespace tui::ansi
 
         // Deletes 1 cell at the cellLocation,
         // this shifts same line cells left by one
-        void removeCellLeftShift(GridLocation cellLocation);
+        void removeCellLeftShift(GridLocation deleteLocation);
 
         // Shift down the whole display by shift rows
         void rowShiftDown(size_t shifts);
@@ -60,6 +60,7 @@ namespace tui::ansi
         // Not 0, 0, 0 due to kitty stuff defaulting to BG which can break diffing logic
         constexpr static Colour FG_COLOUR_DEFAULT{255, 255, 255};
         constexpr static Colour BG_COLOUR_DEFAULT{0, 0, 1};
+        constexpr static GridLocation DEBUG_LOCATION{0, 0};
     };
 
 };

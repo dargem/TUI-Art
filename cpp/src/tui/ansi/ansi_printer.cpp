@@ -67,17 +67,22 @@ namespace tui::ansi
 
         // actual character
         std::cout << cell.character;
+
+        // printing a character moves the cursor one to the right
+        terminalStatus.cursorLocation.x += 1;
     }
 
     void Printer::insertCellRightShift(const Cell &cell, const GridLocation insertLocation)
     {
+        moveTo(insertLocation);
         std::cout << INSERT_SPACE;
-        printCell(cell);
+        printCell(cell, insertLocation);
     }
 
     // Delete 1 character at cursor (shifts same left)
-    void Printer::removeCellLeftShift()
+    void Printer::removeCellLeftShift(const GridLocation deleteLocation)
     {
+        moveTo(deleteLocation);
         std::cout << REMOVE_CELL;
     }
 
@@ -86,15 +91,15 @@ namespace tui::ansi
     // Rendering obviously expects 0, 0 to be at the bottom left though
     // So this must be inverted. ANSI columns are also one based but input
     // x is 0 based, so needs an offset by one
-    template <bool checked = true>
-    void Printer::moveTo(const GridLocation gridLocation)
+    template <bool checked>
+    void Printer::moveTo(const GridLocation destination)
     {
         // option of an unchecked move for setup
         if constexpr (checked)
         {
             // check if a movmement is actually needed, if the cursors in
             // the right position already then it can just be skipped
-            if (terminalStatus.cursorLocation == gridLocation)
+            if (terminalStatus.cursorLocation == destination)
             {
                 return;
             }
@@ -102,8 +107,9 @@ namespace tui::ansi
 
         size_t surfaceHeight{currentTerminalDimension.charHeight};
 
-        assert(surfaceHeight > gridLocation.y && "surface height must be larger than y pos to move to");
-        std::cout << "\033[" << surfaceHeight - gridLocation.y << ";" << gridLocation.x + 1 << "H";
+        assert(surfaceHeight > destination.y && "surface height must be larger than y pos to move to");
+        std::cout << "\033[" << surfaceHeight - destination.y << ";" << destination.x + 1 << "H";
+        terminalStatus.cursorLocation = destination;
     }
 
     void Printer::rowShiftDown(size_t shifts)
@@ -146,7 +152,7 @@ namespace tui::ansi
         cell.style.bg.r = 0;
         cell.style.bg.g = 0;
         cell.style.bg.b = 1;
-        printCell(cell);
+        printCell(cell, DEBUG_LOCATION);
     }
 
 }
