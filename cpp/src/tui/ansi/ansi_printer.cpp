@@ -10,25 +10,17 @@
 namespace tui::ansi
 {
 
-    Printer &Printer::getInstance()
-    {
-        static Printer printer;
-        return printer;
-    }
-
-    Printer::Printer()
-        : terminalStatus{TerminalStatus::getInstance()},
-          currentTerminalDimension{0, 0} // default values
+    Printer::Printer(TerminalStatus& terminalStatus)
+        : dimensionSubscriptionToken{terminalStatus.addDimensionListener(this)}
+        , currentTerminalDimension{0, 0}
     {
         // subscribes and publishes to this object setting the current terminal dimension
-        terminalStatus.addDimensionListener(this);
         terminalStatus.publishTerminalSize();
 
         // centre the cursor to a known position as its at an
         // unknown position at the start of the application
         // do an unchecked move
         moveTo<false>(GridLocation{0, 0});
-        terminalStatus.cursorLocation = {0, 0};
 
         // resets the colour to something known
         resetColour();
@@ -44,32 +36,32 @@ namespace tui::ansi
         // Print new escape string colours only when required
         // If the last printed colour is the same no change is needed
 
-        if (terminalStatus.loadedColour.fg != cell.style.fg)
+        if (loadedFGColour != cell.style.fg)
         {
             std::cout << SET_FOREGROUND_RGB
                       << (int)cell.style.fg.r << ";"
                       << (int)cell.style.fg.g << ";"
                       << (int)cell.style.fg.b << "m";
 
-            terminalStatus.loadedColour.fg = cell.style.fg;
+            loadedFGColour = cell.style.fg;
         }
 
         // background string
-        if (terminalStatus.loadedColour.bg != cell.style.bg)
+        if (loadedBGColour != cell.style.bg)
         {
             std::cout << SET_BACKGROUND_RGB
                       << (int)cell.style.bg.r << ";"
                       << (int)cell.style.bg.g << ";"
                       << (int)cell.style.bg.b << "m";
 
-            terminalStatus.loadedColour.bg = cell.style.bg;
+            loadedBGColour = cell.style.bg;
         }
 
         // actual character
         std::cout << cell.character;
 
         // printing a character moves the cursor one to the right
-        terminalStatus.cursorLocation.x += 1;
+        cursorLocation.x += 1;
     }
 
     void Printer::insertCellRightShift(const Cell &cell, const GridLocation insertLocation)
@@ -99,7 +91,7 @@ namespace tui::ansi
         {
             // check if a movmement is actually needed, if the cursors in
             // the right position already then it can just be skipped
-            if (terminalStatus.cursorLocation == destination)
+            if (cursorLocation == destination)
             {
                 return;
             }
@@ -109,7 +101,7 @@ namespace tui::ansi
 
         assert(surfaceHeight > destination.y && "surface height must be larger than y pos to move to");
         std::cout << "\033[" << surfaceHeight - destination.y << ";" << destination.x + 1 << "H";
-        terminalStatus.cursorLocation = destination;
+        cursorLocation = destination;
     }
 
     void Printer::rowShiftDown(size_t shifts)
@@ -128,13 +120,13 @@ namespace tui::ansi
                   << (int)FG_COLOUR_DEFAULT.r << ";"
                   << (int)FG_COLOUR_DEFAULT.g << ";"
                   << (int)FG_COLOUR_DEFAULT.b << "m";
-        terminalStatus.loadedColour.fg = FG_COLOUR_DEFAULT; // set to a known colour
+        loadedFGColour = FG_COLOUR_DEFAULT; // set to a known colour
 
         std::cout << SET_BACKGROUND_RGB
                   << (int)BG_COLOUR_DEFAULT.r << ";"
                   << (int)BG_COLOUR_DEFAULT.g << ";"
                   << (int)BG_COLOUR_DEFAULT.b << "m";
-        terminalStatus.loadedColour.bg = BG_COLOUR_DEFAULT; // set to a known colour
+        loadedBGColour = BG_COLOUR_DEFAULT; // set to a known colour
     }
 
     void Printer::printDebugHashCell()

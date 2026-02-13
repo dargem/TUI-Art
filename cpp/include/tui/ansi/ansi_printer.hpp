@@ -9,19 +9,13 @@
 
 namespace tui::ansi
 {
-
     // A printer used to print objects to screen
     // This is a singleton as only one terminal will be in use
     // and to prevent misuse with multiple printers
     class Printer : TerminalDimensionListener
     {
     public:
-        static Printer &getInstance();
-
-        Printer(const Printer &) = delete;        // delete copy constructor
-        void operator=(const Printer &) = delete; // delete assignment operator
-        Printer(Printer &&) = delete;             // delete move constructor
-        void operator=(Printer &&) = delete;      // delete move assignment operator
+        Printer(TerminalStatus&);
 
         // Prints a cell at the GridLocation inputted, printing
         //     - Character in its foreground colour
@@ -52,9 +46,14 @@ namespace tui::ansi
         template <bool checked = true>
         void moveTo(GridLocation gridLocation);
 
-        // Private constructor to prevent creation
-        Printer();
-        TerminalStatus &terminalStatus;
+        GridLocation cursorLocation;
+
+        // Holds the last colour the terminal has printed
+        // Is updated when the terminal has printed something new
+        Colour loadedFGColour;
+        Colour loadedBGColour;
+
+        TerminalDimensionToken dimensionSubscriptionToken;
         TerminalDimension currentTerminalDimension;
 
         // Not 0, 0, 0 due to kitty stuff defaulting to BG which can break diffing logic

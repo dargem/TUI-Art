@@ -22,21 +22,10 @@ namespace tui
         size_t charHeight;
     };
 
-    struct LoadedColour
-    {
-
-        LoadedColour(Colour fg, Colour bg)
-            : fg{fg}, bg{bg}
-        {
-        }
-
-        Colour fg;
-        Colour bg;
-    };
-
     class TerminalDimensionListener
     {
     public:
+        // receive news on a new terminal size
         virtual void receiveTerminalSize(TerminalDimension) = 0;
     };
 
@@ -59,16 +48,10 @@ namespace tui
 
         // Should be triggered at the start of each frame
         void publishTerminalSize();
-
-        GridLocation cursorLocation;
-
-        // Holds the last colour the terminal has printed
-        // Is updated when the terminal has printed something new
-        LoadedColour loadedColour;
-
     private:
 
         // check the dimension of the terminal
+        [[nodiscard]]
         TerminalDimension getTerminalDimension();
 
         // all the listeners for terminal size updates
