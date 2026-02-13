@@ -2,13 +2,15 @@
 
 #include "tui/surface.hpp"
 #include "core/types.hpp"
+#include "tui/ansi/ansi_printer.hpp"
 
 #include <iostream>
 #include <cstddef>
 
 namespace tui
-{
-
+{   
+    using ansi::Printer;
+    
     class TerminalBackend
     {
     public:
@@ -31,6 +33,8 @@ namespace tui
 
         // the camera that was used in rendering the front buffer
         Camera frontBufferCamera;
+
+        Printer &printer;
     };
 
 }

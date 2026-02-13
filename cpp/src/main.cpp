@@ -10,9 +10,7 @@ using tui::Camera;
 using tui::Cell;
 using tui::ansi::CLEAR_SCREEN;
 using tui::ansi::Printer;
-/*
- * Main Entry Point for TUI-Art C++ Rewrite
- */
+
 int main()
 {
 

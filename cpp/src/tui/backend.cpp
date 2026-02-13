@@ -9,7 +9,7 @@ namespace tui
     using ansi::Printer;
 
     TerminalBackend::TerminalBackend(const size_t w, const size_t h)
-        : frontBuffer{w, h}, backBuffer{w, h}, frontBufferCamera{0, 0}
+        : frontBuffer{w, h}, backBuffer{w, h}, frontBufferCamera{0, 0}, printer{Printer::getInstance()}
     {
     }
 
@@ -24,15 +24,8 @@ namespace tui
     void TerminalBackend::present(const Camera backBufferCamera)
     {
 
-        Printer &printer = Printer::getInstance();
-
         // abort if the new camera is not equal or above the last in height
         assert(backBufferCamera.y >= frontBufferCamera.y && "Downwards camera movement not supported currently");
-
-        // Tracks where the terminal cursor is
-        printer.moveTo(0, 0, backBuffer.height);
-        size_t terminalCursorX{};
-        size_t terminalCursorY{};
 
         // This can always be converted to a size t because of the assertion above
         size_t y_increase{static_cast<size_t>(backBufferCamera.y - frontBufferCamera.y)};
@@ -44,37 +37,14 @@ namespace tui
         // Because the cursor will always be on the top row
         for (size_t i{}; i < y_increase && i < backBuffer.height; ++i)
         {
-
             const size_t y{backBuffer.height - 1};
-            size_t x{};
-
-            if (terminalCursorX != x || terminalCursorY != y)
-            {
-                printer.moveTo(x, y, backBuffer.height);
-                // update x and y with reset positions
-                terminalCursorX = x;
-                terminalCursorY = y;
-            }
-
-            // printer.printDebugHashCell();
 
             printer.rowShiftDown(1);
 
-            for (; x < backBuffer.width; ++x)
+            for (size_t x{}; x < backBuffer.width; ++x)
             {
                 const Cell &newCell = backBuffer.getCell(x, y);
-
-                if (terminalCursorX != x || terminalCursorY != y)
-                {
-                    printer.moveTo(x, y, backBuffer.height);
-                    // update x and y with reset positions
-                    terminalCursorX = x;
-                    terminalCursorY = y;
-                }
-
-                // Print the cell, noting the cursor will advance by one automatically
-                printer.printCell(newCell);
-                ++terminalCursorX;
+                printer.printCell(newCell, {x, y});
             }
         }
 
@@ -96,18 +66,8 @@ namespace tui
 
                 if (newCell != oldCell)
                 {
-                    // only move the cursor when in incorrect position
-                    if (terminalCursorX != x || terminalCursorY != y)
-                    {
-                        printer.moveTo(x, y, backBuffer.height);
-                        // update x and y with reset positions
-                        terminalCursorX = x;
-                        terminalCursorY = y;
-                    }
-
                     // Print the cell, noting the cursor will advance by one automatically
-                    printer.printCell(newCell);
-                    ++terminalCursorX;
+                    printer.printCell(newCell, {x,y});
                 }
             }
         }

@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include <cstddef>
+#include <optional>
 #include "tui/terminal_status.hpp"
 
 #if defined(__linux__) || defined(__unix__)
@@ -9,6 +10,7 @@
 #endif
 
 using tui::TerminalDimension;
+using tui::TerminalDimensionListener;
 using tui::TerminalStatus;
 
 static bool is_stdout_tty()
@@ -22,6 +24,19 @@ static bool is_stdout_tty()
 #endif
 }
 
+namespace {
+
+    struct ExampleTerminalListener : public TerminalDimensionListener
+    {
+        void receiveTerminalSize(TerminalDimension dimension) override {
+            terminalDimension.value() = dimension;
+        }
+
+        std::optional<TerminalDimension> terminalDimension{std::nullopt};
+    };
+
+}
+
 TEST(TerminalStatus, TerminalDimensionAccessible)
 {
     if (!is_stdout_tty())
@@ -29,7 +44,9 @@ TEST(TerminalStatus, TerminalDimensionAccessible)
         GTEST_SKIP() << "stdout is not a TTY; terminal size query is expected to fail";
     }
     TerminalStatus &terminalStatus{TerminalStatus::getInstance()};
-
+    ExampleTerminalListener listener;
+    terminalStatus.addDimensionListener(&listener);
+    
     EXPECT_NO_THROW(TerminalDimension terminalDimension{terminalStatus.getTerminalDimension()}) << "Querying terminal dimension throws an error";
 }
 
