@@ -41,15 +41,21 @@ namespace tui
         loadedColour.fg.b = 0;
     }
 
-    void TerminalStatus::addDimensionListener(TerminalDimensionListener *newListener)
+    TerminalDimensionToken TerminalStatus::addDimensionListener(TerminalDimensionListener *newListener)
     {
-        listeners.push_back(newListener);
+        ID id = listeners.push_back(newListener);
+        return TerminalDimensionToken{id};
+    }
+
+    void TerminalStatus::removeDimensionListener(ID discardedID) {
+        listeners.erase(discardedID);
     }
 
     void TerminalStatus::publishTerminalSize()
     {
         TerminalDimension terminalDimension{getTerminalDimension()};
-        for (TerminalDimensionListener *listener : listeners)
+        // iterate over the underlying sparse vector array
+        for (TerminalDimensionListener *listener : listeners.getData())
         {
             listener->receiveTerminalSize(terminalDimension);
         }

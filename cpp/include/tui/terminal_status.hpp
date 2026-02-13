@@ -2,14 +2,17 @@
 
 #include <cstddef>
 #include <vector>
+#include <optional>
 #include "core/types.hpp"
+#include "utils/sparse_set.hpp"
 
 namespace tui
 {
+    using utils::SparseSet;
+    using utils::ID;
 
     struct TerminalDimension
     {
-
         TerminalDimension(size_t charWidth, size_t charHeight)
             : charWidth{charWidth}, charHeight{charHeight}
         {
@@ -37,6 +40,9 @@ namespace tui
         virtual void receiveTerminalSize(TerminalDimension) = 0;
     };
 
+    // forward declare
+    class TerminalDimensionToken;
+
     class TerminalStatus
     {
     public:
@@ -50,7 +56,11 @@ namespace tui
         // Add a listener to the size of the terminal
         // Listeners will be updated with the new terminal size if the terminal resized
         // It will only check for updates at the start of each frame
-        void addDimensionListener(TerminalDimensionListener *);
+        [[nodiscard]]
+        TerminalDimensionToken addDimensionListener(TerminalDimensionListener *);
+
+        // Discard a dimension listener by its ID
+        void removeDimensionListener(ID discarded);
 
         // Should be triggered at the start of each frame
         void publishTerminalSize();
@@ -68,7 +78,39 @@ namespace tui
         TerminalDimension getTerminalDimension();
 
         // all the listeners for terminal size updates
-        std::vector<TerminalDimensionListener *> listeners;
+        SparseSet<TerminalDimensionListener *> listeners;
+    };
+
+    // A token that manages the lifecycle of subscription to the terminal
+    // Should only be issued by TerminalStatus
+    class TerminalDimensionToken
+    {
+    public:
+        void operator=(const TerminalDimensionToken&) = delete; // remove copy assignment
+        TerminalDimensionToken(const TerminalDimensionToken&) = delete; // remove copy construction
+        TerminalDimensionToken& operator=(TerminalDimensionToken&&) = delete; // remove move assignment
+
+        TerminalDimensionToken(TerminalDimensionToken&& other)
+            : listenerID{other.listenerID}
+        {
+            // move construct and invalidate the old ID
+            other.listenerID = std::nullopt;
+        }
+
+        ~TerminalDimensionToken() {
+            if (listenerID.has_value()) {
+                // this token is valid
+                TerminalStatus::getInstance().removeDimensionListener(listenerID.value());
+            }
+        }
+    private:
+        friend class TerminalStatus; 
+
+        explicit TerminalDimensionToken(ID listenerID)
+            : listenerID{listenerID}
+        {
+        }
+        std::optional<ID> listenerID;
     };
 
 };

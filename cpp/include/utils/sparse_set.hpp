@@ -119,6 +119,7 @@ namespace utils
          * @param object The object to copy
          * @return The ID to retrieve the object
          */
+        [[nodiscard]]
         ID push_back(const TObjectType &object)
         {
             const ID id = getFreeSlot();
@@ -133,6 +134,7 @@ namespace utils
          * @return The ID to retrieve the object
          */
         template <typename... TArgs>
+        [[nodiscard]]
         ID emplace_back(TArgs &&...args)
         {
             const ID id = getFreeSlot();
