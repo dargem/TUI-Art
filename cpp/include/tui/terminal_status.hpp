@@ -46,12 +46,7 @@ namespace tui
     class TerminalStatus
     {
     public:
-        static TerminalStatus &getInstance();
-
-        void operator=(const TerminalStatus &) = delete; // remove assignment
-        void operator=(TerminalStatus &&) = delete;      // remove move assignment
-        TerminalStatus(const TerminalStatus &) = delete; // remove copy constructor
-        TerminalStatus(TerminalStatus &&) = delete;      // remove move constructor
+        TerminalStatus();
 
         // Add a listener to the size of the terminal
         // Listeners will be updated with the new terminal size if the terminal resized
@@ -72,7 +67,6 @@ namespace tui
         LoadedColour loadedColour;
 
     private:
-        TerminalStatus();
 
         // check the dimension of the terminal
         TerminalDimension getTerminalDimension();
@@ -91,7 +85,7 @@ namespace tui
         TerminalDimensionToken& operator=(TerminalDimensionToken&&) = delete; // remove move assignment
 
         TerminalDimensionToken(TerminalDimensionToken&& other)
-            : listenerID{other.listenerID}
+            : publisher{other.publisher}, listenerID{other.listenerID}
         {
             // move construct and invalidate the old ID
             other.listenerID = std::nullopt;
@@ -100,16 +94,18 @@ namespace tui
         ~TerminalDimensionToken() {
             if (listenerID.has_value()) {
                 // this token is valid
-                TerminalStatus::getInstance().removeDimensionListener(listenerID.value());
+                publisher.removeDimensionListener(listenerID.value());
             }
         }
     private:
         friend class TerminalStatus; 
 
-        explicit TerminalDimensionToken(ID listenerID)
-            : listenerID{listenerID}
+        explicit TerminalDimensionToken(TerminalStatus& publisher, ID listenerID)
+            : publisher{publisher}, listenerID{listenerID}
         {
         }
+
+        TerminalStatus& publisher;
         std::optional<ID> listenerID;
     };
 

@@ -20,13 +20,6 @@
 namespace tui
 {
 
-    TerminalStatus &TerminalStatus::getInstance()
-    {
-        // lazy loaded static terminal status for sharing around
-        static TerminalStatus terminal_status;
-        return terminal_status;
-    }
-
     TerminalStatus::TerminalStatus()
         : cursorLocation(0, 0),
           loadedColour(Colour(), Colour())
@@ -44,7 +37,7 @@ namespace tui
     TerminalDimensionToken TerminalStatus::addDimensionListener(TerminalDimensionListener *newListener)
     {
         ID id = listeners.push_back(newListener);
-        return TerminalDimensionToken{id};
+        return TerminalDimensionToken{*this, id};
     }
 
     void TerminalStatus::removeDimensionListener(ID discardedID) {
