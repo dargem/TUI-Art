@@ -3,18 +3,19 @@
 #include "tui/surface.hpp"
 #include "core/types.hpp"
 #include "tui/ansi/ansi_printer.hpp"
-
+#include "app_context.hpp"
+#include "tui/terminal_status.hpp"
 #include <iostream>
 #include <cstddef>
 
 namespace tui
 {   
     using ansi::Printer;
-    
-    class TerminalBackend
+
+    class TerminalBackend : TerminalDimensionListener
     {
     public:
-        TerminalBackend(size_t w, size_t h);
+        TerminalBackend(AppContext context);
 
         // gets the draw surface (the back buffer)
         [[nodiscard]] Surface &getDrawSurface();
@@ -24,7 +25,14 @@ namespace tui
         // after presenting a new draw surface should be retrieved for use
         void present(const Camera backBufferCamera);
 
+        void receiveTerminalSize(TerminalDimension dimension) override;
     private:
+        // subscription for receiving terminal dimensions
+        TerminalDimensionToken dimensionSubscriptionToken;
+
+        // current size of the terminal
+        TerminalDimension currentDimension;
+
         // the front buffer is the buffer that is currently displayed
         Surface frontBuffer;
 

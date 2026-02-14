@@ -5,7 +5,7 @@
 #include "tui/ansi/ansi_printer.hpp"
 #include "tui/ansi/ansi_constants.hpp"
 #include "core/types.hpp"
-
+#include "app_context.hpp"
 using tui::Camera;
 using tui::Cell;
 using tui::ansi::CLEAR_SCREEN;
@@ -13,8 +13,19 @@ using tui::ansi::Printer;
 
 int main()
 {
-
     // 1. Setup
+    AppContext appContext;
+    
+    
+
+
+
+
+
+
+
+
+
     constexpr int WIDTH{80};
     constexpr int HEIGHT{24};
     // const Camera camera{0, 0};

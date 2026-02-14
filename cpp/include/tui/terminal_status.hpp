@@ -47,7 +47,12 @@ namespace tui
         void removeDimensionListener(ID discarded);
 
         // Should be triggered at the start of each frame
+        // Updates each listener with a new update
         void publishTerminalSize();
+
+        // Query the current terminal size without notifying listeners
+        [[nodiscard]]
+        TerminalDimension queryTerminalSize();
     private:
 
         // check the dimension of the terminal

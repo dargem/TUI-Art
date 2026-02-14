@@ -20,20 +20,6 @@
 namespace tui
 {
 
-    TerminalStatus::TerminalStatus()
-        : cursorLocation(0, 0),
-          loadedColour(Colour(), Colour())
-    {
-        // reset colours on startup
-        loadedColour.bg.r = 0;
-        loadedColour.bg.g = 0;
-        loadedColour.bg.b = 0;
-
-        loadedColour.fg.r = 0;
-        loadedColour.fg.g = 0;
-        loadedColour.fg.b = 0;
-    }
-
     TerminalDimensionToken TerminalStatus::addDimensionListener(TerminalDimensionListener *newListener)
     {
         ID id = listeners.push_back(newListener);
@@ -52,6 +38,11 @@ namespace tui
         {
             listener->receiveTerminalSize(terminalDimension);
         }
+    }
+
+    TerminalDimension TerminalStatus::queryTerminalSize()
+    {
+        return getTerminalDimension();
     }
 
     // Checks the current size of the terminal

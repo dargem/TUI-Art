@@ -8,8 +8,13 @@ namespace tui
 
     using ansi::Printer;
 
-    TerminalBackend::TerminalBackend(const size_t w, const size_t h)
-        : frontBuffer{w, h}, backBuffer{w, h}, frontBufferCamera{0, 0}, printer{Printer::getInstance()}
+    TerminalBackend::TerminalBackend(AppContext context)
+        : dimensionSubscriptionToken{context.getTerminalStatus().addDimensionListener(this)}
+        , currentDimension{context.getTerminalStatus().queryTerminalSize()}
+        , frontBuffer{currentDimension.charWidth, currentDimension.charHeight}
+        , backBuffer{currentDimension.charWidth, currentDimension.charHeight}
+        , frontBufferCamera{0, 0}
+        , printer{context.getPrinter()}
     {
     }
 
@@ -78,6 +83,11 @@ namespace tui
         frontBuffer = backBuffer;
         frontBufferCamera = backBufferCamera;
         backBuffer.clear();
+    }
+
+    void TerminalBackend::receiveTerminalSize(TerminalDimension dimension) 
+    {
+        currentDimension = dimension;
     }
 
     Surface &TerminalBackend::getDrawSurface() { return backBuffer; }
