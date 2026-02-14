@@ -15,7 +15,7 @@ namespace tui
     class TerminalBackend : TerminalDimensionListener
     {
     public:
-        TerminalBackend(AppContext context);
+        TerminalBackend(AppContext& context);
 
         // gets the draw surface (the back buffer)
         [[nodiscard]] Surface &getDrawSurface();

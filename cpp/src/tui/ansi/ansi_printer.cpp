@@ -12,11 +12,8 @@ namespace tui::ansi
 
     Printer::Printer(TerminalStatus& terminalStatus)
         : dimensionSubscriptionToken{terminalStatus.addDimensionListener(this)}
-        , currentTerminalDimension{0, 0}
+        , currentTerminalDimension{terminalStatus.queryTerminalSize()}
     {
-        // subscribes and publishes to this object setting the current terminal dimension
-        terminalStatus.publishTerminalSize();
-
         // centre the cursor to a known position as its at an
         // unknown position at the start of the application
         // do an unchecked move
@@ -33,6 +30,8 @@ namespace tui::ansi
 
     void Printer::printCell(const Cell &cell, GridLocation insertionLocation)
     {
+        moveTo(insertionLocation);
+
         // Print new escape string colours only when required
         // If the last printed colour is the same no change is needed
 

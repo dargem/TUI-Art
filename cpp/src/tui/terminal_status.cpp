@@ -30,7 +30,7 @@ namespace tui
         listeners.erase(discardedID);
     }
 
-    void TerminalStatus::publishTerminalSize()
+    TerminalDimension TerminalStatus::publishTerminalSize()
     {
         TerminalDimension terminalDimension{getTerminalDimension()};
         // iterate over the underlying sparse vector array
@@ -38,6 +38,8 @@ namespace tui
         {
             listener->receiveTerminalSize(terminalDimension);
         }
+
+        return terminalDimension;
     }
 
     TerminalDimension TerminalStatus::queryTerminalSize()

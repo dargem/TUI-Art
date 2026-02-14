@@ -381,7 +381,7 @@ namespace utils
         }
 
         [[nodiscard]]
-        bool isValidID(siv::ID id) const
+        bool isValidID(ID id) const
         {
             return id < m_indexes.size();
         }

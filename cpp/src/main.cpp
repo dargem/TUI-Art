@@ -6,8 +6,12 @@
 #include "tui/ansi/ansi_constants.hpp"
 #include "core/types.hpp"
 #include "app_context.hpp"
+
 using tui::Camera;
 using tui::Cell;
+using tui::Surface;
+using tui::TerminalBackend;
+using tui::TerminalDimension;
 using tui::ansi::CLEAR_SCREEN;
 using tui::ansi::Printer;
 
@@ -16,21 +20,7 @@ int main()
     // 1. Setup
     AppContext appContext;
     
-    
-
-
-
-
-
-
-
-
-
-    constexpr int WIDTH{80};
-    constexpr int HEIGHT{24};
-    // const Camera camera{0, 0};
-    int y_count{};
-    tui::TerminalBackend backend(WIDTH, HEIGHT);
+    TerminalBackend backend(appContext);
 
     // 2. Clear screen initially
     std::cout << CLEAR_SCREEN;
@@ -39,15 +29,17 @@ int main()
     bool running{true};
     int frameCount{};
 
+    int yCount;
     while (running)
     {
-        tui::Surface &surface = backend.getDrawSurface();
+        TerminalDimension dimension = appContext.getTerminalStatus().publishTerminalSize();
+        Surface &surface = backend.getDrawSurface();
 
         // --- Update & Render ---
 
         // Example: Draw a moving box
-        int boxX = frameCount % (WIDTH - 5);
-        int boxY = (frameCount / 2) % (HEIGHT - 2);
+        int boxX = frameCount % (dimension.charWidth - 5);
+        int boxY = (frameCount / 2) % (dimension.charHeight - 2);
 
         /*
         for (int y = 0; y < HEIGHT; ++y) {
@@ -74,8 +66,8 @@ int main()
 
         // --- Present ---
 
-        backend.present(Camera{0, y_count});
-        y_count++;
+        backend.present(Camera{0, yCount});
+        yCount++;
         // Timing
         std::this_thread::sleep_for(std::chrono::milliseconds(30)); // ~30 FPS
         frameCount++;
@@ -84,7 +76,7 @@ int main()
         if (frameCount > 20000)
             running = false;
 
-        Printer::getInstance().resetColour();
+        appContext.getPrinter().resetColour();
     }
 
     return 0;

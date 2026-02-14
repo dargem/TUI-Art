@@ -35,8 +35,6 @@ namespace tui
     class TerminalStatus
     {
     public:
-        TerminalStatus();
-
         // Add a listener to the size of the terminal
         // Listeners will be updated with the new terminal size if the terminal resized
         // It will only check for updates at the start of each frame
@@ -48,7 +46,8 @@ namespace tui
 
         // Should be triggered at the start of each frame
         // Updates each listener with a new update
-        void publishTerminalSize();
+        // Also returns an optionally usable terminal dimension it emitted
+        TerminalDimension publishTerminalSize();
 
         // Query the current terminal size without notifying listeners
         [[nodiscard]]

@@ -8,7 +8,7 @@ namespace tui
 
     using ansi::Printer;
 
-    TerminalBackend::TerminalBackend(AppContext context)
+    TerminalBackend::TerminalBackend(AppContext& context)
         : dimensionSubscriptionToken{context.getTerminalStatus().addDimensionListener(this)}
         , currentDimension{context.getTerminalStatus().queryTerminalSize()}
         , frontBuffer{currentDimension.charWidth, currentDimension.charHeight}
