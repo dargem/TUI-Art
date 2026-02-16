@@ -17,6 +17,8 @@ using tui::TerminalDimension;
 using tui::ansi::CLEAR_SCREEN;
 using tui::ansi::HIDE_CURSOR;
 using tui::ansi::Printer;
+using tui::ansi::RESET_COLOUR;
+using tui::ansi::SHOW_CURSOR;
 
 std::atomic<bool> running{true};
 
@@ -29,8 +31,9 @@ void signalHandler(int signum)
 int main()
 {
     // 1. Setup
-    AppContext appContext;
+    std::signal(SIGINT, signalHandler);
 
+    AppContext appContext;
     TerminalBackend backend(appContext);
 
     // 2. Clear screen initially
@@ -85,5 +88,7 @@ int main()
         appContext.getPrinter().resetColour();
     }
 
+    // user has done a signal interrupt so main loop exited gracefully
+    std::cout << SHOW_CURSOR << CLEAR_SCREEN << RESET_COLOUR;
     return 0;
 }
