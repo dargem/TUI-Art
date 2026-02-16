@@ -1,5 +1,7 @@
 #include <thread>
 #include <chrono>
+#include <csignal>
+#include <atomic>
 
 #include "tui/backend.hpp"
 #include "tui/ansi/ansi_printer.hpp"
@@ -16,6 +18,14 @@ using tui::ansi::CLEAR_SCREEN;
 using tui::ansi::HIDE_CURSOR;
 using tui::ansi::Printer;
 
+std::atomic<bool> running{true};
+
+void signalHandler(int signum)
+{
+    // has received a signal interrupt (ctrl C)
+    running = false;
+}
+
 int main()
 {
     // 1. Setup
@@ -28,7 +38,6 @@ int main()
     std::cout << HIDE_CURSOR;
 
     // 3. Game Loop
-    bool running{true};
     int frameCount{};
 
     int yCount;
@@ -72,10 +81,6 @@ int main()
         // Timing
         std::this_thread::sleep_for(std::chrono::milliseconds(30)); // ~30 FPS
         frameCount++;
-
-        // Simple exit condition for demo
-        if (frameCount > 20000)
-            running = false;
 
         appContext.getPrinter().resetColour();
     }
