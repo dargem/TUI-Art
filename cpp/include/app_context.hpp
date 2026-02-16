@@ -3,18 +3,19 @@
 #include "tui/terminal_status.hpp"
 #include "tui/ansi/ansi_printer.hpp"
 
-using tui::ansi::Printer;
 using tui::TerminalStatus;
+using tui::ansi::Printer;
 
-class AppContext {
+class AppContext
+{
 public:
     AppContext();
 
     [[nodiscard]]
-    TerminalStatus& getTerminalStatus();
+    TerminalStatus &getTerminalStatus();
 
     [[nodiscard]]
-    Printer& getPrinter();
+    Printer &getPrinter();
 
 private:
     TerminalStatus terminalStatus;

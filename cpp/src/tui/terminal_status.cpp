@@ -26,7 +26,8 @@ namespace tui
         return TerminalDimensionToken{*this, id};
     }
 
-    void TerminalStatus::removeDimensionListener(ID discardedID) {
+    void TerminalStatus::removeDimensionListener(ID discardedID)
+    {
         listeners.erase(discardedID);
     }
 
@@ -40,6 +41,11 @@ namespace tui
         }
 
         return terminalDimension;
+    }
+
+    size_t TerminalStatus::getNumberListeners() const
+    {
+        return listeners.size();
     }
 
     TerminalDimension TerminalStatus::queryTerminalSize()

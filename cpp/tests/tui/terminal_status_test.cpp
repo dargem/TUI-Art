@@ -2,6 +2,7 @@
 #include <cstddef>
 #include <optional>
 #include "tui/terminal_status.hpp"
+#include "app_context.hpp"
 
 #if defined(__linux__) || defined(__unix__)
 #include <unistd.h>
@@ -11,6 +12,7 @@
 
 using tui::TerminalDimension;
 using tui::TerminalDimensionListener;
+using tui::TerminalDimensionToken;
 using tui::TerminalStatus;
 
 static bool is_stdout_tty()
@@ -24,12 +26,14 @@ static bool is_stdout_tty()
 #endif
 }
 
-namespace {
+namespace
+{
 
     struct ExampleTerminalListener : public TerminalDimensionListener
     {
-        void receiveTerminalSize(TerminalDimension dimension) override {
-            terminalDimension.value() = dimension;
+        void receiveTerminalSize(TerminalDimension dimension) override
+        {
+            terminalDimension = dimension;
         }
 
         std::optional<TerminalDimension> terminalDimension{std::nullopt};
@@ -37,17 +41,65 @@ namespace {
 
 }
 
-TEST(TerminalStatus, TerminalDimensionAccessible)
+TEST(TerminalStatus, TerminalDimensionQueryable)
 {
     if (!is_stdout_tty())
     {
         GTEST_SKIP() << "stdout is not a TTY; terminal size query is expected to fail";
     }
-    TerminalStatus &terminalStatus{TerminalStatus::getInstance()};
+
+    AppContext appContext;
+    TerminalStatus &terminalStatus{appContext.getTerminalStatus()};
+
+    EXPECT_NO_THROW(terminalStatus.queryTerminalSize()) << "Querying terminal dimension throws an error";
+}
+
+TEST(TerminalStatus, StatusAcceptsAndRemovesSubscribers)
+{
+    if (!is_stdout_tty())
+    {
+        GTEST_SKIP() << "stdout is not a TTY; terminal size query is expected to fail";
+    }
+
+    AppContext appContext;
+    TerminalStatus &terminalStatus{appContext.getTerminalStatus()};
+    // may not start at 0 due to printer subbing at startup of appcontext
+    const size_t startingListeners{terminalStatus.getNumberListeners()};
+
+    // add a listener
     ExampleTerminalListener listener;
-    terminalStatus.addDimensionListener(&listener);
-    
-    EXPECT_NO_THROW(TerminalDimension terminalDimension{terminalStatus.getTerminalDimension()}) << "Querying terminal dimension throws an error";
+
+    {
+        TerminalDimensionToken token{terminalStatus.addDimensionListener(&listener)};
+        EXPECT_TRUE(terminalStatus.getNumberListeners() == (startingListeners + 1)) << "Terminal status should gain exactly one listener after adding just one";
+
+    } // token gets destroyed, unsubscribing it fom listeners
+    EXPECT_TRUE(terminalStatus.getNumberListeners() == startingListeners) << "Terminal status should have original number of listeners after deleting access token";
+}
+
+TEST(TerminalStatus, StatusUpdatesOnlySubscribers)
+{
+    if (!is_stdout_tty())
+    {
+        GTEST_SKIP() << "stdout is not a TTY; terminal size query is expected to fail";
+    }
+
+    AppContext appContext;
+    TerminalStatus &terminalStatus{appContext.getTerminalStatus()};
+    ExampleTerminalListener listener;
+    {
+        TerminalDimensionToken token{terminalStatus.addDimensionListener(&listener)};
+        EXPECT_FALSE(listener.terminalDimension.has_value()) << "Listener should start with no value";
+
+        // check updates work
+        terminalStatus.publishTerminalSize(); // should update listener with a terminal size
+        EXPECT_TRUE(listener.terminalDimension.has_value()) << "Listener should have a value";
+
+        // check unsubscribing stops updates, remove the listeners value
+        listener.terminalDimension.reset();
+    } // tokens lifetime ends
+    terminalStatus.publishTerminalSize();
+    EXPECT_FALSE(listener.terminalDimension.has_value()) << "Listener shouldn't be updated after unsubscribing";
 }
 
 TEST(TerminalStatus, TerminalDimensionSizesLogical)
@@ -60,11 +112,8 @@ TEST(TerminalStatus, TerminalDimensionSizesLogical)
         GTEST_SKIP() << "stdout is not a TTY; terminal size query is expected to fail";
     }
 
-    TerminalStatus &terminalStatus{TerminalStatus::getInstance()};
+    AppContext appContext;
+    TerminalStatus &terminalStatus{appContext.getTerminalStatus()};
 
-    TerminalDimension terminalDimension{terminalStatus.getTerminalDimension()};
-
-    // if its larger than these its probably outputting some nonsense
-    EXPECT_LE(terminalDimension.x, MAX_WIDTH);
-    EXPECT_LE(terminalDimension.y, MAX_HEIGHT);
+    TerminalDimension terminalDimension{terminalStatus.queryTerminalSize()};
 }

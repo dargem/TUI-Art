@@ -8,8 +8,8 @@
 
 namespace tui
 {
-    using utils::SparseSet;
     using utils::ID;
+    using utils::SparseSet;
 
     struct TerminalDimension
     {
@@ -49,11 +49,14 @@ namespace tui
         // Also returns an optionally usable terminal dimension it emitted
         TerminalDimension publishTerminalSize();
 
+        // Returns the number of listeners terminal status has
+        size_t getNumberListeners() const;
+
         // Query the current terminal size without notifying listeners
         [[nodiscard]]
         TerminalDimension queryTerminalSize();
-    private:
 
+    private:
         // check the dimension of the terminal
         [[nodiscard]]
         TerminalDimension getTerminalDimension();
@@ -67,32 +70,35 @@ namespace tui
     class TerminalDimensionToken
     {
     public:
-        void operator=(const TerminalDimensionToken&) = delete; // remove copy assignment
-        TerminalDimensionToken(const TerminalDimensionToken&) = delete; // remove copy construction
-        TerminalDimensionToken& operator=(TerminalDimensionToken&&) = delete; // remove move assignment
+        void operator=(const TerminalDimensionToken &) = delete;               // remove copy assignment
+        TerminalDimensionToken(const TerminalDimensionToken &) = delete;       // remove copy construction
+        TerminalDimensionToken &operator=(TerminalDimensionToken &&) = delete; // remove move assignment
 
-        TerminalDimensionToken(TerminalDimensionToken&& other)
+        TerminalDimensionToken(TerminalDimensionToken &&other)
             : publisher{other.publisher}, listenerID{other.listenerID}
         {
             // move construct and invalidate the old ID
             other.listenerID = std::nullopt;
         }
 
-        ~TerminalDimensionToken() {
-            if (listenerID.has_value()) {
+        ~TerminalDimensionToken()
+        {
+            if (listenerID.has_value())
+            {
                 // this token is valid
                 publisher.removeDimensionListener(listenerID.value());
             }
         }
-    private:
-        friend class TerminalStatus; 
 
-        explicit TerminalDimensionToken(TerminalStatus& publisher, ID listenerID)
+    private:
+        friend class TerminalStatus;
+
+        explicit TerminalDimensionToken(TerminalStatus &publisher, ID listenerID)
             : publisher{publisher}, listenerID{listenerID}
         {
         }
 
-        TerminalStatus& publisher;
+        TerminalStatus &publisher;
         std::optional<ID> listenerID;
     };
 
