@@ -13,17 +13,19 @@ using tui::Surface;
 using tui::TerminalBackend;
 using tui::TerminalDimension;
 using tui::ansi::CLEAR_SCREEN;
+using tui::ansi::HIDE_CURSOR;
 using tui::ansi::Printer;
 
 int main()
 {
     // 1. Setup
     AppContext appContext;
-    
+
     TerminalBackend backend(appContext);
 
     // 2. Clear screen initially
     std::cout << CLEAR_SCREEN;
+    std::cout << HIDE_CURSOR;
 
     // 3. Game Loop
     bool running{true};
@@ -66,8 +68,7 @@ int main()
 
         // --- Present ---
 
-        backend.present(Camera{0, yCount});
-        yCount++;
+        backend.present(Camera{0, 0});
         // Timing
         std::this_thread::sleep_for(std::chrono::milliseconds(30)); // ~30 FPS
         frameCount++;

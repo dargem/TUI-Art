@@ -104,6 +104,7 @@ TEST(TerminalStatus, StatusUpdatesOnlySubscribers)
 
 TEST(TerminalStatus, TerminalDimensionSizesLogical)
 {
+    // throw out if its doing some illogically large sizes for some reasons
     constexpr static size_t MAX_WIDTH{1000};
     constexpr static size_t MAX_HEIGHT{1000};
 
@@ -116,4 +117,6 @@ TEST(TerminalStatus, TerminalDimensionSizesLogical)
     TerminalStatus &terminalStatus{appContext.getTerminalStatus()};
 
     TerminalDimension terminalDimension{terminalStatus.queryTerminalSize()};
+    EXPECT_LT(terminalDimension.charWidth, MAX_WIDTH);
+    EXPECT_LT(terminalDimension.charHeight, MAX_HEIGHT);
 }
