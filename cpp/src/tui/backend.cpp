@@ -8,13 +8,8 @@ namespace tui
 
     using ansi::Printer;
 
-    TerminalBackend::TerminalBackend(AppContext& context)
-        : dimensionSubscriptionToken{context.getTerminalStatus().addDimensionListener(this)}
-        , currentDimension{context.getTerminalStatus().queryTerminalSize()}
-        , frontBuffer{currentDimension.charWidth, currentDimension.charHeight}
-        , backBuffer{currentDimension.charWidth, currentDimension.charHeight}
-        , frontBufferCamera{0, 0}
-        , printer{context.getPrinter()}
+    TerminalBackend::TerminalBackend(AppContext &context)
+        : dimensionSubscriptionToken{context.getTerminalStatus().addDimensionListener(this)}, currentDimension{context.getTerminalStatus().queryTerminalSize()}, frontBuffer{currentDimension.charWidth, currentDimension.charHeight}, backBuffer{currentDimension.charWidth, currentDimension.charHeight}, frontBufferCamera{0, 0}, printer{context.getPrinter()}
     {
     }
 
@@ -72,7 +67,7 @@ namespace tui
                 if (newCell != oldCell)
                 {
                     // Print the cell, noting the cursor will advance by one automatically
-                    printer.printCell(newCell, {x,y});
+                    printer.printCell(newCell, {x, y});
                 }
             }
         }
@@ -80,16 +75,25 @@ namespace tui
         std::cout.flush();
 
         // Swap buffers then clear the back buffer
-        frontBuffer = backBuffer;
+        frontBuffer = std::move(backBuffer);
         frontBufferCamera = backBufferCamera;
-        backBuffer.clear();
+        backBuffer.reset();
+        backBuffer.drawnOn = false; // wiped so now empty
     }
 
-    void TerminalBackend::receiveTerminalSize(TerminalDimension dimension) 
+    void TerminalBackend::receiveTerminalSize(TerminalDimension dimension)
     {
-        currentDimension = dimension;
+        // kindof sketchy, back buffer if drawn on before receiving terminal size, the new terminal size will throw out what is drawn
+        // this leads to logical errors so should just assert as false
+        assert(!backBuffer.drawnOn && "Back buffer must not be drawn on before receiving a new terminal size for the backbuffer");
+        backBuffer = Surface(dimension.charWidth, dimension.charHeight);
     }
 
-    Surface &TerminalBackend::getDrawSurface() { return backBuffer; }
+    Surface &TerminalBackend::getDrawSurface()
+    {
+        // returns a non const reference so it is states as drawn on
+        backBuffer.drawnOn = true;
+        return backBuffer;
+    }
 
 }
