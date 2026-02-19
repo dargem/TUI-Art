@@ -28,7 +28,7 @@ class TerminalBackend : TerminalDimensionListener {
 
    private:
     // logger
-    Setup::AppLogger& logger;
+    setup::AppLogger& logger;
 
     // subscription for receiving terminal dimensions
     TerminalDimensionToken dimensionSubscriptionToken;

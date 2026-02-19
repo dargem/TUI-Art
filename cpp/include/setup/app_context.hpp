@@ -7,7 +7,7 @@
 
 class AppContext {
    public:
-    AppContext() : terminalStatus{}, printer{terminalStatus}, logger{Setup::LOG_LOCATION} {}
+    AppContext() : terminalStatus{}, printer{terminalStatus}, logger{setup::LOG_LOCATION} {}
 
     [[nodiscard]]
     tui::TerminalStatus& getTerminalStatus() {
@@ -27,5 +27,5 @@ class AppContext {
    private:
     tui::TerminalStatus terminalStatus;
     tui::ansi::Printer printer;
-    Setup::AppLogger logger;
+    setup::AppLogger logger;
 };

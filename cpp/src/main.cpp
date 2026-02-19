@@ -5,10 +5,12 @@
 
 #include "core/types.hpp"
 #include "setup/app_context.hpp"
+#include "setup/configs.hpp"
 #include "tui/ansi/ansi_constants.hpp"
 #include "tui/ansi/ansi_printer.hpp"
 #include "tui/backend.hpp"
 
+using setup::AppLogger;
 using tui::Camera;
 using tui::Cell;
 using tui::Surface;
