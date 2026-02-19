@@ -13,5 +13,6 @@
     "editor.formatOnSave": true,
     "cSpell.words": [
         "csbi"
-    ]
+    ],
+    "cmake.sourceDirectory": "/home/tristan/Documents/github/TUI-Art/cpp"
 }

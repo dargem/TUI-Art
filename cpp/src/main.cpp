@@ -44,6 +44,7 @@ int main()
     int frameCount{};
 
     int yCount;
+
     while (running)
     {
         TerminalDimension dimension = appContext.getTerminalStatus().publishTerminalSize();
@@ -89,6 +90,6 @@ int main()
     }
 
     // user has done a signal interrupt so main loop exited gracefully
-    std::cout << SHOW_CURSOR << CLEAR_SCREEN << RESET_COLOUR;
+    std::cout << SHOW_CURSOR << CLEAR_SCREEN << RESET_COLOUR << std::endl;
     return 0;
 }
