@@ -1,13 +1,13 @@
-#include <thread>
+#include <atomic>
 #include <chrono>
 #include <csignal>
-#include <atomic>
+#include <thread>
 
-#include "tui/backend.hpp"
-#include "tui/ansi/ansi_printer.hpp"
-#include "tui/ansi/ansi_constants.hpp"
 #include "core/types.hpp"
 #include "setup/app_context.hpp"
+#include "tui/ansi/ansi_constants.hpp"
+#include "tui/ansi/ansi_printer.hpp"
+#include "tui/backend.hpp"
 
 using tui::Camera;
 using tui::Cell;
@@ -22,14 +22,12 @@ using tui::ansi::SHOW_CURSOR;
 
 std::atomic<bool> running{true};
 
-void signalHandler(int signum)
-{
+void signalHandler(int signum) {
     // has received a signal interrupt (ctrl C)
     running = false;
 }
 
-int main()
-{
+int main() {
     // 1. Setup
     std::signal(SIGINT, signalHandler);
 
@@ -45,10 +43,9 @@ int main()
 
     int yCount;
 
-    while (running)
-    {
+    while (running) {
         TerminalDimension dimension = appContext.getTerminalStatus().publishTerminalSize();
-        Surface &surface = backend.getDrawSurface();
+        Surface& surface = backend.getDrawSurface();
 
         // --- Update & Render ---
 
@@ -67,13 +64,11 @@ int main()
         }
         */
 
-        for (int y = 0; y < 3; ++y)
-        {
-            for (int x = 0; x < 5; ++x)
-            {
+        for (int y = 0; y < 3; ++y) {
+            for (int x = 0; x < 5; ++x) {
                 Cell c;
                 c.character = '#';
-                c.style.fg = {255, 0, 0}; // Red
+                c.style.fg = {255, 0, 0};  // Red
                 c.style.bg = {0, 0, 0};
                 surface.setCell(boxX + x, boxY + y, c);
             }
@@ -83,7 +78,7 @@ int main()
 
         backend.present(Camera{0, 0});
         // Timing
-        std::this_thread::sleep_for(std::chrono::milliseconds(30)); // ~30 FPS
+        std::this_thread::sleep_for(std::chrono::milliseconds(30));  // ~30 FPS
         frameCount++;
 
         appContext.getPrinter().resetColour();

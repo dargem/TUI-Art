@@ -1,18 +1,18 @@
-#include <gtest/gtest.h>
 #include "core/types.hpp"
 
-TEST(TypesTest, ColourEquality)
-{
+#include <gtest/gtest.h>
+
+TEST(TypesTest, ColourEquality) {
     tui::Colour red1{255, 0, 0};
     tui::Colour red2{255, 0, 0};
     tui::Colour green{0, 255, 0};
 
-    EXPECT_EQ(red1, red2) << "Colours with the same value even with different identity should be equal";
+    EXPECT_EQ(red1, red2)
+        << "Colours with the same value even with different identity should be equal";
     EXPECT_NE(red1, green) << "Colours with different value should be unequal";
 }
 
-TEST(TypesTest, StyleEquality)
-{
+TEST(TypesTest, StyleEquality) {
     const tui::Colour red{255, 0, 0};
     const tui::Colour green{0, 255, 0};
 
@@ -28,8 +28,7 @@ TEST(TypesTest, StyleEquality)
     EXPECT_NE(base, diffBg) << "Different background constant should make styles unequal";
 }
 
-TEST(TypesTest, CellEquality)
-{
+TEST(TypesTest, CellEquality) {
     tui::Colour red{255, 0, 0};
     tui::Colour green{0, 255, 0};
 
@@ -46,8 +45,7 @@ TEST(TypesTest, CellEquality)
     EXPECT_NE(base, cellDiffChar) << "Different chars should make them need overwriting";
 }
 
-TEST(TypesTest, CellSize)
-{
+TEST(TypesTest, CellSize) {
     constexpr static size_t EIGHT_BYTES{8};
     tui::Cell cell;
 
@@ -55,8 +53,7 @@ TEST(TypesTest, CellSize)
     EXPECT_EQ(sizeof(cell), EIGHT_BYTES);
 }
 
-TEST(TypesTest, GridLocationEquality)
-{
+TEST(TypesTest, GridLocationEquality) {
     tui::GridLocation base{5, 5};
     tui::GridLocation copy{5, 5};
     tui::GridLocation altered{5, 10};

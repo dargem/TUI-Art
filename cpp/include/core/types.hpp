@@ -1,47 +1,41 @@
 #pragma once
-#include <cstdint>
 #include <cstddef>
+#include <cstdint>
 
-namespace tui
-{
+namespace tui {
 
-    struct Colour
-    {
-        uint8_t r, g, b;
+struct Colour {
+    uint8_t r, g, b;
 
-        bool operator==(const Colour &other) const = default;
-    };
+    bool operator==(const Colour& other) const = default;
+};
 
-    struct Style
-    {
-        Colour fg;
-        Colour bg;
-        bool bold = false;
+struct Style {
+    Colour fg;
+    Colour bg;
+    bool bold = false;
 
-        bool operator==(const Style &other) const = default;
-    };
+    bool operator==(const Style& other) const = default;
+};
 
-    struct Cell
-    {
-        char character = ' ';
-        Style style;
+struct Cell {
+    char character = ' ';
+    Style style;
 
-        bool operator==(const Cell &other) const = default;
-    };
+    bool operator==(const Cell& other) const = default;
+};
 
-    // Viewer of the screen
-    struct Camera
-    {
-        int x;
-        int y;
-    };
+// Viewer of the screen
+struct Camera {
+    int x;
+    int y;
+};
 
-    struct GridLocation
-    {
-        size_t x;
-        size_t y;
+struct GridLocation {
+    size_t x;
+    size_t y;
 
-        bool operator==(const GridLocation &other) const = default;
-    };
+    bool operator==(const GridLocation& other) const = default;
+};
 
-}
+}  // namespace tui

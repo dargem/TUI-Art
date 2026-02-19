@@ -1,57 +1,51 @@
 #pragma once
-#include "core/types.hpp"
-#include <vector>
 #include <algorithm>
 #include <cassert>
 #include <cstddef>
+#include <vector>
 
-namespace tui
-{
+#include "core/types.hpp"
 
-    class Surface
-    {
-    public:
-        size_t width, height;
-        // keep track whether this surface has been drawn on
-        bool drawnOn;
+namespace tui {
 
-        Surface(size_t w, size_t h) : width{w}, height{h}, drawnOn{false}, pixels{w * h} {}
+class Surface {
+   public:
+    size_t width, height;
+    // keep track whether this surface has been drawn on
+    bool drawnOn;
 
-        Surface &operator=(Surface &&) noexcept = default;
+    Surface(size_t w, size_t h) : width{w}, height{h}, drawnOn{false}, pixels{w * h} {}
 
-        // Sets a cell on the surface to be equal to another
-        void setCell(size_t x, size_t y, const Cell &cell)
-        {
-            assert(x < width && "Out of x bounds write");
-            assert(y < height && "Out of y bounds write");
-            pixels[y * width + x] = cell;
+    Surface& operator=(Surface&&) noexcept = default;
+
+    // Sets a cell on the surface to be equal to another
+    void setCell(size_t x, size_t y, const Cell& cell) {
+        assert(x < width && "Out of x bounds write");
+        assert(y < height && "Out of y bounds write");
+        pixels[y * width + x] = cell;
+    }
+
+    // Returns a cell
+    [[nodiscard]] const Cell& getCell(size_t x, size_t y) const {
+        assert(x < width && "Out of x bounds read");
+        assert(y < height && "Out of y bounds read");
+        return pixels[y * width + x];
+    }
+
+    void reset() {
+        if (pixels.capacity() != width * height || pixels.size() != width * height) {
+            pixels.resize(width * height);
         }
+        pixels.clear();
+        std::fill(pixels.begin(), pixels.end(), Cell{' ', {}});
+    }
 
-        // Returns a cell
-        [[nodiscard]] const Cell &getCell(size_t x, size_t y) const
-        {
-            assert(x < width && "Out of x bounds read");
-            assert(y < height && "Out of y bounds read");
-            return pixels[y * width + x];
-        }
+    bool sameSize(const Surface& other) {
+        return (width == other.width) && (height == other.height);
+    }
 
-        void reset()
-        {
-            if (pixels.capacity() != width * height || pixels.size() != width * height)
-            {
-                pixels.resize(width * height);
-            }
-            pixels.clear();
-            std::fill(pixels.begin(), pixels.end(), Cell{' ', {}});
-        }
+   private:
+    std::vector<Cell> pixels;
+};
 
-        bool sameSize(const Surface &other)
-        {
-            return (width == other.width) && (height == other.height);
-        }
-
-    private:
-        std::vector<Cell> pixels;
-    };
-
-}
+}  // namespace tui

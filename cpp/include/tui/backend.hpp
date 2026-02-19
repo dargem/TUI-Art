@@ -1,51 +1,51 @@
 #pragma once
 
-#include "tui/surface.hpp"
-#include "core/types.hpp"
-#include "tui/ansi/ansi_printer.hpp"
-#include "setup/app_context.hpp"
-#include "tui/terminal_status.hpp"
-#include <iostream>
 #include <cstddef>
+#include <iostream>
 
-namespace tui
-{
-    using ansi::Printer;
+#include "core/types.hpp"
+#include "setup/app_context.hpp"
+#include "setup/configs.hpp"
+#include "tui/ansi/ansi_printer.hpp"
+#include "tui/surface.hpp"
+#include "tui/terminal_status.hpp"
 
-    class TerminalBackend : TerminalDimensionListener
-    {
-    public:
-        TerminalBackend(AppContext &context);
+namespace tui {
 
-        // gets the draw surface (the back buffer)
-        [[nodiscard]] Surface &getDrawSurface();
+class TerminalBackend : TerminalDimensionListener {
+   public:
+    TerminalBackend(AppContext& context);
 
-        // renders the back buffer
-        // usedCamera is the camera that was used in drawing to the back buffer
-        // after presenting a new draw surface should be retrieved for use
-        void present(const Camera backBufferCamera);
+    // gets the draw surface (the back buffer)
+    [[nodiscard]] Surface& getDrawSurface();
 
-        void receiveTerminalSize(TerminalDimension dimension) override;
+    // renders the back buffer
+    // usedCamera is the camera that was used in drawing to the back buffer
+    // after presenting a new draw surface should be retrieved for use
+    void present(const Camera backBufferCamera);
 
-    private:
-        // logger
+    void receiveTerminalSize(TerminalDimension dimension) override;
 
-        // subscription for receiving terminal dimensions
-        TerminalDimensionToken dimensionSubscriptionToken;
+   private:
+    // logger
+    Setup::AppLogger& logger;
 
-        // current size of the terminal
-        TerminalDimension currentDimension;
+    // subscription for receiving terminal dimensions
+    TerminalDimensionToken dimensionSubscriptionToken;
 
-        // the front buffer is the buffer that is currently displayed
-        Surface frontBuffer;
+    // current size of the terminal
+    TerminalDimension currentDimension;
 
-        // the back buffer is where the next frame is being rendered
-        Surface backBuffer;
+    // the front buffer is the buffer that is currently displayed
+    Surface frontBuffer;
 
-        // the camera that was used in rendering the front buffer
-        Camera frontBufferCamera;
+    // the back buffer is where the next frame is being rendered
+    Surface backBuffer;
 
-        Printer &printer;
-    };
+    // the camera that was used in rendering the front buffer
+    Camera frontBufferCamera;
 
-}
+    ansi::Printer& printer;
+};
+
+}  // namespace tui

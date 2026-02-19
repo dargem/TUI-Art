@@ -10,6 +10,7 @@
     "java.jdt.ls.java.home": "/usr/lib/jvm/java-21-openjdk",
     "C_Cpp.default.cppStandard": "c++23",
     "C_Cpp.default.cStandard": "c17",
+    "C_Cpp.clang_format_style": "file",
     "editor.formatOnSave": true,
     "cSpell.words": [
         "csbi"

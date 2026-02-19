@@ -1,0 +1,10 @@
+# .clang-format
+BasedOnStyle: Google
+
+# Max line length
+ColumnLimit: 100 # pick 80/100/120 as you prefer
+IndentWidth: 4
+
+# Encourage breaking constructor initializer lists
+BreakConstructorInitializers: AfterColon
+ConstructorInitializerIndentWidth: 8
