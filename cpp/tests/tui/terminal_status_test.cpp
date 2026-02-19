@@ -2,7 +2,7 @@
 #include <cstddef>
 #include <optional>
 #include "tui/terminal_status.hpp"
-#include "app_context.hpp"
+#include "setup/app_context.hpp"
 
 #if defined(__linux__) || defined(__unix__)
 #include <unistd.h>

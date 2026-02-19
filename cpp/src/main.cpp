@@ -7,7 +7,7 @@
 #include "tui/ansi/ansi_printer.hpp"
 #include "tui/ansi/ansi_constants.hpp"
 #include "core/types.hpp"
-#include "app_context.hpp"
+#include "setup/app_context.hpp"
 
 using tui::Camera;
 using tui::Cell;

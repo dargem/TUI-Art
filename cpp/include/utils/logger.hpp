@@ -3,7 +3,7 @@
 #include <string>
 #include <iostream>
 #include <filesystem>
-#include <assert.h>
+#include <cassert>
 
 namespace utils
 {
@@ -23,14 +23,15 @@ namespace utils
     class Logger
     {
     public:
-        Logger(const std::string &filename = "logs.txt")
+        Logger(std::string_view filename)
         {
-            // Check if file exists
-            bool fileExists = std::filesystem::exists(filename);
+            const std::filesystem::path path{filename};
 
-            // Open in append mode if exists, otherwise create new
+            // Check if file exists
+            bool fileExists = std::filesystem::exists(path);
             std::ios_base::openmode mode = fileExists ? std::ios::app : std::ios::out;
-            logFile.open(filename, mode);
+
+            logFile.open(path, mode);
 
             if (!logFile.is_open())
             {
@@ -38,21 +39,15 @@ namespace utils
                 {
                     throw std::runtime_error("File exists, but unable to open file for writing error logs");
                 }
-                else
-                {
-                    throw std::runtime_error("Created a file but unable to open file for writing error logs");
-                }
+                throw std::runtime_error("Created a file but unable to open file for writing error logs");
             }
         }
 
+        Logger(const Logger &) = delete;
+        Logger &operator=(Logger &) = delete;
+
         // Clean up holding the file
-        ~Logger()
-        {
-            if (logFile.is_open())
-            {
-                logFIle.close();
-            }
-        }
+        ~Logger() = default;
 
         // Log a message to the logger's file
         // This call should be completely optimized away at compile time, if it doesn't log
@@ -73,13 +68,22 @@ namespace utils
         {
             switch (level)
             {
-            case LogLevel::TRACE return "TRACE";
-            case LogLevel::DEBUG return "DEBUG";
-            case LogLevel::INFO return "INFO";
-            case LogLevel::WARN return "WARN";
-            case LogLevel::ERROR return "ERROR";
-            case LogLevel::FATAL return "FATAL";
+            case LogLevel::TRACE:
+                return "TRACE";
+            case LogLevel::DEBUG:
+                return "DEBUG";
+            case LogLevel::INFO:
+                return "INFO";
+            case LogLevel::WARN:
+                return "WARN";
+            case LogLevel::ERROR:
+                return "ERROR";
+            case LogLevel::FATAL:
+                return "FATAL";
             }
+
+            // Fallback, if adding another log level make sure to map it
+            return "UNKNOWN";
         }
         std::ofstream logFile;
     };

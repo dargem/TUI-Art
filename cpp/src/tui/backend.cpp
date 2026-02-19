@@ -9,7 +9,12 @@ namespace tui
     using ansi::Printer;
 
     TerminalBackend::TerminalBackend(AppContext &context)
-        : dimensionSubscriptionToken{context.getTerminalStatus().addDimensionListener(this)}, currentDimension{context.getTerminalStatus().queryTerminalSize()}, frontBuffer{currentDimension.charWidth, currentDimension.charHeight}, backBuffer{currentDimension.charWidth, currentDimension.charHeight}, frontBufferCamera{0, 0}, printer{context.getPrinter()}
+        : dimensionSubscriptionToken{context.getTerminalStatus().addDimensionListener(this)}
+        , currentDimension{context.getTerminalStatus().queryTerminalSize()}
+        , frontBuffer{currentDimension.charWidth, currentDimension.charHeight}
+        , backBuffer{currentDimension.charWidth, currentDimension.charHeight}
+        , frontBufferCamera{0, 0}
+        , printer{context.getPrinter()}
     {
     }
 
