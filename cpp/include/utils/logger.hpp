@@ -10,12 +10,13 @@ namespace utils
 
     enum class LogLevel
     {
-        TRACE,
+        TRACE = 0,
         DEBUG,
         INFO,
         WARN,
         ERROR,
-        FATAL
+        FATAL,
+        COUNT // to allow iteration through log level
     };
 
     // A file logger class, will log everything as or more critical than keptLogLevel

@@ -4,7 +4,6 @@
 
 namespace SetupConstants
 {
-
     // Log level of the program
     inline constexpr utils::LogLevel APP_LOG_LEVEL = utils::LogLevel::INFO;
     // Default log file of the program
