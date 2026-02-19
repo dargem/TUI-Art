@@ -15,6 +15,7 @@ namespace
     // location of written out file
     constexpr std::string_view TEST_LOC{"test_logs.txt"};
     constexpr std::string_view EXAMPLE_TXT{"An example log entry"};
+    constexpr std::string_view EXAMPLE_TXT_2{"A different log entry"};
 }
 
 TEST(Logger, LoggersCanBeCreated)
@@ -47,4 +48,33 @@ TEST(Logger, LogsIntoFile)
     EXPECT_FALSE(line.empty()) << "Logged line should not be empty!";
     EXPECT_TRUE(line.contains(EXAMPLE_TXT)) << "The logged file should contain the message it outputted";
     EXPECT_TRUE(line.contains("INFO")) << "Should contain the log level of the message";
+}
+
+TEST(Logger, LogsOnlyHigherLevelWarnings)
+{
+    // open and clear the file
+    const std::filesystem::path path{TEST_LOC};
+    // opens for the file for writing and truncate file length 0 (empties it)
+    std::fstream logFile(path, std::ofstream::out | std::ofstream::trunc);
+    EXPECT_TRUE(logFile.is_open()) << "File should be opened";
+    logFile.close();
+
+    // Log to the file
+    std::optional<Logger<LogLevel::WARN>> logger{TEST_LOC};
+    logger.value().log<LogLevel::INFO>(EXAMPLE_TXT);
+    logger.value().log<LogLevel::FATAL>(EXAMPLE_TXT_2);
+    // safely destroy the old logger
+    logger.reset();
+
+    logFile.open(path, std::ios::in);
+    EXPECT_TRUE(logFile.is_open()) << "File should be opened";
+
+    std::string line;
+    std::getline(logFile, line);
+
+    EXPECT_FALSE(line.empty()) << "Logged line should not be empty!";
+    EXPECT_FALSE(line.contains("INFO")) << "Should not log the INFO level message";
+    EXPECT_FALSE(line.contains(EXAMPLE_TXT)) << "Should only log WARN level and higher";
+    EXPECT_TRUE(line.contains("FATAL")) << "Should log the Fatal level log message";
+    EXPECT_TRUE(line.contains(EXAMPLE_TXT_2)) << "Should contain the fatal level log message";
 }
