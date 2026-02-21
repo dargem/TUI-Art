@@ -1,6 +1,7 @@
 #include "tui/backend.hpp"
 
 #include <cstddef>
+#include <format>
 #include <iostream>
 
 #include "tui/ansi/ansi_printer.hpp"
