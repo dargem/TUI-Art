@@ -18,10 +18,11 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y libgtest-dev cmake build-essential
 
       - name: Configure CMake
-        run: cmake -B ${{github.workspace}}/cpp/build
+        # Enter the right folder
+        run: cd cpp && cmake -B ${{github.workspace}}/cpp/build
 
       - name: Build Project
-        run: cmake --build ${{github.workspace}}/cpp/build
+        run: cd cpp && cmake --build ${{github.workspace}}/cpp/build
 
       - name: Run Tests
         run: cd ${{github.workspace}}/cpp/build && ctest -VV
