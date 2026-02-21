@@ -1,6 +1,7 @@
 #include <atomic>
 #include <chrono>
 #include <csignal>
+#include <format>
 #include <thread>
 
 #include "core/types.hpp"
@@ -21,10 +22,11 @@ using tui::ansi::HIDE_CURSOR;
 using tui::ansi::Printer;
 using tui::ansi::RESET_COLOUR;
 using tui::ansi::SHOW_CURSOR;
+using utils::LogLevel;
 
 std::atomic<bool> running{true};
 
-void signalHandler(int signum) {
+void signalHandler(int) {
     // has received a signal interrupt (ctrl C)
     running = false;
 }
@@ -35,6 +37,8 @@ int main() {
 
     AppContext appContext;
     TerminalBackend backend(appContext);
+    AppLogger& logger = appContext.getLogger();
+    logger.log<LogLevel::INFO>("Program starting up");
 
     // 2. Clear screen initially
     std::cout << CLEAR_SCREEN;
@@ -43,17 +47,21 @@ int main() {
     // 3. Game Loop
     int frameCount{};
 
-    int yCount;
+    // int yCount;
 
+    logger.log<LogLevel::INFO>("Starting rendering loop");
     while (running) {
         TerminalDimension dimension = appContext.getTerminalStatus().publishTerminalSize();
+        logger.log<LogLevel::DEBUG>(
+            std::format("Dimension queried at with width and height in char of {},{}",
+                        dimension.charWidth, dimension.charHeight));
         Surface& surface = backend.getDrawSurface();
 
         // --- Update & Render ---
 
         // Example: Draw a moving box
         int boxX = frameCount % (dimension.charWidth - 5);
-        int boxY = (frameCount / 2) % (dimension.charHeight - 2);
+        int boxY = (frameCount / 2) % (dimension.charHeight - 3);
 
         /*
         for (int y = 0; y < HEIGHT; ++y) {

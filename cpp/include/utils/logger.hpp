@@ -7,15 +7,7 @@
 
 namespace utils {
 
-enum class LogLevel : uint8_t {
-    TRACE = 0,
-    DEBUG,
-    INFO,
-    WARN,
-    ERROR,
-    FATAL,
-    COUNT  // to allow iteration through log level
-};
+enum class LogLevel : uint8_t { TRACE = 0, DEBUG, INFO, WARN, ERROR, FATAL };
 
 // A file logger class, will log everything as or more critical than keptLogLevel
 template <LogLevel keptLogLevel>

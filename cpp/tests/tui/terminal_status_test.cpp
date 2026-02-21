@@ -48,7 +48,7 @@ TEST(TerminalStatus, TerminalDimensionQueryable) {
     AppContext appContext;
     TerminalStatus& terminalStatus{appContext.getTerminalStatus()};
 
-    EXPECT_NO_THROW(terminalStatus.queryTerminalSize())
+    EXPECT_NO_THROW(std::ignore = terminalStatus.queryTerminalSize())
         << "Querying terminal dimension throws an error";
 }
 
