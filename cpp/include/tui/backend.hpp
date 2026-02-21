@@ -27,6 +27,9 @@ class TerminalBackend : TerminalDimensionListener {
     void receiveTerminalSize(TerminalDimension dimension) override;
 
    private:
+    // Should be called when presentation ends
+    void cleanupPresentation(Camera backBufferCamera);
+
     // logger
     setup::AppLogger& logger;
 

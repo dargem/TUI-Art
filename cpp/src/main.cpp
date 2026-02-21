@@ -53,9 +53,11 @@ int main() {
     while (running) {
         TerminalDimension dimension = appContext.getTerminalStatus().publishTerminalSize();
         logger.log<LogLevel::DEBUG>(
-            std::format("Dimension queried at with width and height in char of {},{}",
+            std::format("Dimension queried with width and height in char of {},{}",
                         dimension.charWidth, dimension.charHeight));
         Surface& surface = backend.getDrawSurface();
+        logger.log<LogLevel::DEBUG>(std::format("Draw surface has width and height of {},{}",
+                                                surface.width, surface.height));
 
         // --- Update & Render ---
 

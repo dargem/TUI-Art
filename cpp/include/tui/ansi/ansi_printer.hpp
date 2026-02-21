@@ -18,10 +18,10 @@ class Printer : TerminalDimensionListener {
     // Prints a cell at the GridLocation inputted, printing
     //     - Character in its foreground colour
     //     - Background in the background colour
-    void printCell(const Cell& cell, GridLocation printLocation);
+    void printCell(const Cell cell, GridLocation printLocation);
 
     // Inserts a cell at the GridLocation, shifts same line cells right by one
-    void insertCellRightShift(const Cell& cell, GridLocation insertLocation);
+    void insertCellRightShift(const Cell cell, GridLocation insertLocation);
 
     // Deletes 1 cell at the cellLocation,
     // this shifts same line cells left by one

@@ -27,7 +27,7 @@ void Printer::receiveTerminalSize(TerminalDimension terminalDimension) {
     currentTerminalDimension = terminalDimension;
 }
 
-void Printer::printCell(const Cell& cell, GridLocation insertionLocation) {
+void Printer::printCell(const Cell cell, GridLocation insertionLocation) {
     moveTo(insertionLocation);
 
     // Print new escape string colours only when required
@@ -55,7 +55,7 @@ void Printer::printCell(const Cell& cell, GridLocation insertionLocation) {
     cursorLocation.x += 1;
 }
 
-void Printer::insertCellRightShift(const Cell& cell, const GridLocation insertLocation) {
+void Printer::insertCellRightShift(const Cell cell, const GridLocation insertLocation) {
     moveTo(insertLocation);
     std::cout << INSERT_SPACE;
     printCell(cell, insertLocation);
@@ -91,6 +91,7 @@ void Printer::moveTo(const GridLocation destination) {
 }
 
 void Printer::rowShiftDown(size_t shifts) {
+    moveTo({0, currentTerminalDimension.charHeight - 1});
     for (size_t i{}; i < shifts; ++i) {
         std::cout << INSERT_LINE;
     }

@@ -35,6 +35,22 @@ void TerminalBackend::present(const Camera backBufferCamera) {
 
     logger.log<LogLevel::INFO>("Started rendering back buffer");
 
+    // if the terminal gets resized it should just reprint the whole screen without dif checks as
+    // current state can get messed up by resizes so there's no point in diffing
+    if (!backBuffer.sameSize(frontBuffer)) {
+        logger.log<LogLevel::INFO>("Screen resize detected, doing a diffless screen reprint");
+
+        for (size_t y{}; y < frontBuffer.height; ++y) {
+            for (size_t x{}; x < frontBuffer.width; ++x) {
+                // Cell is lightweight better to copy by val when not modifying
+                Cell cell = frontBuffer.getCell(x, y);
+                printer.printCell(cell, {x, y});
+            }
+        }
+        cleanupPresentation(backBufferCamera);
+        return;
+    }
+
     // This can always be converted to a size t because of the assertion above
     size_t y_increase{static_cast<size_t>(backBufferCamera.y - frontBufferCamera.y)};
 
@@ -80,6 +96,10 @@ void TerminalBackend::present(const Camera backBufferCamera) {
         }
     }
 
+    cleanupPresentation(backBufferCamera);
+}
+
+void TerminalBackend::cleanupPresentation(const Camera backBufferCamera) {
     std::cout.flush();
 
     // Swap buffers then clear the back buffer
