@@ -40,10 +40,10 @@ void TerminalBackend::present(const Camera backBufferCamera) {
     if (!backBuffer.sameSize(frontBuffer)) {
         logger.log<LogLevel::INFO>("Screen resize detected, doing a diffless screen reprint");
 
-        for (size_t y{}; y < frontBuffer.height; ++y) {
-            for (size_t x{}; x < frontBuffer.width; ++x) {
+        for (size_t y{}; y < backBuffer.height; ++y) {
+            for (size_t x{}; x < backBuffer.width; ++x) {
                 // Cell is lightweight better to copy by val when not modifying
-                Cell cell = frontBuffer.getCell(x, y);
+                Cell cell = backBuffer.getCell(x, y);
                 printer.printCell(cell, {x, y});
             }
         }
