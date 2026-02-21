@@ -7,7 +7,7 @@
 
 namespace utils {
 
-enum class LogLevel {
+enum class LogLevel : uint8_t {
     TRACE = 0,
     DEBUG,
     INFO,

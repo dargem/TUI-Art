@@ -7,6 +7,7 @@
 
 #include "tui/ansi/ansi_constants.hpp"
 #include "tui/terminal_status.hpp"
+#include "utils/logger.hpp"
 
 namespace tui::ansi {
 

@@ -4,10 +4,12 @@
 #include <iostream>
 
 #include "tui/ansi/ansi_printer.hpp"
+#include "utils/logger.hpp"
 
 namespace tui {
 
 using ansi::Printer;
+using utils::LogLevel;
 
 TerminalBackend::TerminalBackend(AppContext& context) :
         logger{context.getLogger()},
@@ -31,8 +33,16 @@ void TerminalBackend::present(const Camera backBufferCamera) {
     assert(backBufferCamera.y >= frontBufferCamera.y &&
            "Downwards camera movement not supported currently");
 
+    logger.log<LogLevel::INFO>("Started rendering back buffer");
+
     // This can always be converted to a size t because of the assertion above
     size_t y_increase{static_cast<size_t>(backBufferCamera.y - frontBufferCamera.y)};
+
+    if (y_increase != 0) {
+        logger.log<LogLevel::INFO>(std::format(
+            "Different camera locs, back buffer cam at {},{} and front buffer cam at {},{}",
+            backBufferCamera.x, backBufferCamera.y, frontBufferCamera.x, frontBufferCamera.y));
+    }
 
     // An initial loop is used to shift down the front buffer with empty lines
     // It then prints in these empty lines the new back buffer

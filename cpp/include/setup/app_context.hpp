@@ -20,7 +20,7 @@ class AppContext {
     }
 
     [[nodiscard]]
-    Setup::AppLogger& getLogger() {
+    setup::AppLogger& getLogger() {
         return logger;
     }
 
