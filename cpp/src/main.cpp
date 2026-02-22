@@ -63,7 +63,7 @@ int main() {
 
         // Example: Draw a moving box
         int boxX = frameCount % (dimension.charWidth - 5);
-        int boxY = (frameCount / 2) % (dimension.charHeight - 3);
+        int boxY = (frameCount / 2) % (dimension.charHeight - 2);
 
         for (int y = 0; y < dimension.charHeight; ++y) {
             for (int x = 0; x < dimension.charWidth; ++x) {
@@ -87,9 +87,9 @@ int main() {
         // --- Present ---
 
         backend.present(Camera{0, yCount});
-        yCount += 0;
+        yCount += 5;
         // Timing
-        std::this_thread::sleep_for(std::chrono::milliseconds(30));  // ~30 FPS
+        std::this_thread::sleep_for(std::chrono::milliseconds(33));  // ~30 FPS
         frameCount++;
 
         appContext.getPrinter().resetColour();
