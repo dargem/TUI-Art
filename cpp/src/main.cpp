@@ -47,7 +47,7 @@ int main() {
     // 3. Game Loop
     int frameCount{};
 
-    // int yCount;
+    int yCount{};
 
     logger.log<LogLevel::INFO>("Starting rendering loop");
     while (running) {
@@ -65,16 +65,14 @@ int main() {
         int boxX = frameCount % (dimension.charWidth - 5);
         int boxY = (frameCount / 2) % (dimension.charHeight - 3);
 
-        /*
-        for (int y = 0; y < HEIGHT; ++y) {
-            for (int x = 0; x < WIDTH; ++x) {
+        for (int y = 0; y < dimension.charHeight; ++y) {
+            for (int x = 0; x < dimension.charWidth; ++x) {
                 Cell c;
                 c.style.bg = {0, 0, 1};
                 // kitty defaults 0, 0, 0 black to the default terminal for some reason...
                 surface.setCell(x, y, c);
             }
         }
-        */
 
         for (int y = 0; y < 3; ++y) {
             for (int x = 0; x < 5; ++x) {
@@ -88,7 +86,8 @@ int main() {
 
         // --- Present ---
 
-        backend.present(Camera{0, 0});
+        backend.present(Camera{0, yCount});
+        yCount += 0;
         // Timing
         std::this_thread::sleep_for(std::chrono::milliseconds(30));  // ~30 FPS
         frameCount++;

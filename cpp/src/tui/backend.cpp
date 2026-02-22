@@ -40,11 +40,16 @@ void TerminalBackend::present(const Camera backBufferCamera) {
     // current state can get messed up by resizes so there's no point in diffing
     if (!backBuffer.sameSize(frontBuffer)) {
         logger.log<LogLevel::INFO>("Screen resize detected, doing a diffless screen reprint");
+        logger.log<LogLevel::DEBUG>(std::format("Backbuffer has width and height of {},{}",
+                                                backBuffer.width, backBuffer.height));
+        logger.log<LogLevel::DEBUG>(std::format("frontBuffer has width and height of {},{}",
+                                                frontBuffer.width, frontBuffer.height));
 
         for (size_t y{}; y < backBuffer.height; ++y) {
             for (size_t x{}; x < backBuffer.width; ++x) {
                 // Cell is lightweight better to copy by val when not modifying
                 Cell cell = backBuffer.getCell(x, y);
+                logger.log<LogLevel::TRACE>(std::format("Printing cell at x: {}, y: {}", x, y));
                 printer.printCell(cell, {x, y});
             }
         }
@@ -54,6 +59,7 @@ void TerminalBackend::present(const Camera backBufferCamera) {
 
     // This can always be converted to a size t because of the assertion above
     size_t y_increase{static_cast<size_t>(backBufferCamera.y - frontBufferCamera.y)};
+    int x_increase{backBufferCamera.x - frontBufferCamera.x};
 
     if (y_increase != 0) {
         logger.log<LogLevel::INFO>(std::format(
@@ -61,19 +67,19 @@ void TerminalBackend::present(const Camera backBufferCamera) {
             backBufferCamera.x, backBufferCamera.y, frontBufferCamera.x, frontBufferCamera.y));
     }
 
-    // An initial loop is used to shift down the front buffer with empty lines
-    // It then prints in these empty lines the new back buffer
-    // As the empty lines are empty no diffing is needed for this
-    // Note the number of iterations is not related to cursor y position
-    // Because the cursor will always be on the top row
+    // row shift down one, this leads the top row empty
+    // then print out without dif checks and this row is empty
+    // lie to the printer and tell it to print to the top row here using the correct tiles
+    // then shift down that top row again if necessary
     for (size_t i{}; i < y_increase && i < backBuffer.height; ++i) {
-        const size_t y{backBuffer.height - 1};
+        const size_t topRow{backBuffer.height - 1};
+        const size_t actualY{backBuffer.height - (std::min(y_increase, backBuffer.height) - i)};
 
         printer.rowShiftDown(1);
 
         for (size_t x{}; x < backBuffer.width; ++x) {
-            const Cell& newCell = backBuffer.getCell(x, y);
-            printer.printCell(newCell, {x, y});
+            const Cell newCell = backBuffer.getCell(x, actualY);
+            printer.printCell(newCell, {x, topRow});
         }
     }
 
