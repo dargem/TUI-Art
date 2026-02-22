@@ -33,6 +33,8 @@ void TerminalBackend::present(const Camera backBufferCamera) {
     // abort if the new camera is not equal or above the last in height
     assert(backBufferCamera.y >= frontBufferCamera.y &&
            "Downwards camera movement not supported currently");
+    assert(backBuffer.height > (backBufferCamera.y - frontBufferCamera.y));
+    assert(backBuffer.width > (backBufferCamera.x - frontBufferCamera.x));
 
     logger.log<LogLevel::INFO>("Started rendering back buffer");
 
@@ -47,7 +49,6 @@ void TerminalBackend::present(const Camera backBufferCamera) {
 
         for (size_t y{}; y < backBuffer.height; ++y) {
             for (size_t x{}; x < backBuffer.width; ++x) {
-                // Cell is lightweight better to copy by val when not modifying
                 Cell cell = backBuffer.getCell(x, y);
                 logger.log<LogLevel::TRACE>(std::format("Printing cell at x: {}, y: {}", x, y));
                 printer.printCell(cell, {x, y});
@@ -59,7 +60,6 @@ void TerminalBackend::present(const Camera backBufferCamera) {
 
     // This can always be converted to a size t because of the assertion above
     size_t y_increase{static_cast<size_t>(backBufferCamera.y - frontBufferCamera.y)};
-    int x_increase{backBufferCamera.x - frontBufferCamera.x};
 
     if (y_increase != 0) {
         logger.log<LogLevel::INFO>(std::format(
@@ -87,14 +87,43 @@ void TerminalBackend::present(const Camera backBufferCamera) {
     // It starts iterating after what has already been printed from the back buffer (top y_increase
     // rows) to avoid needless diffing logic
     const size_t diffHeight{backBuffer.height - y_increase};
-    for (size_t y{}; y < diffHeight; ++y) {
-        for (size_t x{}; x < backBuffer.width; ++x) {
-            const Cell& newCell = backBuffer.getCell(x, y);
+    int x_change{backBufferCamera.x - frontBufferCamera.x};
 
+    for (size_t y{}; y < diffHeight; ++y) {
+        // Printing when the camera has moved left
+        if (x_change < 0) {
+            // shift this to the left by removing x_change tiles from left
+            for (size_t i{}; i < std::abs(x_change); ++i) {
+                printer.removeCellLeftShift({0, y});
+            }
+
+            // diff everything < backBuffer.width - |x_change| considering the translation
+            for (size_t x{}; x < backBuffer.width - std::abs(x_change); ++x) {
+                const Cell oldCell = frontBuffer.getCell(x + std::abs(x_change), y);
+                const Cell newCell = backBuffer.getCell(x, y);
+
+                if (oldCell != newCell) {
+                    printer.printCell(newCell, {x, y});
+                }
+            }
+            return;
+        }
+
+        // printing when the cameras moved right
+
+        // default behaviour no camera move
+        for (size_t x{}; x < backBuffer.width; ++x) {
+            // optimise this later
+
+            if (x_change > 0) {
+                return;
+            }
+
+            const Cell newCell = backBuffer.getCell(x, y);
             // Includes the translation from the front buffer as its been shifted down by y_increase
             // So the old front buffer at y = 1 with a shift of 1 goes down to y = 0,
             // so compare backBuffer with frontBuffer + y_increase
-            const Cell& oldCell = frontBuffer.getCell(x, y + y_increase);
+            const Cell oldCell = frontBuffer.getCell(x, y + y_increase);
 
             if (newCell != oldCell) {
                 // Print the cell, noting the cursor will advance by one automatically

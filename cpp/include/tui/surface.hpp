@@ -19,7 +19,7 @@ class Surface {
     Surface& operator=(Surface&&) noexcept = default;
 
     // Sets a cell on the surface to be equal to another
-    void setCell(size_t x, size_t y, const Cell& cell) {
+    void setCell(size_t x, size_t y, const Cell cell) {
         assert(x < width && "Out of x bounds write");
         assert(y < height && "Out of y bounds write");
         pixels[y * width + x] = cell;
