@@ -88,7 +88,7 @@ int main() {
         // --- Present ---
 
         backend.present(Camera{xCount, yCount});
-        xCount -= 10;
+        xCount += 10;
         yCount += 5;
         // Timing
         std::this_thread::sleep_for(std::chrono::milliseconds(33));  // ~30 FPS

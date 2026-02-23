@@ -116,6 +116,26 @@ void TerminalBackend::present(const Camera backBufferCamera) {
         }
 
         // printing when the cameras moved right
+        if (x_change > 0) {
+            // Insert the first first tiles without dif checking, these shift the whole line right
+            for (size_t x{}; x < x_change; ++x) {
+                const Cell newCell = backBuffer.getCell(x, y);
+                printer.insertCellRightShift(newCell, {x, y});
+            }
+
+            // diff everything < backBuffer.width considering the translated start position when
+            // taking from the front buffer
+            for (size_t x{x_change}; x < backBuffer.width; ++x) {
+                const Cell oldCell = frontBuffer.getCell(x - x_change, y + y_increase);
+                const Cell newCell = backBuffer.getCell(x, y);
+
+                if (oldCell != newCell) {
+                    printer.printCell(newCell, {x, y});
+                }
+            }
+
+            continue;
+        }
 
         // default behaviour no camera move
         for (size_t x{}; x < backBuffer.width; ++x) {
