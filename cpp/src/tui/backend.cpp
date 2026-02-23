@@ -34,7 +34,7 @@ void TerminalBackend::present(const Camera backBufferCamera) {
     assert(backBufferCamera.y >= frontBufferCamera.y &&
            "Downwards camera movement not supported currently");
     assert(backBuffer.height > (backBufferCamera.y - frontBufferCamera.y));
-    assert(backBuffer.width > (backBufferCamera.x - frontBufferCamera.x));
+    // assert(backBuffer.width > (backBufferCamera.x - frontBufferCamera.x));
 
     logger.log<LogLevel::INFO>("Started rendering back buffer");
 
@@ -99,14 +99,20 @@ void TerminalBackend::present(const Camera backBufferCamera) {
 
             // diff everything < backBuffer.width - |x_change| considering the translation
             for (size_t x{}; x < backBuffer.width - std::abs(x_change); ++x) {
-                const Cell oldCell = frontBuffer.getCell(x + std::abs(x_change), y);
+                const Cell oldCell = frontBuffer.getCell(x + std::abs(x_change), y + y_increase);
                 const Cell newCell = backBuffer.getCell(x, y);
 
                 if (oldCell != newCell) {
                     printer.printCell(newCell, {x, y});
                 }
             }
-            return;
+
+            for (size_t x{backBuffer.width - std::abs(x_change)}; x < backBuffer.width; ++x) {
+                // print this part diffless
+                const Cell newCell = backBuffer.getCell(x, y);
+                printer.printCell(newCell, {x, y});
+            }
+            continue;
         }
 
         // printing when the cameras moved right

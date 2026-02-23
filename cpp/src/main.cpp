@@ -48,6 +48,7 @@ int main() {
     int frameCount{};
 
     int yCount{};
+    int xCount{};
 
     logger.log<LogLevel::INFO>("Starting rendering loop");
     while (running) {
@@ -86,7 +87,8 @@ int main() {
 
         // --- Present ---
 
-        backend.present(Camera{0, yCount});
+        backend.present(Camera{xCount, yCount});
+        xCount -= 10;
         yCount += 5;
         // Timing
         std::this_thread::sleep_for(std::chrono::milliseconds(33));  // ~30 FPS
