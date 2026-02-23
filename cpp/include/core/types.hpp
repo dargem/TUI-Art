@@ -12,27 +12,27 @@ struct RGB {
 };
 
 struct Light {
-    RGB rgb{};
+    // rgb is stored premultiplied by alpha for quick blends
+    Light(RGB rgb, uint8_t alpha) {
+        rgbPremultiplied.r = rgb.r * alpha;
+        rgbPremultiplied.g = rgb.g * alpha;
+        rgbPremultiplied.b = rgb.b * alpha;
+    }
     uint8_t alpha{};
 
     void blend(Light other) {
-        // use an additive blend of both lights
-        int my_r = rgb.r * alpha / 255;
-        int my_g = rgb.g * alpha / 255;
-        int my_b = rgb.b * alpha / 255;
-
-        int other_r = other.rgb.r * other.alpha / 255;
-        int other_g = other.rgb.g * other.alpha / 255;
-        int other_b = other.rgb.b * other.alpha / 255;
-
-        // Add together RGB's capping at 255
-        rgb.r = static_cast<uint8_t>(std::min(255, my_r + other_r));
-        rgb.g = static_cast<uint8_t>(std::min(255, my_g + other_g));
-        rgb.b = static_cast<uint8_t>(std::min(255, my_b + other_b));
-
-        // combined alpha
-        alpha = static_cast<uint8_t>(std::min(255, alpha + other.alpha));
+        // Simple saturated addition
+        rgbPremultiplied.r =
+            static_cast<uint8_t>(std::min(255, int(rgbPremultiplied.r) + other.rgbPremultiplied.r));
+        rgbPremultiplied.g =
+            static_cast<uint8_t>(std::min(255, int(rgbPremultiplied.g) + other.rgbPremultiplied.g));
+        rgbPremultiplied.b =
+            static_cast<uint8_t>(std::min(255, int(rgbPremultiplied.b) + other.rgbPremultiplied.b));
+        alpha = static_cast<uint8_t>(std::min(255, int(alpha) + other.alpha));
     }
+
+   private:
+    RGB rgbPremultiplied{};
 };
 
 struct Style {
