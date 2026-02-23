@@ -10,16 +10,13 @@
 
 namespace types {
 
+using CellSurface = SurfaceBase<Cell>;
+using LightSurface = SurfaceBase<Light>;
+
 template <typename T>
-concept Item = requires(T item) { std::same_as<T, Cell> || std::same_as<T, Light>; };
+concept Item = requires(T) { std::same_as<T, Cell> || std::same_as<T, Light>; };
 
 template <Item T>
-class Surface;
-
-using CellSurface = Surface<Cell>;
-using LightSurface = Surface<Light>;
-
-template <typename T>
 struct SurfaceTraits;
 
 template <>
@@ -33,40 +30,46 @@ struct SurfaceTraits<Light> {
 };
 
 template <Item T>
-class Surface {
+class SurfaceBase {
    public:
     const size_t width, height;
     // keep track whether this surface has been drawn on
     bool drawnOn{false};
 
-    Surface(size_t w, size_t h) :
-            width{w}, height{h}, pixels{w * h, SurfaceTraits<T>::defaultValue()} {}
+    SurfaceBase(size_t w, size_t h) :
+            width{w}, height{h}, elements{w * h, SurfaceTraits<T>::defaultValue()} {}
 
-    // allow std::move to steal pixel vectors resource
-    Surface<T>& operator=(Surface<T>&&) noexcept = default;
+    // allow std::move to steal other surface base's vector resource
+    SurfaceBase<T>& operator=(SurfaceBase<T>&&) noexcept = default;
 
-    // Sets a cell on the surface to be equal to another
-    void setPixel(size_t x, size_t y, const T value) {
+    // Writes an element to the grid location
+    void writeElement(const T value, GridLocation gridLocation) {
         assert(x < width && "Out of x bounds write");
         assert(y < height && "Out of y bounds write");
-        pixels[y * width + x] = value;
+
+        if constexpr (std::same_as<T, Light>) {
+            // if its a light, writing to it does a colour blend action
+            elements[gridLocation.y * width + gridLocation.x];
+        } else {
+            elements[gridLocation.y * width + gridLocation.x] = value;
+        }
     }
 
-    // Returns a cell
-    [[nodiscard]] const T& getCell(size_t x, size_t y) const {
+    // Returns the element at the grid location
+    [[nodiscard]] const T& getElement(GridLocation gridLocation) const {
         assert(x < width && "Out of x bounds read");
         assert(y < height && "Out of y bounds read");
-        return pixels[y * width + x];
+        return elements[gridLocation.y * width + gridLocation.x];
     }
 
-    void reset() { pixels.assign(width * height, SurfaceTraits<T>::defaultValue()); }
+    void reset() { elements.assign(width * height, SurfaceTraits<T>::defaultValue()); }
 
-    bool sameSize(const Surface<T>& other) const {
+    bool sameSize(const SurfaceBase<T>& other) const {
         return (width == other.width) && (height == other.height);
     }
 
    private:
-    std::vector<T> pixels;
+    std::vector<T> elements;
 };
 
 }  // namespace types
