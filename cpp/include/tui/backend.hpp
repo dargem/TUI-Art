@@ -3,11 +3,11 @@
 #include <cstddef>
 #include <iostream>
 
+#include "core/surface.hpp"
 #include "core/types.hpp"
 #include "setup/app_context.hpp"
 #include "setup/configs.hpp"
 #include "tui/ansi/ansi_printer.hpp"
-#include "tui/surface.hpp"
 #include "tui/terminal_status.hpp"
 
 namespace tui {

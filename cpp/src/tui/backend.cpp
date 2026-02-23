@@ -139,7 +139,7 @@ void TerminalBackend::present(const Camera backBufferCamera) {
 
         // default behaviour no camera move
         for (size_t x{}; x < backBuffer.width; ++x) {
-            // optimise this later
+            // optimize this later this code is buggish right now
 
             if (x_change > 0) {
                 return;

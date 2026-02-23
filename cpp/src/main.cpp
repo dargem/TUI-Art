@@ -78,9 +78,9 @@ int main() {
         for (int y = 0; y < 3; ++y) {
             for (int x = 0; x < 5; ++x) {
                 Cell c;
-                c.character = '#';
-                c.style.fg = {255, 0, 0};  // Red
-                c.style.bg = {0, 0, 0};
+                c.character = ' ';
+                // c.style.fg = {255, 0, 0};  // Red
+                c.style.bg = {255, 0, 0};
                 surface.setCell(boxX + x, boxY + y, c);
             }
         }
@@ -93,8 +93,6 @@ int main() {
         // Timing
         std::this_thread::sleep_for(std::chrono::milliseconds(33));  // ~30 FPS
         frameCount++;
-
-        appContext.getPrinter().resetColour();
     }
 
     // user has done a signal interrupt so main loop exited gracefully

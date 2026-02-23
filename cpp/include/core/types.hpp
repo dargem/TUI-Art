@@ -2,7 +2,12 @@
 #include <cstddef>
 #include <cstdint>
 
-namespace tui {
+namespace types {
+
+struct Light {
+    Colour colour{};
+    double alpha{};
+};
 
 struct Colour {
     uint8_t r, g, b;
@@ -38,4 +43,4 @@ struct GridLocation {
     bool operator==(const GridLocation& other) const = default;
 };
 
-}  // namespace tui
+}  // namespace types
