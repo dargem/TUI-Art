@@ -22,7 +22,7 @@ class TerminalBackend : TerminalDimensionListener {
     // renders the back buffer
     // usedCamera is the camera that was used in drawing to the back buffer
     // after presenting a new draw surface should be retrieved for use
-    void present(const Camera backBufferCamera);
+    void present(const types::Camera backBufferCamera);
 
     void receiveTerminalSize(TerminalDimension dimension) override;
 
@@ -40,13 +40,13 @@ class TerminalBackend : TerminalDimensionListener {
     TerminalDimension currentDimension;
 
     // the front buffer is the buffer that is currently displayed
-    CellSurface frontBuffer;
+    types::CellSurface frontBuffer;
 
     // the back buffer is where the next frame is being rendered
-    CellSurface backBuffer;
+    types::CellSurface backBuffer;
 
     // the camera that was used in rendering the front buffer
-    Camera frontBufferCamera;
+    types::Camera frontBufferCamera;
 
     ansi::Printer& printer;
 };

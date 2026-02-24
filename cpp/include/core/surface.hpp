@@ -24,7 +24,7 @@ struct SurfaceTraits;
 
 template <>
 struct SurfaceTraits<Cell> {
-    static constexpr Cell defaultValue() { return Cell{' ', {}}; }
+    static constexpr Cell defaultValue() { return Cell{{}, ' '}; }
 };
 
 template <>
@@ -35,15 +35,12 @@ struct SurfaceTraits<Shade> {
 template <Item T>
 class SurfaceBase {
    public:
-    const size_t width, height;
+    size_t width, height;
     // keep track whether this surface has been drawn on
     bool drawnOn{false};
 
     SurfaceBase(size_t w, size_t h) :
             width{w}, height{h}, elements{w * h, SurfaceTraits<T>::defaultValue()} {}
-
-    // allow std::move to steal other surface base's vector resource
-    SurfaceBase<T>& operator=(SurfaceBase<T>&&) noexcept = default;
 
     // Writes an element to the grid location
     void writeElement(const T value, GridLocation gridLocation) {

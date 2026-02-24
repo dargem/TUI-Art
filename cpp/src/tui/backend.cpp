@@ -3,6 +3,7 @@
 #include <cstddef>
 #include <format>
 #include <iostream>
+#include <utility>
 
 #include "tui/ansi/ansi_printer.hpp"
 #include "utils/logger.hpp"
@@ -169,7 +170,7 @@ void TerminalBackend::cleanupPresentation(const Camera backBufferCamera) {
     std::cout.flush();
 
     // Swap buffers then clear the back buffer
-    frontBuffer = std::move(backBuffer);
+    std::swap(frontBuffer, backBuffer);
     frontBufferCamera = backBufferCamera;
     backBuffer.reset();
     backBuffer.drawnOn = false;  // wiped so now empty
