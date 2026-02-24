@@ -17,7 +17,7 @@ class TerminalBackend : TerminalDimensionListener {
     TerminalBackend(AppContext& context);
 
     // gets the draw surface (the back buffer)
-    [[nodiscard]] Surface& getDrawSurface();
+    [[nodiscard]] types::CellSurface& getDrawSurface();
 
     // renders the back buffer
     // usedCamera is the camera that was used in drawing to the back buffer
@@ -28,7 +28,7 @@ class TerminalBackend : TerminalDimensionListener {
 
    private:
     // Should be called when presentation ends
-    void cleanupPresentation(Camera backBufferCamera);
+    void cleanupPresentation(types::Camera backBufferCamera);
 
     // logger
     setup::AppLogger& logger;
@@ -40,10 +40,10 @@ class TerminalBackend : TerminalDimensionListener {
     TerminalDimension currentDimension;
 
     // the front buffer is the buffer that is currently displayed
-    Surface frontBuffer;
+    CellSurface frontBuffer;
 
     // the back buffer is where the next frame is being rendered
-    Surface backBuffer;
+    CellSurface backBuffer;
 
     // the camera that was used in rendering the front buffer
     Camera frontBufferCamera;

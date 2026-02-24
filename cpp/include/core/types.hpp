@@ -11,16 +11,18 @@ struct RGB {
     bool operator==(const RGB& other) const = default;
 };
 
-struct Light {
+struct Shade {
     // rgb is stored premultiplied by alpha for quick blends
-    Light(RGB rgb, uint8_t alpha) {
+    Shade(RGB rgb, uint8_t alpha) {
         rgbPremultiplied.r = rgb.r * alpha;
         rgbPremultiplied.g = rgb.g * alpha;
         rgbPremultiplied.b = rgb.b * alpha;
     }
-    uint8_t alpha{};
 
-    void blend(Light other) {
+    // default construct everything to 0
+    Shade() : rgbPremultiplied{}, alpha{} {}
+
+    void blend(Shade other) {
         // Simple saturated addition
         rgbPremultiplied.r =
             static_cast<uint8_t>(std::min(255, int(rgbPremultiplied.r) + other.rgbPremultiplied.r));
@@ -33,12 +35,13 @@ struct Light {
 
    private:
     RGB rgbPremultiplied{};
+    uint8_t alpha{};
 };
 
 struct Style {
     RGB fg;
     RGB bg;
-    uint8_t alpha;
+    uint8_t fg_alpha;
 
     bool operator==(const Style& other) const = default;
 };

@@ -12,9 +12,6 @@
 #include "tui/backend.hpp"
 
 using setup::AppLogger;
-using tui::Camera;
-using tui::Cell;
-using tui::Surface;
 using tui::TerminalBackend;
 using tui::TerminalDimension;
 using tui::ansi::CLEAR_SCREEN;
@@ -22,6 +19,9 @@ using tui::ansi::HIDE_CURSOR;
 using tui::ansi::Printer;
 using tui::ansi::RESET_COLOUR;
 using tui::ansi::SHOW_CURSOR;
+using types::Camera;
+using types::Cell;
+using types::CellSurface;
 using utils::LogLevel;
 
 std::atomic<bool> running{true};
@@ -56,7 +56,7 @@ int main() {
         logger.log<LogLevel::DEBUG>(
             std::format("Dimension queried with width and height in char of {},{}",
                         dimension.charWidth, dimension.charHeight));
-        Surface& surface = backend.getDrawSurface();
+        CellSurface& surface = backend.getDrawSurface();
         logger.log<LogLevel::DEBUG>(std::format("Draw surface has width and height of {},{}",
                                                 surface.width, surface.height));
 
@@ -71,7 +71,7 @@ int main() {
                 Cell c;
                 c.style.bg = {0, 0, 1};
                 // kitty defaults 0, 0, 0 black to the default terminal for some reason...
-                surface.setCell(x, y, c);
+                surface.writeElement(c, {static_cast<size_t>(x), static_cast<size_t>(y)});
             }
         }
 
@@ -81,7 +81,8 @@ int main() {
                 c.character = ' ';
                 // c.style.fg = {255, 0, 0};  // Red
                 c.style.bg = {255, 0, 0};
-                surface.setCell(boxX + x, boxY + y, c);
+                surface.writeElement(
+                    c, {static_cast<size_t>(boxX + x), static_cast<size_t>(boxY + y)});
             }
         }
 

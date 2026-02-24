@@ -10,11 +10,14 @@
 
 namespace types {
 
-using CellSurface = SurfaceBase<Cell>;
-using LightSurface = SurfaceBase<Light>;
-
 template <typename T>
-concept Item = requires(T) { std::same_as<T, Cell> || std::same_as<T, Light>; };
+concept Item = std::same_as<T, Cell> || std::same_as<T, Shade>;
+
+template <Item T>
+class SurfaceBase;  // forward declare surface base
+
+using CellSurface = SurfaceBase<Cell>;
+using ShadeSurface = SurfaceBase<Shade>;
 
 template <Item T>
 struct SurfaceTraits;
@@ -25,8 +28,8 @@ struct SurfaceTraits<Cell> {
 };
 
 template <>
-struct SurfaceTraits<Light> {
-    static constexpr Light defaultValue() { return Light{}; }
+struct SurfaceTraits<Shade> {
+    static constexpr Shade defaultValue() { return Shade{}; }
 };
 
 template <Item T>
@@ -44,11 +47,11 @@ class SurfaceBase {
 
     // Writes an element to the grid location
     void writeElement(const T value, GridLocation gridLocation) {
-        assert(x < width && "Out of x bounds write");
-        assert(y < height && "Out of y bounds write");
+        assert(gridLocation.x < width && "Out of x bounds write");
+        assert(gridLocation.y < height && "Out of y bounds write");
 
-        if constexpr (std::same_as<T, Light>) {
-            // if its a light, writing to it does a colour blend action
+        if constexpr (std::same_as<T, Shade>) {
+            // if its a shade, writing to it does a colour blend action
             elements[gridLocation.y * width + gridLocation.x];
         } else {
             elements[gridLocation.y * width + gridLocation.x] = value;
@@ -57,8 +60,8 @@ class SurfaceBase {
 
     // Returns the element at the grid location
     [[nodiscard]] const T& getElement(GridLocation gridLocation) const {
-        assert(x < width && "Out of x bounds read");
-        assert(y < height && "Out of y bounds read");
+        assert(gridLocation.x < width && "Out of x bounds read");
+        assert(gridLocation.y < height && "Out of y bounds read");
         return elements[gridLocation.y * width + gridLocation.x];
     }
 

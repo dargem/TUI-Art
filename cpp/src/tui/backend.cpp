@@ -10,6 +10,9 @@
 namespace tui {
 
 using ansi::Printer;
+using types::Camera;
+using types::Cell;
+using types::CellSurface;
 using utils::LogLevel;
 
 TerminalBackend::TerminalBackend(AppContext& context) :
@@ -49,7 +52,7 @@ void TerminalBackend::present(const Camera backBufferCamera) {
 
         for (size_t y{}; y < backBuffer.height; ++y) {
             for (size_t x{}; x < backBuffer.width; ++x) {
-                Cell cell = backBuffer.getCell(x, y);
+                Cell cell = backBuffer.getElement({x, y});
                 logger.log<LogLevel::TRACE>(std::format("Printing cell at x: {}, y: {}", x, y));
                 printer.printCell(cell, {x, y});
             }
@@ -78,7 +81,7 @@ void TerminalBackend::present(const Camera backBufferCamera) {
         printer.rowShiftDown(1);
 
         for (size_t x{}; x < backBuffer.width; ++x) {
-            const Cell newCell = backBuffer.getCell(x, actualY);
+            const Cell newCell = backBuffer.getElement({x, actualY});
             printer.printCell(newCell, {x, topRow});
         }
     }
@@ -99,8 +102,8 @@ void TerminalBackend::present(const Camera backBufferCamera) {
 
             // diff everything < backBuffer.width - |x_change| considering the translation
             for (size_t x{}; x < backBuffer.width - std::abs(x_change); ++x) {
-                const Cell oldCell = frontBuffer.getCell(x + std::abs(x_change), y + y_increase);
-                const Cell newCell = backBuffer.getCell(x, y);
+                Cell oldCell = frontBuffer.getElement({x + std::abs(x_change), y + y_increase});
+                Cell newCell = backBuffer.getElement({x, y});
 
                 if (oldCell != newCell) {
                     printer.printCell(newCell, {x, y});
@@ -109,7 +112,7 @@ void TerminalBackend::present(const Camera backBufferCamera) {
 
             for (size_t x{backBuffer.width - std::abs(x_change)}; x < backBuffer.width; ++x) {
                 // print this part diffless
-                const Cell newCell = backBuffer.getCell(x, y);
+                const Cell newCell = backBuffer.getElement({x, y});
                 printer.printCell(newCell, {x, y});
             }
             continue;
@@ -119,15 +122,16 @@ void TerminalBackend::present(const Camera backBufferCamera) {
         if (x_change > 0) {
             // Insert the first first tiles without dif checking, these shift the whole line right
             for (size_t x{}; x < x_change; ++x) {
-                const Cell newCell = backBuffer.getCell(x, y);
+                const Cell newCell = backBuffer.getElement({x, y});
                 printer.insertCellRightShift(newCell, {x, y});
             }
 
             // diff everything < backBuffer.width considering the translated start position when
             // taking from the front buffer
             for (size_t x{x_change}; x < backBuffer.width; ++x) {
-                const Cell oldCell = frontBuffer.getCell(x - x_change, y + y_increase);
-                const Cell newCell = backBuffer.getCell(x, y);
+                const Cell oldCell =
+                    frontBuffer.getElement({static_cast<size_t>(x - x_change), y + y_increase});
+                const Cell newCell = backBuffer.getElement({x, y});
 
                 if (oldCell != newCell) {
                     printer.printCell(newCell, {x, y});
@@ -145,11 +149,11 @@ void TerminalBackend::present(const Camera backBufferCamera) {
                 return;
             }
 
-            const Cell newCell = backBuffer.getCell(x, y);
+            const Cell newCell = backBuffer.getElement({x, y});
             // Includes the translation from the front buffer as its been shifted down by y_increase
             // So the old front buffer at y = 1 with a shift of 1 goes down to y = 0,
             // so compare backBuffer with frontBuffer + y_increase
-            const Cell oldCell = frontBuffer.getCell(x, y + y_increase);
+            const Cell oldCell = frontBuffer.getElement({x, y + y_increase});
 
             if (newCell != oldCell) {
                 // Print the cell, noting the cursor will advance by one automatically
@@ -177,10 +181,10 @@ void TerminalBackend::receiveTerminalSize(TerminalDimension dimension) {
     assert(
         !backBuffer.drawnOn &&
         "Back buffer must not be drawn on before receiving a new terminal size for the backbuffer");
-    backBuffer = Surface(dimension.charWidth, dimension.charHeight);
+    backBuffer = CellSurface(dimension.charWidth, dimension.charHeight);
 }
 
-Surface& TerminalBackend::getDrawSurface() {
+CellSurface& TerminalBackend::getDrawSurface() {
     // returns a non const reference so it is states as drawn on
     backBuffer.drawnOn = true;
     return backBuffer;

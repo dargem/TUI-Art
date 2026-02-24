@@ -11,6 +11,9 @@
 
 namespace tui::ansi {
 
+using types::Cell;
+using types::GridLocation;
+
 Printer::Printer(TerminalStatus& terminalStatus) :
         dimensionSubscriptionToken{terminalStatus.addDimensionListener(this)},
         currentTerminalDimension{terminalStatus.queryTerminalSize()} {
@@ -33,19 +36,19 @@ void Printer::printCell(const Cell cell, GridLocation insertionLocation) {
     // Print new escape string colours only when required
     // If the last printed colour is the same no change is needed
 
-    if (loadedFGColour != cell.style.fg) {
+    if (loadedFgRGB != cell.style.fg) {
         std::cout << SET_FOREGROUND_RGB << (int)cell.style.fg.r << ";" << (int)cell.style.fg.g
                   << ";" << (int)cell.style.fg.b << "m";
 
-        loadedFGColour = cell.style.fg;
+        loadedFgRGB = cell.style.fg;
     }
 
     // background string
-    if (loadedBGColour != cell.style.bg) {
+    if (loadedBgRGB != cell.style.bg) {
         std::cout << SET_BACKGROUND_RGB << (int)cell.style.bg.r << ";" << (int)cell.style.bg.g
                   << ";" << (int)cell.style.bg.b << "m";
 
-        loadedBGColour = cell.style.bg;
+        loadedBgRGB = cell.style.bg;
     }
 
     // actual character
@@ -102,11 +105,11 @@ void Printer::rowShiftDown(size_t shifts) {
 void Printer::resetColour() {
     std::cout << SET_FOREGROUND_RGB << (int)FG_COLOUR_DEFAULT.r << ";" << (int)FG_COLOUR_DEFAULT.g
               << ";" << (int)FG_COLOUR_DEFAULT.b << "m";
-    loadedFGColour = FG_COLOUR_DEFAULT;  // set to a known colour
+    loadedFgRGB = FG_COLOUR_DEFAULT;  // set to a known colour
 
     std::cout << SET_BACKGROUND_RGB << (int)BG_COLOUR_DEFAULT.r << ";" << (int)BG_COLOUR_DEFAULT.g
               << ";" << (int)BG_COLOUR_DEFAULT.b << "m";
-    loadedBGColour = BG_COLOUR_DEFAULT;  // set to a known colour
+    loadedBgRGB = BG_COLOUR_DEFAULT;  // set to a known colour
 }
 
 void Printer::printDebugHashCell() {
