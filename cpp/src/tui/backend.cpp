@@ -130,9 +130,9 @@ void TerminalBackend::present(const Camera backBufferCamera) {
             // diff everything < backBuffer.width considering the translated start position when
             // taking from the front buffer
             for (size_t x{x_change}; x < backBuffer.width; ++x) {
-                const Cell oldCell =
+                Cell oldCell =
                     frontBuffer.getElement({static_cast<size_t>(x - x_change), y + y_increase});
-                const Cell newCell = backBuffer.getElement({x, y});
+                Cell newCell = backBuffer.getElement({x, y});
 
                 if (oldCell != newCell) {
                     printer.printCell(newCell, {x, y});
