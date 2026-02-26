@@ -89,7 +89,7 @@ int main() {
         // --- Present ---
 
         backend.present(Camera{xCount, yCount});
-        xCount += 10;
+        xCount += 0;
         yCount += 5;
         // Timing
         std::this_thread::sleep_for(std::chrono::milliseconds(33));  // ~30 FPS
@@ -97,6 +97,6 @@ int main() {
     }
 
     // user has done a signal interrupt so main loop exited gracefully
-    std::cout << SHOW_CURSOR << CLEAR_SCREEN << RESET_COLOUR << std::endl;
+    std::cout << SHOW_CURSOR << RESET_COLOUR << CLEAR_SCREEN << std::endl;
     return 0;
 }
