@@ -3,6 +3,8 @@
 #include <cassert>
 #include <concepts>
 #include <cstddef>
+#include <execution>
+#include <ranges>
 #include <type_traits>
 #include <vector>
 
@@ -86,6 +88,12 @@ class SurfaceBase {
         return (width == other.width) && (height == other.height);
     }
 
+    // return a modifiable view of its elements, avoid using when possible
+    auto getView() { return std::views::all(elements); }
+
+    // returns a read only view of its elements
+    auto getReadView() const { return std::views::all(elements); }
+
    private:
     std::vector<T> elements;
 };
@@ -99,9 +107,14 @@ class CellSurface : public SurfaceBase<Cell> {
         assert((height == shadeSurface.height) && (width == shadeSurface.width) &&
                "The applied shader should have the same dimensions as the surface");
 
-        for (size_t i{}; i < width * height; ++i) {
-            Cell cell = SurfaceBase::getElement(i);
-        }
+        // Create a view which will effectively zip the relevant tile with its shader
+        auto zip = std::views::zip(SurfaceBase::getView(), shadeSurface.getReadView());
+        // Apply the shaders, can be done in parallel and non sequentially
+        std::for_each(std::execution::par_unseq, zip.begin(), zip.end(), [](auto&& overlay) {
+            auto& cell = std::get<0>(overlay);
+            auto& shade = std::get<1>(overlay);
+            shade.applyOn(cell);
+        });
     }
 };
 

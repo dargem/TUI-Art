@@ -51,9 +51,7 @@ struct Shade {
     }
 
     // apply this shade onto a cell
-    void apply(Cell cell) {
-        
-    }
+    void applyOn(Cell cell) const {}
 
    private:
     RGB rgbPremultiplied{};

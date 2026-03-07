@@ -18,7 +18,8 @@ list(FILTER SOURCES EXCLUDE REGEX "src/main.cpp$")
 # Create Library (Core Logic)
 add_library(tui_lib ${SOURCES})
 find_package(Threads REQUIRED)
-target_link_libraries(tui_lib Threads::Threads)
+find_package(TBB REQUIRED)
+target_link_libraries(tui_lib Threads::Threads TBB::tbb)
 
 # Create Main Executable
 add_executable(tui_art src/main.cpp)
