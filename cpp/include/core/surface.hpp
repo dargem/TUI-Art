@@ -93,13 +93,14 @@ class SurfaceBase {
 // cell surface is an implementation of a surface base that holds cells
 class CellSurface : public SurfaceBase<Cell> {
    public:
-    void applyShader(const ShadeSurface shadeSurface) {
+    CellSurface(size_t w, size_t h) : SurfaceBase<Cell>(w, h) {}
+
+    void applyShader(const ShadeSurface& shadeSurface) {
         assert((height == shadeSurface.height) && (width == shadeSurface.width) &&
                "The applied shader should have the same dimensions as the surface");
 
         for (size_t i{}; i < width * height; ++i) {
             Cell cell = SurfaceBase::getElement(i);
-            cell.
         }
     }
 };

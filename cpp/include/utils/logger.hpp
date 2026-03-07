@@ -45,13 +45,18 @@ class Logger {
         assert(logFile.is_open() && "File should always be open");
 
         if constexpr (static_cast<int>(thisLogsLevel) >= static_cast<int>(keptLogLevel)) {
+            // for C++ 20 this works and onwards as a static assert is only evaluated if the
+            // constexpr expression its in is true. Prior to C++ 20 this would fail at compile time
+            // surprisingly
+            static_assert(levelToString(thisLogsLevel) != "UNKNOWN",
+                          "Unknown is a default value for levelToString should never return this");
             logFile << levelToString(thisLogsLevel) << ": " << message << std::endl;
             logFile.flush();
         }
     }
 
    private:
-    static constexpr std::string_view levelToString(LogLevel level) {
+    static consteval std::string_view levelToString(LogLevel level) {
         switch (level) {
             case LogLevel::TRACE:
                 return "TRACE";
