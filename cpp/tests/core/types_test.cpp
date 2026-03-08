@@ -2,9 +2,12 @@
 
 #include <gtest/gtest.h>
 
+#include <utility>
+
 using types::Cell;
 using types::GridLocation;
 using types::RGB;
+using types::Shade;
 using types::Style;
 
 TEST(TypesTest, RGB_Equality) {
@@ -67,11 +70,19 @@ TEST(TypesTest, CellEquality) {
 
 TEST(TypesTest, CellSize) {
     constexpr static size_t EIGHT_BYTES{8};
-    Cell cell;
 
     // A cell should be exactly eight bytes for good alignment
-    EXPECT_EQ(sizeof(cell), EIGHT_BYTES);
+    EXPECT_EQ(sizeof(std::declval<Cell>()), EIGHT_BYTES);
 }
+
+TEST(TypesTest, ShadeSize) {
+    constexpr static size_t FOUR_BYTES{4};
+
+    // A shade should be exactly 4 bytes for good alignment
+    EXPECT_EQ(sizeof(std::declval<Shade>()), FOUR_BYTES);
+}
+
+// TEST(TypesTest, ShadeBlends) {}
 
 TEST(TypesTest, GridLocationEquality) {
     GridLocation base{5, 5};

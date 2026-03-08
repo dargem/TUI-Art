@@ -38,9 +38,9 @@ struct Cell {
 struct Shade {
     // rgb is stored premultiplied by alpha
     Shade(RGB rgb, uint8_t alpha) {
-        rgbPremultiplied.r = rgb.r * alpha;
-        rgbPremultiplied.g = rgb.g * alpha;
-        rgbPremultiplied.b = rgb.b * alpha;
+        rgbPremultiplied.r = rgb.r * double(alpha) / 255 + 0.5;
+        rgbPremultiplied.g = rgb.g * double(alpha) / 255 + 0.5;
+        rgbPremultiplied.b = rgb.b * double(alpha) / 255 + 0.5;
     }
 
     // default construct everything to 0
@@ -67,6 +67,8 @@ struct Shade {
                 std::min(255, int(rgbPremultiplied.colours[i]) + cell.style.fg.colours[i]));
         }
     }
+
+    RGB getColour() const { return rgbPremultiplied; }
 
    private:
     RGB rgbPremultiplied{};
