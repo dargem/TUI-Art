@@ -19,14 +19,6 @@ union RGB {
     }
 };
 
-/*
-struct RGB {
-    uint8_t r, g, b;
-
-    bool operator==(const RGB& other) const = default;
-};
-*/
-
 struct Style {
     RGB fg;
     RGB bg;
@@ -81,17 +73,29 @@ struct Shade {
     uint8_t alpha{};
 };
 
-// A shadow is used for negative lighting, basically a brightness multiplier
-struct Shadow {
-    uint8_t brightness{255};  // brightness, 255 is no change, 0 is absolute black
-};
-
 // A tone shift is used to push a colour towards another one
 // E.g. Make everything more dark or give a light orange shift
 // Works not additively but through multiplication (lerp)
 struct ToneShift {
     RGB tone{};               // The tone for moving towards
     uint8_t shiftStrength{};  // 255 strength would set them as the same, 0 would do nothing
+
+    // blend two tone shifts together
+    void blend(ToneShift other) {
+        if (other.shiftStrength == 0) [[unlikely]] {
+            return;
+        }
+
+        // try and find and intermediate of the tone based on the strength of each shift
+        double neededShift =
+            other.shiftStrength / static_cast<double>(shiftStrength + other.shiftStrength);
+        for (size_t i{}; i < tone.colours.size(); ++i) {
+            tone.colours[i] +=
+                neededShift * (int(other.tone.colours[i]) - int(tone.colours[i])) + 0.5;
+        }
+        shiftStrength = 0.5 + 255 * (1 - (1 - double(shiftStrength) / 255) *
+                                             (1 - double(other.shiftStrength) / 255));
+    }
 
     void applyOn(Cell& cell) const {
         for (size_t i{}; i < tone.colours.size(); ++i) {
@@ -107,7 +111,7 @@ struct ToneShift {
             cell.style.bg.colours[i] =
                 (c_2 * (255 - shiftStrength) + w * shiftStrength + 127) / 255;
         }
-    };
+    }
 };
 
 // Viewer of the screen
