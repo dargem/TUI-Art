@@ -42,6 +42,7 @@ struct Cell {
     bool operator==(const Cell& other) const = default;
 };
 
+// A shade is used for positive lighting, think adding light sources on top of each other.
 struct Shade {
     // rgb is stored premultiplied by alpha
     Shade(RGB rgb, uint8_t alpha) {
@@ -79,6 +80,9 @@ struct Shade {
     RGB rgbPremultiplied{};
     uint8_t alpha{};
 };
+
+// A shadow is used for negative lighting
+struct Shadow {};
 
 // Viewer of the screen
 struct Camera {

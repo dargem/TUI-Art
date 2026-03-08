@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install GoogleTest (system package, optional)
-        run: sudo apt-get update && sudo apt-get install -y libgtest-dev cmake build-essential
+        run: sudo apt-get update && sudo apt-get install -y libgtest-dev cmake build-essential libtbb-dev
 
       - name: Configure CMake
         # Enter the right folder
