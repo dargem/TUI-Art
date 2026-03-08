@@ -2,19 +2,35 @@
 #include <algorithm>
 #include <cstddef>
 #include <cstdint>
+#include <execution>
+#include <ranges>
 
 namespace types {
 
+union RGB {
+    struct {
+        uint8_t r, g, b;
+    };
+    std::array<uint8_t, 3> colours;
+
+    // bool operator==(const RGB& other) const = default;
+    bool operator==(const RGB& other) const {
+        return (r == other.r) && (g == other.g) && (b == other.b);
+    }
+};
+
+/*
 struct RGB {
     uint8_t r, g, b;
 
     bool operator==(const RGB& other) const = default;
 };
+*/
 
 struct Style {
     RGB fg;
     RGB bg;
-    uint8_t alpha;
+    bool bold{false};
 
     bool operator==(const Style& other) const = default;
 };
@@ -41,17 +57,23 @@ struct Shade {
     // this is a process where order of addition doesn't matter
     void blend(Shade other) {
         // Simple saturated addition
-        rgbPremultiplied.r =
-            static_cast<uint8_t>(std::min(255, int(rgbPremultiplied.r) + other.rgbPremultiplied.r));
-        rgbPremultiplied.g =
-            static_cast<uint8_t>(std::min(255, int(rgbPremultiplied.g) + other.rgbPremultiplied.g));
-        rgbPremultiplied.b =
-            static_cast<uint8_t>(std::min(255, int(rgbPremultiplied.b) + other.rgbPremultiplied.b));
+        for (size_t i{}; i < rgbPremultiplied.colours.size(); ++i) {
+            rgbPremultiplied.colours[i] = static_cast<uint8_t>(std::min(
+                255, int(rgbPremultiplied.colours[i]) + other.rgbPremultiplied.colours[i]));
+        }
         alpha = static_cast<uint8_t>(std::min(255, int(alpha) + other.alpha));
     }
 
     // apply this shade onto a cell
-    void applyOn(Cell cell) const {}
+    void applyOn(Cell& cell) const {
+        // Simple saturated addition
+        for (size_t i{}; i < rgbPremultiplied.colours.size(); ++i) {
+            cell.style.bg.colours[i] = static_cast<uint8_t>(
+                std::min(255, int(rgbPremultiplied.colours[i]) + cell.style.bg.colours[i]));
+            cell.style.fg.colours[i] = static_cast<uint8_t>(
+                std::min(255, int(rgbPremultiplied.colours[i]) + cell.style.fg.colours[i]));
+        }
+    }
 
    private:
     RGB rgbPremultiplied{};
