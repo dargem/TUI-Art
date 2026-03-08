@@ -81,8 +81,34 @@ struct Shade {
     uint8_t alpha{};
 };
 
-// A shadow is used for negative lighting
-struct Shadow {};
+// A shadow is used for negative lighting, basically a brightness multiplier
+struct Shadow {
+    uint8_t brightness{255};  // brightness, 255 is no change, 0 is absolute black
+};
+
+// A tone shift is used to push a colour towards another one
+// E.g. Make everything more dark or give a light orange shift
+// Works not additively but through multiplication (lerp)
+struct ToneShift {
+    RGB tone{};               // The tone for moving towards
+    uint8_t shiftStrength{};  // 255 strength would set them as the same, 0 would do nothing
+
+    void applyOn(Cell& cell) const {
+        for (size_t i{}; i < tone.colours.size(); ++i) {
+            int w = tone.colours[i];  // wanted colour
+
+            // do lerp to get the new cell colour, from the old shifted towards the wanted. Add 127
+            // so that outputs are rounded to closest int effectively not just up/down.
+            int c_1 = cell.style.fg.colours[i];  // current foreground colour
+            cell.style.fg.colours[i] =
+                (c_1 * (255 - shiftStrength) + w * shiftStrength + 127) / 255;
+
+            int c_2 = cell.style.bg.colours[i];  // current background colour
+            cell.style.bg.colours[i] =
+                (c_2 * (255 - shiftStrength) + w * shiftStrength + 127) / 255;
+        }
+    };
+};
 
 // Viewer of the screen
 struct Camera {
