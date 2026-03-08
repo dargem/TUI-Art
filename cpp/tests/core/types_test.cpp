@@ -82,7 +82,53 @@ TEST(TypesTest, ShadeSize) {
     EXPECT_EQ(sizeof(std::declval<Shade>()), FOUR_BYTES);
 }
 
-// TEST(TypesTest, ShadeBlends) {}
+TEST(TypesTest, ShadePremultiplied) {
+    RGB RGB_Initializer{50, 60, 70};
+
+    {
+        Shade shade(RGB_Initializer, 100);
+        RGB RGB_Premultiplied = shade.getPremultipliedRGB();
+        EXPECT_NE(RGB_Premultiplied, RGB_Initializer)
+            << "Shouldn't be equal if alpha is premultiplied and alpha != 255";
+
+        for (size_t i{}; i < RGB_Premultiplied.colours.size(); ++i) {
+            // should be smaller as alpha != 1 (when scaled 255 effectively)
+            EXPECT_LT(RGB_Premultiplied.colours[i], RGB_Initializer.colours[i]);
+        }
+    }
+
+    {
+        Shade shade(RGB_Initializer, 255);
+        RGB RGB_Premultiplied = shade.getPremultipliedRGB();
+        EXPECT_EQ(RGB_Premultiplied, RGB_Initializer)
+            << "Should be equal since alpha == 255, premultiplied should be same as input";
+    }
+
+    {
+        Shade shade(RGB_Initializer, 0);
+        RGB RGB_Premultiplied = shade.getPremultipliedRGB();
+        EXPECT_EQ(RGB_Premultiplied, (RGB{0, 0, 0}))
+            << "Should be equal since alpha = 0 its premultiplied to zero";
+    }
+}
+
+TEST(TypesTest, ShadeBlends) {
+    RGB RGB_Initializer{100, 100, 100};
+    RGB RGB_Initializer_2{50, 70, 95};
+
+    Shade base{{}, 0};  // a blank base
+    Shade shade{RGB_Initializer, 86};
+    base.blend(shade);  // blend the shade with this
+
+    EXPECT_EQ(shade.getPremultipliedRGB(), base.getPremultipliedRGB())
+        << "Should be additively put together, the base was originally empty so should be same";
+
+    RGB oldRGB = base.getPremultipliedRGB();
+    Shade blankShade{RGB_Initializer, 0};  // should be blank since 0 alpha
+    base.blend(blankShade);  // Shouldn't do anything since its a blank shade being blended in
+    EXPECT_EQ(oldRGB, base.getPremultipliedRGB())
+        << "Should be equivalent since a blank shade was added";
+}
 
 TEST(TypesTest, GridLocationEquality) {
     GridLocation base{5, 5};

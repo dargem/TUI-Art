@@ -68,7 +68,8 @@ struct Shade {
         }
     }
 
-    RGB getColour() const { return rgbPremultiplied; }
+    // shouldn't really be called, shade is only for blending or applying on cells
+    RGB getPremultipliedRGB() const { return rgbPremultiplied; }
 
    private:
     RGB rgbPremultiplied{};
