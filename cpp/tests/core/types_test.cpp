@@ -7,8 +7,8 @@
 
 using types::Cell;
 using types::GridLocation;
+using types::Light;
 using types::RGB;
-using types::Shade;
 using types::Style;
 using types::ToneShift;
 
@@ -98,19 +98,19 @@ TEST(TypesTest, CellSize) {
     EXPECT_EQ(sizeof(std::declval<Cell>()), EIGHT_BYTES);
 }
 
-TEST(TypesTest, ShadeSize) {
+TEST(TypesTest, LightSize) {
     constexpr static size_t FOUR_BYTES{4};
 
-    // A shade should be exactly 4 bytes for good alignment
-    EXPECT_EQ(sizeof(std::declval<Shade>()), FOUR_BYTES);
+    // A light should be exactly 4 bytes for good alignment
+    EXPECT_EQ(sizeof(std::declval<Light>()), FOUR_BYTES);
 }
 
-TEST(TypesTest, ShadePremultiplied) {
+TEST(TypesTest, LightPremultiplied) {
     RGB RGB_Initializer{50, 60, 70};
 
     {
-        Shade shade(RGB_Initializer, 100);
-        RGB RGB_Premultiplied = shade.getPremultipliedRGB();
+        Light light(RGB_Initializer, 100);
+        RGB RGB_Premultiplied = light.getPremultipliedRGB();
         EXPECT_NE(RGB_Premultiplied, RGB_Initializer)
             << "Shouldn't be equal if alpha is premultiplied and alpha != 255";
 
@@ -121,86 +121,86 @@ TEST(TypesTest, ShadePremultiplied) {
     }
 
     {
-        Shade shade(RGB_Initializer, 255);
-        RGB RGB_Premultiplied = shade.getPremultipliedRGB();
+        Light light(RGB_Initializer, 255);
+        RGB RGB_Premultiplied = light.getPremultipliedRGB();
         EXPECT_EQ(RGB_Premultiplied, RGB_Initializer)
             << "Should be equal since alpha == 255, premultiplied should be same as input";
     }
 
     {
-        Shade shade(RGB_Initializer, 0);
-        RGB RGB_Premultiplied = shade.getPremultipliedRGB();
+        Light light(RGB_Initializer, 0);
+        RGB RGB_Premultiplied = light.getPremultipliedRGB();
         EXPECT_EQ(RGB_Premultiplied, (RGB{0, 0, 0}))
             << "Should be equal since alpha = 0 its premultiplied to zero";
     }
 }
 
-TEST(TypesTest, ShadeBlends) {
+TEST(TypesTest, LightBlends) {
     RGB RGB_Initializer{100, 100, 100};
     RGB RGB_Initializer_2{50, 70, 95};
 
-    Shade base{{}, 0};  // a blank base
-    Shade shade{RGB_Initializer, 86};
-    base.blend(shade);  // blend the shade with this
+    Light base{{}, 0};  // a blank base
+    Light light{RGB_Initializer, 86};
+    base.blend(light);  // blend the light with this
 
-    EXPECT_EQ(shade.getPremultipliedRGB(), base.getPremultipliedRGB())
+    EXPECT_EQ(light.getPremultipliedRGB(), base.getPremultipliedRGB())
         << "Should be additively put together, the base was originally empty so should be same";
 
     RGB oldRGB = base.getPremultipliedRGB();
-    Shade blankShade{RGB_Initializer, 0};  // should be blank since 0 alpha
-    base.blend(blankShade);  // Shouldn't do anything since its a blank shade being blended in
+    Light blankLight{RGB_Initializer, 0};  // should be blank since 0 alpha
+    base.blend(blankLight);  // Shouldn't do anything since its a blank light being blended in
     EXPECT_EQ(oldRGB, base.getPremultipliedRGB())
-        << "Should be equivalent since a blank shade was added";
+        << "Should be equivalent since a blank light was added";
     // not really needed but to ensure tests are independent
     oldRGB = base.getPremultipliedRGB();
-    base.blend({{RGB_Initializer_2}, 30});  // blend it with another shade
+    base.blend({{RGB_Initializer_2}, 30});  // blend it with another light
     EXPECT_NE(oldRGB, base.getPremultipliedRGB()) << "Should be different after a blend";
 }
 
-TEST(TypesTest, ShadeBlendsOrderless) {
-    Shade A({60, 50, 60}, 75);
-    Shade B({30, 30, 0}, 120);
-    Shade C({7, 120, 1}, 5);
+TEST(TypesTest, LightBlendsOrderless) {
+    Light A({60, 50, 60}, 75);
+    Light B({30, 30, 0}, 120);
+    Light C({7, 120, 1}, 5);
 
-    Shade AB = A;
+    Light AB = A;
     AB.blend(B);
 
-    Shade BA = B;
+    Light BA = B;
     BA.blend(A);
 
-    EXPECT_EQ(AB, BA) << "Shade blending should be commutative at least 2 ways";
+    EXPECT_EQ(AB, BA) << "Light blending should be commutative at least 2 ways";
 
-    Shade ABCC = A;
+    Light ABCC = A;
     ABCC.blend(B);
     ABCC.blend(C);
     ABCC.blend(C);
 
-    Shade CBCA = C;
+    Light CBCA = C;
     CBCA.blend(B);
     CBCA.blend(C);
     CBCA.blend(A);
 
-    EXPECT_EQ(ABCC, CBCA) << "Shade blending should be commutative 3+ ways";
+    EXPECT_EQ(ABCC, CBCA) << "Light blending should be commutative 3+ ways";
 }
 
-TEST(TypesTest, ShadeApplies) {
-    Shade nothingShade({30, 30, 30}, 0);  // has no alpha so should do nothing
+TEST(TypesTest, LightApplies) {
+    Light nothingLight({30, 30, 30}, 0);  // has no alpha so should do nothing
 
     Cell cell{};
     RGB lastFG = cell.style.fg;
     RGB lastBG = cell.style.bg;
-    nothingShade.applyOn(cell);
+    nothingLight.applyOn(cell);
     for (size_t i{}; i < lastFG.colours.size(); ++i) {
-        EXPECT_EQ(cell.style.fg.colours[i], lastFG.colours[i]) << "Shade should do nothing";
-        EXPECT_EQ(cell.style.bg.colours[i], lastBG.colours[i]) << "Shade should do nothing";
+        EXPECT_EQ(cell.style.fg.colours[i], lastFG.colours[i]) << "Light should do nothing";
+        EXPECT_EQ(cell.style.bg.colours[i], lastBG.colours[i]) << "Light should do nothing";
     }
 
-    Shade somethingShade({50, 50, 50}, 120);
-    somethingShade.applyOn(cell);
+    Light somethingLight({50, 50, 50}, 120);
+    somethingLight.applyOn(cell);
     EXPECT_NE(lastFG, cell.style.fg);
     EXPECT_NE(lastFG, cell.style.bg);
 
-    // the shade applied should brighten it as its an additive proccess
+    // the light applied should brighten it as its an additive proccess
     for (size_t i{}; i < lastFG.colours.size(); ++i) {
         EXPECT_GT(cell.style.fg.colours[i], lastFG.colours[i]);
         EXPECT_GT(cell.style.bg.colours[i], lastBG.colours[i]);

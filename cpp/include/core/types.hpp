@@ -35,23 +35,23 @@ struct Cell {
     bool operator==(const Cell& other) const = default;
 };
 
-// A shade is used for positive lighting, think adding light sources on top of each other.
-struct Shade {
+// A light is used for positive lighting, think adding light sources on top of each other.
+struct Light {
     // rgb is stored premultiplied by alpha
-    Shade(RGB rgb, uint8_t alpha) {
+    Light(RGB rgb, uint8_t alpha) {
         rgbPremultiplied.r = rgb.r * double(alpha) / 255 + 0.5;
         rgbPremultiplied.g = rgb.g * double(alpha) / 255 + 0.5;
         rgbPremultiplied.b = rgb.b * double(alpha) / 255 + 0.5;
     }
 
     // default construct everything to 0
-    Shade() : rgbPremultiplied{}, alpha{} {}
+    Light() : rgbPremultiplied{}, alpha{} {}
 
-    bool operator==(const Shade& other) const = default;
+    bool operator==(const Light& other) const = default;
 
-    // blend another shade together with this shade
+    // blend another light together with this lilght
     // this is a process where order of addition doesn't matter
-    void blend(Shade other) {
+    void blend(Light other) {
         // Simple saturated addition
         for (size_t i{}; i < rgbPremultiplied.colours.size(); ++i) {
             rgbPremultiplied.colours[i] = static_cast<uint8_t>(std::min(
@@ -60,7 +60,7 @@ struct Shade {
         alpha = static_cast<uint8_t>(std::min(255, int(alpha) + other.alpha));
     }
 
-    // apply this shade onto a cell
+    // apply this light onto a cell
     void applyOn(Cell& cell) const {
         // Simple saturated addition
         for (size_t i{}; i < rgbPremultiplied.colours.size(); ++i) {
@@ -71,7 +71,7 @@ struct Shade {
         }
     }
 
-    // shouldn't really be called, shade is only for blending or applying on cells
+    // shouldn't really be called, lilght is only for blending or applying on cells
     RGB getPremultipliedRGB() const { return rgbPremultiplied; }
 
    private:

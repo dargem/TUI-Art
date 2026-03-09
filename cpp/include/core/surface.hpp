@@ -13,12 +13,12 @@
 namespace types {
 
 template <typename T>
-concept Item = std::same_as<T, Cell> || std::same_as<T, Shade>;
+concept Item = std::same_as<T, Cell> || std::same_as<T, Light>;
 
 template <Item T>
 class SurfaceBase;  // forward declare surface base
 
-using ShadeSurface = SurfaceBase<Shade>;
+using LightSurface = SurfaceBase<Light>;
 
 template <Item T>
 struct SurfaceTraits;
@@ -29,8 +29,8 @@ struct SurfaceTraits<Cell> {
 };
 
 template <>
-struct SurfaceTraits<Shade> {
-    static constexpr Shade defaultValue() { return Shade{}; }
+struct SurfaceTraits<Light> {
+    static constexpr Light defaultValue() { return Light{}; }
 };
 
 template <Item T>
@@ -48,8 +48,8 @@ class SurfaceBase {
         assert(gridLocation.x < width && "Out of x bounds write");
         assert(gridLocation.y < height && "Out of y bounds write");
 
-        if constexpr (std::same_as<T, Shade>) {
-            // if its a shade, writing to it does a colour blend action
+        if constexpr (std::same_as<T, Light>) {
+            // if its a light, writing to it does a colour blend action
             elements[gridLocation.y * width + gridLocation.x].blend(element);
         } else {
             elements[gridLocation.y * width + gridLocation.x] = element;
@@ -60,8 +60,8 @@ class SurfaceBase {
     void writeElement(const T element, size_t index) {
         assert(index < elements.size() && "Out of bounds indexing");
 
-        if constexpr (std::same_as<T, Shade>) {
-            // if its a shade, writing to it does a colour blend action
+        if constexpr (std::same_as<T, Light>) {
+            // if its a light, writing to it does a colour blend action
             elements[index].blend(element);
         } else {
             elements[index] = element;
@@ -103,17 +103,17 @@ class CellSurface : public SurfaceBase<Cell> {
    public:
     CellSurface(size_t w, size_t h) : SurfaceBase<Cell>(w, h) {}
 
-    void applyShader(const ShadeSurface& shadeSurface) {
-        assert((height == shadeSurface.height) && (width == shadeSurface.width) &&
-               "The applied shader should have the same dimensions as the surface");
+    void applyLight(const LightSurface& lightSurface) {
+        assert((height == lightSurface.height) && (width == lightSurface.width) &&
+               "The applied light surface should have the same dimensions as the surface");
 
-        // Create a view which will effectively zip the relevant tile with its shader
-        auto zip = std::views::zip(SurfaceBase::getView(), shadeSurface.getReadView());
-        // Apply the shaders, can be done in parallel and non sequentially
+        // Create a view which will effectively zip the relevant tile with its light
+        auto zip = std::views::zip(SurfaceBase::getView(), lightSurface.getReadView());
+        // Apply the lights, can be done in parallel and non sequentially
         std::for_each(std::execution::par_unseq, zip.begin(), zip.end(), [](auto&& overlay) {
             auto& cell = std::get<0>(overlay);
-            auto& shade = std::get<1>(overlay);
-            shade.applyOn(cell);
+            auto& light = std::get<1>(overlay);
+            light.applyOn(cell);
         });
     }
 };
