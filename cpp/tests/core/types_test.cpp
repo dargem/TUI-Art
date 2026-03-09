@@ -128,6 +128,34 @@ TEST(TypesTest, ShadeBlends) {
     base.blend(blankShade);  // Shouldn't do anything since its a blank shade being blended in
     EXPECT_EQ(oldRGB, base.getPremultipliedRGB())
         << "Should be equivalent since a blank shade was added";
+    // not really needed but to ensure tests are independent
+    oldRGB = base.getPremultipliedRGB();
+    base.blend({{RGB_Initializer_2}, 30});  // blend it with another shade
+    EXPECT_NE(oldRGB, base.getPremultipliedRGB()) << "Should be different after a blend";
+}
+
+TEST(TypesTest, ShadeApplies) {
+    Shade nothingShade({30, 30, 30}, 0);  // has no alpha so should do nothing
+
+    Cell cell{};
+    RGB lastFG = cell.style.fg;
+    RGB lastBG = cell.style.bg;
+    nothingShade.applyOn(cell);
+    for (size_t i{}; i < lastFG.colours.size(); ++i) {
+        EXPECT_EQ(cell.style.fg.colours[i], lastFG.colours[i]) << "Shade should do nothing";
+        EXPECT_EQ(cell.style.bg.colours[i], lastBG.colours[i]) << "Shade should do nothing";
+    }
+
+    Shade somethingShade({50, 50, 50}, 120);
+    somethingShade.applyOn(cell);
+    EXPECT_NE(lastFG, cell.style.fg);
+    EXPECT_NE(lastFG, cell.style.bg);
+
+    // the shade applied should brighten it as its an additive proccess
+    for (size_t i{}; i < lastFG.colours.size(); ++i) {
+        EXPECT_GT(cell.style.fg.colours[i], lastFG.colours[i]);
+        EXPECT_GT(cell.style.bg.colours[i], lastBG.colours[i]);
+    }
 }
 
 TEST(TypesTest, GridLocationEquality) {
