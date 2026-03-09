@@ -9,6 +9,7 @@ using types::GridLocation;
 using types::RGB;
 using types::Shade;
 using types::Style;
+using types::ToneShift;
 
 TEST(TypesTest, RGB_Equality) {
     RGB red1{255, 0, 0};
@@ -155,6 +156,39 @@ TEST(TypesTest, ShadeApplies) {
     for (size_t i{}; i < lastFG.colours.size(); ++i) {
         EXPECT_GT(cell.style.fg.colours[i], lastFG.colours[i]);
         EXPECT_GT(cell.style.bg.colours[i], lastBG.colours[i]);
+    }
+}
+
+TEST(TypesTest, ToneShiftSize) {
+    static constexpr size_t FOUR_BYTES{4};
+    EXPECT_EQ(sizeof(std::declval<ToneShift>()), FOUR_BYTES)
+        << "Should be 4 bytes for good alignment";
+}
+
+TEST(TypesTest, ToneShiftBlends) {
+    constexpr uint8_t initialShift{100};
+
+    ToneShift base{{50, 50, 50}, initialShift};
+    ToneShift other{{50, 50, 50}, 100};
+
+    RGB oldTone = base.tone;
+    base.blend(other);
+    EXPECT_EQ(oldTone, base.tone)
+        << "Blending two toneshifts of equal tone should still have the same tone output";
+
+    oldTone = base.tone;
+    base.blend({{100, 200, 37}, 0});
+    EXPECT_EQ(oldTone, base.tone)
+        << "Blending with another tone of shiftStrength 0 should have no impacts";
+
+    oldTone = base.tone;
+    ToneShift modifier{{200, 200, 200}, initialShift};
+    base.shiftStrength = initialShift;
+    base.blend(modifier);
+    for (size_t i{}; i < oldTone.colours.size(); ++i) {
+        // should meet in middle since both start with same initialShift shiftStrength
+        int expectedMeet = (int(oldTone.colours[i]) + modifier.tone.colours[i]) / 2;
+        EXPECT_EQ(base.tone.colours[i], expectedMeet);
     }
 }
 

@@ -96,8 +96,8 @@ struct ToneShift {
             tone.colours[i] +=
                 neededShift * (int(other.tone.colours[i]) - int(tone.colours[i])) + 0.5;
         }
-        shiftStrength = 0.5 + 255 * (1 - (1 - double(shiftStrength) / 255) *
-                                             (1 - double(other.shiftStrength) / 255));
+        shiftStrength = int(shiftStrength) + int(other.shiftStrength) -
+                        (int(shiftStrength) * int(other.shiftStrength) + 127) / 255;
     }
 
     void applyOn(Cell& cell) const {
