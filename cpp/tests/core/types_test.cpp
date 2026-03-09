@@ -2,6 +2,7 @@
 
 #include <gtest/gtest.h>
 
+#include <ostream>
 #include <utility>
 
 using types::Cell;
@@ -10,6 +11,26 @@ using types::RGB;
 using types::Shade;
 using types::Style;
 using types::ToneShift;
+
+namespace types {
+
+void PrintTo(const RGB& rgb, std::ostream* os) {
+    *os << "RGB{";
+    *os << "r=" << static_cast<int>(rgb.r);
+    *os << ", g=" << static_cast<int>(rgb.g);
+    *os << ", b=" << static_cast<int>(rgb.b);
+    *os << "}";
+}
+
+void PrintTo(const ToneShift& ts, std::ostream* os) {
+    *os << "ToneShift{";
+    *os << "tone=";
+    PrintTo(ts.tone, os);
+    *os << ", shiftStrength=" << static_cast<int>(ts.shiftStrength);
+    *os << "}";
+}
+
+}  // namespace types
 
 TEST(TypesTest, RGB_Equality) {
     RGB red1{255, 0, 0};
@@ -135,6 +156,30 @@ TEST(TypesTest, ShadeBlends) {
     EXPECT_NE(oldRGB, base.getPremultipliedRGB()) << "Should be different after a blend";
 }
 
+TEST(TypesTest, ShadeBlendsOrderless) {
+    Shade A({100, 50, 120}, 75);
+    Shade B({120, 30, 0}, 120);
+    Shade C({7, 120, 1}, 5);
+
+    Shade AB = A;
+    AB.blend(B);
+
+    Shade BA = B;
+    BA.blend(A);
+
+    EXPECT_EQ(AB, BA) << "Shade blending should be commutative at least 2 ways";
+
+    Shade ABC = A;
+    ABC.blend(B);
+    ABC.blend(C);
+
+    Shade CAB = C;
+    CAB.blend(A);
+    CAB.blend(B);
+
+    EXPECT_EQ(ABC, CAB) << "Shade blending should be commutative 3+ ways";
+}
+
 TEST(TypesTest, ShadeApplies) {
     Shade nothingShade({30, 30, 30}, 0);  // has no alpha so should do nothing
 
@@ -190,6 +235,29 @@ TEST(TypesTest, ToneShiftBlends) {
         int expectedMeet = (int(oldTone.colours[i]) + modifier.tone.colours[i]) / 2;
         EXPECT_EQ(base.tone.colours[i], expectedMeet);
     }
+}
+
+TEST(TypesTest, ToneShiftOrderless) {
+    ToneShift A{{50, 40, 55}, 73};
+    ToneShift B{{52, 56, 51}, 120};
+    ToneShift C{{152, 26, 121}, 90};
+
+    ToneShift AB = A;
+    AB.blend(B);
+    ToneShift BA = B;
+    BA.blend(A);
+
+    EXPECT_EQ(AB, BA) << "Should be commutative two way";
+
+    ToneShift ABC = A;
+    ABC.blend(B);
+    ABC.blend(C);
+
+    ToneShift CAB = C;
+    CAB.blend(A);
+    CAB.blend(B);
+
+    EXPECT_EQ(ABC, CAB) << "Should be three way commutative";
 }
 
 TEST(TypesTest, GridLocationEquality) {

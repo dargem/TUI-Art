@@ -46,6 +46,8 @@ struct Shade {
     // default construct everything to 0
     Shade() : rgbPremultiplied{}, alpha{} {}
 
+    bool operator==(const Shade& other) const = default;
+
     // blend another shade together with this shade
     // this is a process where order of addition doesn't matter
     void blend(Shade other) {
@@ -82,6 +84,8 @@ struct Shade {
 struct ToneShift {
     RGB tone{};               // The tone for moving towards
     uint8_t shiftStrength{};  // 255 strength would set them as the same, 0 would do nothing
+
+    bool operator==(const ToneShift& other) const = default;
 
     // blend two tone shifts together
     void blend(ToneShift other) {
