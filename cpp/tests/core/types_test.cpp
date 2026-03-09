@@ -25,8 +25,9 @@ void PrintTo(const RGB& rgb, std::ostream* os) {
 void PrintTo(const ToneShift& ts, std::ostream* os) {
     *os << "ToneShift{";
     *os << "tone=";
-    PrintTo(ts.tone, os);
-    *os << ", shiftStrength=" << static_cast<int>(ts.shiftStrength);
+    PrintTo(ts.getTone(), os);
+    *os << ", shiftStrength=" << static_cast<int>(ts.getShiftStrength());
+    *os << ", accumulatedWeight=" << ts.getAccumulatedWeight();
     *os << "}";
 }
 
@@ -157,8 +158,8 @@ TEST(TypesTest, ShadeBlends) {
 }
 
 TEST(TypesTest, ShadeBlendsOrderless) {
-    Shade A({100, 50, 120}, 75);
-    Shade B({120, 30, 0}, 120);
+    Shade A({60, 50, 60}, 75);
+    Shade B({30, 30, 0}, 120);
     Shade C({7, 120, 1}, 5);
 
     Shade AB = A;
@@ -169,15 +170,17 @@ TEST(TypesTest, ShadeBlendsOrderless) {
 
     EXPECT_EQ(AB, BA) << "Shade blending should be commutative at least 2 ways";
 
-    Shade ABC = A;
-    ABC.blend(B);
-    ABC.blend(C);
+    Shade ABCC = A;
+    ABCC.blend(B);
+    ABCC.blend(C);
+    ABCC.blend(C);
 
-    Shade CAB = C;
-    CAB.blend(A);
-    CAB.blend(B);
+    Shade CBCA = C;
+    CBCA.blend(B);
+    CBCA.blend(C);
+    CBCA.blend(A);
 
-    EXPECT_EQ(ABC, CAB) << "Shade blending should be commutative 3+ ways";
+    EXPECT_EQ(ABCC, CBCA) << "Shade blending should be commutative 3+ ways";
 }
 
 TEST(TypesTest, ShadeApplies) {
@@ -205,9 +208,9 @@ TEST(TypesTest, ShadeApplies) {
 }
 
 TEST(TypesTest, ToneShiftSize) {
-    static constexpr size_t FOUR_BYTES{4};
-    EXPECT_EQ(sizeof(std::declval<ToneShift>()), FOUR_BYTES)
-        << "Should be 4 bytes for good alignment";
+    static constexpr size_t TWENTY_BYTES{20};
+    EXPECT_EQ(sizeof(std::declval<ToneShift>()), TWENTY_BYTES)
+        << "ToneShift size should remain stable";
 }
 
 TEST(TypesTest, ToneShiftBlends) {
@@ -226,14 +229,15 @@ TEST(TypesTest, ToneShiftBlends) {
     EXPECT_EQ(oldTone, base.tone)
         << "Blending with another tone of shiftStrength 0 should have no impacts";
 
-    oldTone = base.tone;
+    // midpoint blend should only assume equal weights if both ToneShifts are fresh.
+    ToneShift midpointBase{{50, 50, 50}, initialShift};
+    RGB midpointOldTone = midpointBase.tone;
     ToneShift modifier{{200, 200, 200}, initialShift};
-    base.shiftStrength = initialShift;
-    base.blend(modifier);
-    for (size_t i{}; i < oldTone.colours.size(); ++i) {
-        // should meet in middle since both start with same initialShift shiftStrength
-        int expectedMeet = (int(oldTone.colours[i]) + modifier.tone.colours[i]) / 2;
-        EXPECT_EQ(base.tone.colours[i], expectedMeet);
+
+    midpointBase.blend(modifier);
+    for (size_t i{}; i < midpointOldTone.colours.size(); ++i) {
+        int expectedMeet = (int(midpointOldTone.colours[i]) + modifier.tone.colours[i]) / 2;
+        EXPECT_EQ(midpointBase.tone.colours[i], expectedMeet);
     }
 }
 

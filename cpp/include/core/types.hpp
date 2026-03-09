@@ -1,5 +1,6 @@
 #pragma once
 #include <algorithm>
+#include <array>
 #include <cstddef>
 #include <cstdint>
 #include <execution>
@@ -82,24 +83,39 @@ struct Shade {
 // E.g. Make everything more dark or give a light orange shift
 // Works not additively but through multiplication (lerp)
 struct ToneShift {
-    RGB tone{};               // The tone for moving towards
-    uint8_t shiftStrength{};  // 255 strength would set them as the same, 0 would do nothing
+    RGB tone{};  // The tone for moving towards
+    // need to enforce that accumulated weight gets set to be same as shift strength at startup
+    ToneShift(RGB tone, uint8_t shiftStrength) :
+            tone{tone},
+            shiftStrength{shiftStrength},
+            accumulatedWeight{shiftStrength},
+            weightedToneSum{uint32_t(uint16_t(tone.r) * shiftStrength),
+                            uint32_t(uint16_t(tone.g) * shiftStrength),
+                            uint32_t(uint16_t(tone.b) * shiftStrength)} {}
 
     bool operator==(const ToneShift& other) const = default;
 
+    // get a copy of tone
+    RGB getTone() const { return tone; }
+    uint8_t getShiftStrength() const { return shiftStrength; }
+    uint32_t getAccumulatedWeight() const { return accumulatedWeight; }
+
     // blend two tone shifts together
     void blend(ToneShift other) {
-        if (other.shiftStrength == 0) [[unlikely]] {
-            return;
+        if (other.shiftStrength == 0) {
+            return;  // not going to be shifting anything
         }
 
-        // try and find and intermediate of the tone based on the strength of each shift
-        double neededShift =
-            other.shiftStrength / static_cast<double>(shiftStrength + other.shiftStrength);
-        for (size_t i{}; i < tone.colours.size(); ++i) {
-            tone.colours[i] +=
-                neededShift * (int(other.tone.colours[i]) - int(tone.colours[i])) + 0.5;
+        for (size_t i{}; i < weightedToneSum.size(); ++i) {
+            weightedToneSum[i] += other.weightedToneSum[i];
         }
+        accumulatedWeight += other.accumulatedWeight;
+
+        for (size_t i{}; i < tone.colours.size(); ++i) {
+            tone.colours[i] = static_cast<uint8_t>((weightedToneSum[i] + accumulatedWeight / 2) /
+                                                   accumulatedWeight);
+        }
+
         shiftStrength = int(shiftStrength) + int(other.shiftStrength) -
                         (int(shiftStrength) * int(other.shiftStrength) + 127) / 255;
     }
@@ -119,6 +135,11 @@ struct ToneShift {
                 (c_2 * (255 - shiftStrength) + w * shiftStrength + 127) / 255;
         }
     }
+
+   private:
+    uint8_t shiftStrength{};  // 255 strength would set them as the same, 0 would do nothing
+    uint32_t accumulatedWeight{};
+    std::array<uint32_t, 3> weightedToneSum{};
 };
 
 // Viewer of the screen

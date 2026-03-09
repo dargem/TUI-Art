@@ -13,6 +13,8 @@
     "C_Cpp.clang_format_style": "file",
     "editor.formatOnSave": true,
     "cSpell.words": [
+        "ABCC",
+        "CBCA",
         "csbi"
     ],
     "cmake.sourceDirectory": "/home/tristan/Documents/github/TUI-Art/cpp"
