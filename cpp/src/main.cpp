@@ -56,9 +56,9 @@ int main() {
         logger.log<LogLevel::DEBUG>(
             std::format("Dimension queried with width and height in char of {},{}",
                         dimension.charWidth, dimension.charHeight));
-        CellSurface& surface = backend.getDrawSurface();
-        logger.log<LogLevel::DEBUG>(std::format("Draw surface has width and height of {},{}",
-                                                surface.width, surface.height));
+        CellSurface& cellSurface = backend.getDrawSurface();
+        logger.log<LogLevel::DEBUG>(std::format("Draw cell surface has width and height of {},{}",
+                                                cellSurface.width, cellSurface.height));
 
         // --- Update & Render ---
 
@@ -66,12 +66,12 @@ int main() {
         int boxX = frameCount % (dimension.charWidth - 5);
         int boxY = (frameCount / 2) % (dimension.charHeight - 2);
 
-        for (int y = 0; y < dimension.charHeight; ++y) {
-            for (int x = 0; x < dimension.charWidth; ++x) {
+        for (size_t y{}; y < dimension.charHeight; ++y) {
+            for (size_t x{}; x < dimension.charWidth; ++x) {
                 Cell c;
                 c.style.bg = {0, 0, 1};
                 // kitty defaults 0, 0, 0 black to the default terminal for some reason...
-                surface.writeElement(c, {static_cast<size_t>(x), static_cast<size_t>(y)});
+                cellSurface.writeElement(c, {x, y});
             }
         }
 
@@ -81,7 +81,7 @@ int main() {
                 c.character = ' ';
                 // c.style.fg = {255, 0, 0};  // Red
                 c.style.bg = {255, 0, 0};
-                surface.writeElement(
+                cellSurface.writeElement(
                     c, {static_cast<size_t>(boxX + x), static_cast<size_t>(boxY + y)});
             }
         }

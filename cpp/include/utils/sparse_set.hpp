@@ -12,7 +12,7 @@ namespace utils {
  * until its erased. An index is simply the current position of the object in the data vector and
  * may change with deletions.
  */
-using ID = uint64_t;
+using ID = uint32_t;
 
 static constexpr ID InvalidID = std::numeric_limits<ID>::max();
 
@@ -166,7 +166,7 @@ class SparseSet {
      * @return The index in the data vector associated with the ID
      */
     [[nodiscard]]
-    uint64_t getDataIndex(ID id) const {
+    uint32_t getDataIndex(ID id) const {
         return m_indexes[id];
     }
 
@@ -219,7 +219,7 @@ class SparseSet {
      * @param idx The index of the object in the data vector
      * @return A handle to the object
      */
-    Handle<TObjectType> createHandleFromData(uint64_t idx) {
+    Handle<TObjectType> createHandleFromData(uint32_t idx) {
         /* Ensure the object is valid. If the data index is greater than the current size
          * it means that it has been swapped and removed. */
         assert(idx < size());

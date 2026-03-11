@@ -9,9 +9,13 @@
 namespace types {
 
 union RGB {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
+    // Ignore anonymous struct issues
     struct {
         uint8_t r, g, b;
     };
+#pragma GCC diagnostic pop
     std::array<uint8_t, 3> colours;
 
     // bool operator==(const RGB& other) const = default;

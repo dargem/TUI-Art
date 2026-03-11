@@ -13,12 +13,13 @@
 namespace types {
 
 template <typename T>
-concept Item = std::same_as<T, Cell> || std::same_as<T, Light>;
+concept Item = std::same_as<T, Cell> || std::same_as<T, Light> || std::same_as<T, ToneShift>;
 
 template <Item T>
 class SurfaceBase;  // forward declare surface base
 
 using LightSurface = SurfaceBase<Light>;
+using ToneSurface = SurfaceBase<ToneShift>;
 
 template <Item T>
 struct SurfaceTraits;
@@ -31,6 +32,12 @@ struct SurfaceTraits<Cell> {
 template <>
 struct SurfaceTraits<Light> {
     static constexpr Light defaultValue() { return Light{}; }
+};
+
+template <>
+struct SurfaceTraits<ToneShift> {
+    // defaults to a blank RGB value with 0 shift
+    static constexpr ToneShift defaultValue() { return ToneShift{RGB{}, 0}; }
 };
 
 template <Item T>
@@ -48,23 +55,11 @@ class SurfaceBase {
         assert(gridLocation.x < width && "Out of x bounds write");
         assert(gridLocation.y < height && "Out of y bounds write");
 
-        if constexpr (std::same_as<T, Light>) {
+        if constexpr (std::same_as<T, Light> || std::same_as<T, ToneShift>) {
             // if its a light, writing to it does a colour blend action
             elements[gridLocation.y * width + gridLocation.x].blend(element);
         } else {
             elements[gridLocation.y * width + gridLocation.x] = element;
-        }
-    }
-
-    // directly access elements by index, ensure indexing is correct because this can be dangerous
-    void writeElement(const T element, size_t index) {
-        assert(index < elements.size() && "Out of bounds indexing");
-
-        if constexpr (std::same_as<T, Light>) {
-            // if its a light, writing to it does a colour blend action
-            elements[index].blend(element);
-        } else {
-            elements[index] = element;
         }
     }
 
