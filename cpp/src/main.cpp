@@ -5,6 +5,8 @@
 #include <thread>
 
 #include "core/types.hpp"
+#include "ecs/archetypes.hpp"
+#include "ecs/components.hpp"
 #include "setup/app_context.hpp"
 #include "setup/configs.hpp"
 #include "tui/ansi/ansi_constants.hpp"
