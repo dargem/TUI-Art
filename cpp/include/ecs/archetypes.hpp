@@ -1,6 +1,7 @@
 #pragma once
 
 #include <concepts>
+#include <cstdint>
 #include <ranges>
 #include <tuple>
 #include <vector>
@@ -14,22 +15,41 @@ namespace ECS {
 // Used to hold archetypes (component groupings)
 template <Component... Cs>
     requires UniqueTypes<Cs...>
-struct ArchetypeTable {
-    // tuple of sparse sets, where each sparse set holds a component type, SOA style
-    std::tuple<utils::SparseSet<Cs>...> cols;
+class ArchetypeTable {
+   public:
+    // sparse set mapping ID's to the dense set (component data)
+    // std::vector<size_t> sparseArray; // maybe do this another way actually
+
+    // tuple of dense sets, where each vector holds a component type, SOA style
+    std::tuple<std::vector<Cs>...> data;
+
+    // Remove a component by index, does a swap and pop
+    void remove(size_t index) {
+        // For each vector in the components tuple do a swap and pop of the data
+        swapPop<Cs...>(index);
+    }
 
     // get an unordered vector of a specific component type
     template <Component C>
-        requires(std::same_as<C, Cs> || ...)  // table must actually have it
+        requires OneOf<C, Cs>
     std::vector<C>& column() {
-        return std::get<utils::SparseSet<C>>(cols).getData();
+        return std::get<std::vector<C>>(data);
     }
 
     // get a zipped view of multiple components
     template <Component... Csearch>
         requires UniqueTypes<Csearch...> && Bounded<Csearch..., Cs...>
     auto columns() {
-        return std::views::zip(std::get<utils::SparseSet<Csearch>>(cols).getData()...);
+        return std::views::zip(std::get<std::vector<Csearch>>(data)...) | std::views::reverse;
+    }
+
+   private:
+    template <Component C>
+        requires OneOf<C, Cs...>
+    void swapPop(size_t index) {
+        std::vector<C>& matchedVector = std::get<std::vector<C>>(data);
+        // Pops + moves the last element into this new index, overwriting the element there
+        matchedVector[index] = std::move(matchedVector.pop_back());
     }
 };
 
