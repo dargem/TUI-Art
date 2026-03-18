@@ -3,6 +3,7 @@
 #include <tuple>
 
 #include "cstdint"
+#include "ecs/archetypes.hpp"
 #include "ecs/components.hpp"
 #include "ecs/concepts.hpp"
 #include "utils/sparse_set.hpp"

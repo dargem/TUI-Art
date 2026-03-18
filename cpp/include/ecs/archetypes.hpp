@@ -12,26 +12,38 @@
 
 namespace ECS {
 
+using ID = uint32_t;
+
 // Used to hold archetypes (component groupings)
 template <Component... Cs>
     requires UniqueTypes<Cs...>
 class ArchetypeTable {
    public:
-    // sparse set mapping ID's to the dense set (component data)
-    // std::vector<size_t> sparseArray; // maybe do this another way actually
-
-    // tuple of dense sets, where each vector holds a component type, SOA style
-    std::tuple<std::vector<Cs>...> data;
+    // Add the components of an entity into the archetype table
+    ID add(auto& holderEntity) { return 5; }  // placeholder
 
     // Remove a component by index, does a swap and pop
-    void remove(size_t index) {
-        // For each vector in the components tuple do a swap and pop of the data
-        swapPop<Cs...>(index);
+    void remove(ID entityID) {
+        auto swapPop = [](auto& vec, size_t index) {
+            assert(index < vec.size());
+            vec[index] = std::move(vec.back());
+            vec.pop_back();
+        };
+
+        assert(index >= 0 && index < IDdataMapper.size());
+        size_t dataIndex = IDdataMapper[entityID];
+        // For each component (each nested in its own vector) pop and swap with the last component
+        std::apply([&, dataIndex](auto&... vecs) { (swapPop(vecs, dataIndex), ...); }, data);
+
+        // Realign the dataIDMapper for the components that were at the back, moved to dataIndex
+        // to point to the proper index. Then pop the back.
+        dataIDMapper[dataIndex] = dataIDMapper.back();
+        dataIDMapper.pop_back();
     }
 
     // get an unordered vector of a specific component type
     template <Component C>
-        requires OneOf<C, Cs>
+        requires OneOf<C, Cs...>
     std::vector<C>& column() {
         return std::get<std::vector<C>>(data);
     }
@@ -44,13 +56,14 @@ class ArchetypeTable {
     }
 
    private:
-    template <Component C>
-        requires OneOf<C, Cs...>
-    void swapPop(size_t index) {
-        std::vector<C>& matchedVector = std::get<std::vector<C>>(data);
-        // Pops + moves the last element into this new index, overwriting the element there
-        matchedVector[index] = std::move(matchedVector.pop_back());
-    }
+    // sparse set keying ID's to the dense vectors (component data)
+    std::vector<ID> IDdataMapper;
+
+    // reverse map, keying data indices to the ID vector
+    std::vector<ID> dataIDMapper;
+
+    // tuple of dense vectors, where each vector holds a component type, SOA style
+    std::tuple<std::vector<Cs>...> data;
 };
 
 struct AccessManager {};
