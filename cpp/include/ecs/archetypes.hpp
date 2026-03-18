@@ -30,15 +30,15 @@ class ArchetypeTable {
             vec.pop_back();
         };
 
-        assert(index >= 0 && index < IDdataMapper.size());
-        size_t dataIndex = IDdataMapper[entityID];
-        // For each component (each nested in its own vector) pop and swap with the last component
+        size_t dataIndex = dataIndices[entityID];
+        // For each component (each nested in its own vector) pop and swap it with the last
+        // component
         std::apply([&, dataIndex](auto&... vecs) { (swapPop(vecs, dataIndex), ...); }, data);
 
-        // Realign the dataIDMapper for the components that were at the back, moved to dataIndex
-        // to point to the proper index. Then pop the back.
-        dataIDMapper[dataIndex] = dataIDMapper.back();
-        dataIDMapper.pop_back();
+        // Swap around the IDIndices of the back and [dataIndices] to keep consistency
+        size_t backIDIndex = IDIndices.back();
+        IDIndices.back() = IDIndices[dataIndex];
+        IDIndices[dataIndex] = backIDIndex;
     }
 
     // get an unordered vector of a specific component type
@@ -56,11 +56,11 @@ class ArchetypeTable {
     }
 
    private:
-    // sparse set keying ID's to the dense vectors (component data)
-    std::vector<ID> IDdataMapper;
+    // sparse set keying ID's to the dense vectors's index (component data)
+    std::vector<ID> dataIndices;
 
-    // reverse map, keying data indices to the ID vector
-    std::vector<ID> dataIDMapper;
+    // maps an index in data back to the id
+    std::vector<ID> IDIndices;
 
     // tuple of dense vectors, where each vector holds a component type, SOA style
     std::tuple<std::vector<Cs>...> data;
