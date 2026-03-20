@@ -21,6 +21,7 @@ template <Component... Cs>
 class ArchetypeTable {
    public:
     // Add the components of an entity into the archetype table
+    [[nodiscard]]
     ID add() {
         // Emplace each vector with a new component
         auto emplaceBack = [](auto& vec) { vec.emplace_back(); };
@@ -70,6 +71,30 @@ class ArchetypeTable {
 
    private:
     inline size_t getDataSize() { return std::get<0>(data).size(); }
+
+    /**
+     * @brief Makes a free slot returning an ID for use.
+     *
+     * @return ID
+     */
+    inline ID getFreeSlot() {
+        const ID id = getFreeID();
+        dataIndices[id] = getDataSize();
+        return id;
+    }
+
+    inline ID getFreeID() {
+        // Available from the free list
+        if (metadata.size() > getDataSize()) {
+            ++metadata[getDataSize()].validityID;
+            return metadata[getDataSize()].rid;
+        }
+
+        // ID needs creation
+        const ID newID = getDataSize();
+        metadata.push_back({newID, {}});
+        dataIndices.push_back(newID);
+    }
 
     struct Metadata {
         // The reverse ID allowing retrieval of ID of the object from data vector
