@@ -20,14 +20,19 @@ template <Component... Cs>
     requires UniqueTypes<Cs...>
 class ArchetypeTable {
    public:
-    // Add the components of an entity into the archetype table
-    [[nodiscard]]
-    ID add() {
-        // Emplace each vector with a new component
-        auto emplaceBack = [](auto& vec) { vec.emplace_back(); };
-        std::apply([&](auto&... vecs) { (emplaceBack(vecs), ...); }, data);
+    // Add the components of an entity into the archetype table. Requirements statement ensures that
+    // there must be one component passed in for each of the archetype table's components
+    template <Component... CsAdd>
+        requires SameComposition<Cs..., CsAdd...>
+    [[nodiscard]] ID pushBack(CsAdd&&... components) {
+        ID id = getFreeSlot();
 
-        return metadata[getDataSize() - 1].rid;
+        auto pushBack = [&](auto& component) {
+            std::get<std::vector<decltype(component)>>(data).push_back(component);
+        };
+        (pushback(components), ...);
+
+        return id;
     }
 
     // Remove a component by index, does a swap and pop
