@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <ranges>
 #include <tuple>
+#include <type_traits>
 #include <vector>
 
 #include "ecs/components.hpp"
@@ -22,16 +23,17 @@ class ArchetypeTable {
    public:
     // Add the components of an entity into the archetype table. Requirements statement ensures that
     // there must be one component passed in for each of the archetype table's components
-    template <Component... CsAdd>
-        requires SameCompositionPacks<TypePack<Cs...>, TypePack<CsAdd...>>
-    [[nodiscard]] ID pushBack(CsAdd&&... components) {
+    template <typename... Args>
+        requires(Component<Args> && ...) &&
+                SameCompositionPacks<TypePack<Cs...>, TypePack<std::remove_cvref_t<Args>...>>
+    [[nodiscard]] ID pushBack(Args&&... components) {
         ID id = getFreeSlot();
 
         auto pushBack = [&](auto&& component) {
-            std::get<std::vector<std::decay_t<decltype(component)>>>(data).push_back(
-                std::forward<decltype(component)>(component));
+            using C = std::remove_cvref_t<decltype(component)>;
+            std::get<std::vector<C>>(data).push_back(std::forward<decltype(component)>(component));
         };
-        (pushBack(components), ...);
+        (pushBack(std::forward<Args>(components)), ...);
 
         return id;
     }
@@ -100,6 +102,7 @@ class ArchetypeTable {
         const ID newID = getDataSize();
         metadata.push_back({newID, {}});
         dataIndices.push_back(newID);
+        return newID;
     }
 
     struct Metadata {

@@ -9,20 +9,11 @@
 
 namespace ECS {
 
-// components
-enum class Ordering : uint8_t { HEALTH = 0, DEFENSE, ATTACK, COUNT };
-
-struct Health {
-    constexpr static Ordering RANK{Ordering::HEALTH};
-    float hitPoints{};
-};
-
-struct Attack {
-    constexpr static Ordering RANK{Ordering::ATTACK};
-    float attack{};
-};
+// To be a component it must inherit a ComponentTag. Should have 0 overhead due to empty base
+// optimisation and it not relying on polymorphism at runtime.
+struct ComponentTag {};
 
 template <typename T>
-concept Component = std::same_as<T, Health> || std::same_as<T, Attack>;
+concept Component = std::derived_from<std::remove_cvref_t<T>, ComponentTag>;
 
 }  // namespace ECS
