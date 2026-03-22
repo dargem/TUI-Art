@@ -22,6 +22,12 @@ TEST(ECSConceptTests, OneOfFilters) {
 }
 
 TEST(ECSConceptTests, OneOfPackFilters) {
+    EXPECT_TRUE((OneOfPack<int, TypePack<bool, double, long, int, float>>));
+    EXPECT_TRUE((OneOfPack<float, TypePack<float, double>>));
+    EXPECT_FALSE((OneOfPack<float, TypePack<int, double>>));
+}
+
+TEST(ECSConceptTests, BoundPackFilters) {
     // Can also be used with more explicit type pack syntax
     EXPECT_TRUE((OneOfPack<int, TypePack<bool, double, long, int, float>>));
     EXPECT_TRUE((OneOfPack<float, TypePack<float, double>>));
@@ -50,6 +56,27 @@ TEST(ECSConceptTests, SameSize) {
         << "Should be falsy if accidentally not providing a typepack for argument";
     EXPECT_TRUE((SameSizePacks<TypePack<double>, TypePack<double>>));
     EXPECT_FALSE((SameSizePacks<TypePack<double, float>, TypePack<double>>));
+}
+
+TEST(ECSConceptTests, SameCompositionPacks) {
+    EXPECT_TRUE((SameCompositionPacks<TypePack<float, double>, TypePack<float, double>>));
+    EXPECT_TRUE((SameCompositionPacks<TypePack<float, double>, TypePack<double, float>>));
+    EXPECT_TRUE((SameCompositionPacks<TypePack<double, Foo<int>, float, short>,
+                                      TypePack<Foo<int>, short, float, double>>));
+
+    EXPECT_FALSE((SameCompositionPacks<TypePack<float, long, double>, TypePack<double, float>>));
+    EXPECT_FALSE(
+        (SameCompositionPacks<TypePack<float, double, long>, TypePack<double, float, int>>));
+    EXPECT_FALSE((SameCompositionPacks<TypePack<float, double, long>, TypePack<float, int>>));
+    EXPECT_FALSE((SameCompositionPacks<TypePack<float>, TypePack<float, int>>));
+}
+
+TEST(ECSConceptTests, BoundedPack) {
+    EXPECT_TRUE((BoundedPacks<TypePack<int, double, long>, TypePack<int, short, long, double>>));
+    EXPECT_TRUE((BoundedPacks<TypePack<int>, TypePack<long, int, double, short>>));
+    EXPECT_TRUE((BoundedPacks<TypePack<int, double>, TypePack<double, float, int>>));
+    EXPECT_FALSE((BoundedPacks<TypePack<int, double, long>, TypePack<int, short, double, float>>));
+    EXPECT_FALSE((BoundedPacks<TypePack<float, double>, TypePack<double>>));
 }
 
 }  // namespace ECS
