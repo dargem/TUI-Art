@@ -23,14 +23,15 @@ class ArchetypeTable {
     // Add the components of an entity into the archetype table. Requirements statement ensures that
     // there must be one component passed in for each of the archetype table's components
     template <Component... CsAdd>
-        requires SameComposition<Cs..., CsAdd...>
+        requires SameCompositionPacks<TypePack<Cs...>, TypePack<CsAdd...>>
     [[nodiscard]] ID pushBack(CsAdd&&... components) {
         ID id = getFreeSlot();
 
-        auto pushBack = [&](auto& component) {
-            std::get<std::vector<decltype(component)>>(data).push_back(component);
+        auto pushBack = [&](auto&& component) {
+            std::get<std::vector<std::decay_t<decltype(component)>>>(data).push_back(
+                std::forward<decltype(component)>(component));
         };
-        (pushback(components), ...);
+        (pushBack(components), ...);
 
         return id;
     }
@@ -69,7 +70,7 @@ class ArchetypeTable {
 
     // get a zipped view of multiple components
     template <Component... Csearch>
-        requires UniqueTypes<Csearch...> && Bounded<Csearch..., Cs...>
+        requires UniqueTypes<Csearch...> && BoundedPacks<TypePack<Csearch...>, TypePack<Cs...>>
     auto columns() {
         return std::views::zip(std::get<std::vector<Csearch>>(data)...) | std::views::reverse;
     }
