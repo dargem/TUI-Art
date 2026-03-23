@@ -17,6 +17,7 @@ struct ComponentTag {};
 // something like x and y pos they cannot both be doubles since an archetype can't have multiple of
 // the same type. A type alias does not solve this since its just an alias not a different type. So
 // this allows creating a simple component like a X component that works like a given type (double)
+
 template <typename Tag, typename T>
 class BasicComponent : public ComponentTag {
    public:
@@ -26,6 +27,31 @@ class BasicComponent : public ComponentTag {
     operator T&() const { return val; }
     // Returns a comparison category object
     auto operator<=>(const BasicComponent<Tag, T>&) const = default;
+    auto operator<=>(const T& other) const { return val <=> BasicComponent<Tag, T>(other); }
+
+    friend auto operator<=>(const BasicComponent<Tag, T>& lhs, const auto& rhs)
+        requires std::three_way_comparable<T>
+    {
+        return lhs.val == rhs;
+    }
+
+    friend auto operator<=>(const auto& lhs, const BasicComponent<Tag, T>& rhs)
+        requires std::three_way_comparable<T>
+    {
+        return lhs == rhs.val;
+    }
+
+    friend auto operator==(const BasicComponent<Tag, T>& lhs, const auto& rhs)
+        requires std::equality_comparable<T>
+    {
+        return lhs.val == rhs;
+    }
+
+    friend auto operator==(const auto& lhs, const BasicComponent<Tag, T>& rhs)
+        requires std::equality_comparable<T>
+    {
+        return lhs == rhs.val;
+    }
 
    private:
     T val;
