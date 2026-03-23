@@ -17,7 +17,14 @@ TEST(ArchetypesTest, pushBackEntities) {
     ArchetypeTable<IntComponent, BoolComponent> table;
     IntComponent a{};
     BoolComponent b{};
-    ID id = table.pushBack(a, b);
+
+    ID sink{};
+    // Should be able to do it in an orderless fashion since types unique
+    // And should be happy to use template argument type deduction
+    sink = table.pushBack(a, b);
+    sink = table.pushBack(b, a);
+    // Should take an rvalue as well as an lvalue happily
+    sink = table.pushBack(BoolComponent{}, a);
 }
 
 }  // namespace ECS
