@@ -22,6 +22,13 @@ TEST(ComponentTests, BasicComponentFunctions) {
     Z loc{5.0f};
     Z loc_z{loc};
     ASSERT_EQ(loc_z, loc);
+
+    loc = 7.0f;  // should be able to reassign like this
+    loc_z = 3.0f;
+    ASSERT_EQ(loc, 7.0f);
+    ASSERT_EQ(loc, 3.0f);
+    ASSERT_GT(loc, loc_z);
+    ASSERT_LT(loc_z, loc);
 }
 
 struct TesterTagged : public ComponentTag {};
