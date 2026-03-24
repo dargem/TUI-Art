@@ -26,7 +26,7 @@ TEST(ComponentTests, BasicComponentFunctions) {
     loc = 7.0f;  // should be able to reassign like this
     loc_z = 3.0f;
     ASSERT_EQ(loc, 7.0f);
-    ASSERT_EQ(loc, 3.0f);
+    ASSERT_EQ(loc_z, 3.0f);
     ASSERT_GT(loc, loc_z);
     ASSERT_LT(loc_z, loc);
 }
