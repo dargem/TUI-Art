@@ -9,6 +9,7 @@ struct ZTag {};
 using X = BasicComponent<XTag, float>;
 using Y = BasicComponent<YTag, float>;
 using Z = BasicComponent<ZTag, float>;
+
 TEST(ComponentTests, BasicComponentFunctions) {
     // Should construct properly using floats
     X locX{3.7f};
@@ -17,6 +18,21 @@ TEST(ComponentTests, BasicComponentFunctions) {
     Y locY{};
     ASSERT_EQ(locY, 0.0f);  // Should default construct fine
     ASSERT_EQ(locY, float{});
+
+    Z loc{5.0f};
+    Z loc_z{loc};
+    ASSERT_EQ(loc_z, loc);
+}
+
+struct TesterTagged : public ComponentTag {};
+struct TesterUntagged {};
+
+TEST(ComponentTests, ComponentConceptFilters) {
+    ASSERT_TRUE(Component<TesterTagged>) << "Should be a component if given a component tag";
+    ASSERT_FALSE(Component<TesterUntagged>) << "Tagless should not be considered a component";
+
+    ASSERT_TRUE(Component<X>)
+        << "Should be considered a component if a BasicComponent specialization";
 }
 
 }  // namespace ECS

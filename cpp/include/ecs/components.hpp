@@ -53,6 +53,12 @@ class BasicComponent : public ComponentTag {
         return lhs == rhs.val;
     }
 
+    friend auto operator==(const BasicComponent<Tag, T>& lhs, const BasicComponent<Tag, T>& rhs)
+        requires std::equality_comparable<T>
+    {
+        return lhs.val == rhs.val;
+    }
+
    private:
     T val;
 };
