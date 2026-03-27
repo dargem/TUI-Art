@@ -27,4 +27,8 @@ TEST(ArchetypesTest, pushBackEntities) {
     sink = table.pushBack(BoolComponent{}, a);
 }
 
+TEST(ArchetypesTest, fetchComponents) {
+    
+}
+
 }  // namespace ECS
