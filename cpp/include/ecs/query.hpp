@@ -11,7 +11,7 @@ namespace ECS {
 template <typename T>
 struct callable_traits;
 
-// Specialization for function pointers: Ret(*)(Args...)
+// Function pointers: Ret(*)(Args...)
 template <typename Ret, typename... Args>
 struct callable_traits<Ret (*)(Args...)> {
     using signature = Ret(Args...);
@@ -20,32 +20,27 @@ struct callable_traits<Ret (*)(Args...)> {
     using argsTuple = std::tuple<Args...>;  // Alternative access
 };
 
-// Specialization for lambdas/functors
+// Member function pointer (lambda/functor operator())
 template <typename Ret, typename Class, typename... Args>
-struct callable_traits<Ret (Class::*)(Args...)> {
-    using signature = Ret(Args...);
-    using returnType = Ret;
-    using args = Args...;
-    using argsTuple = std::tuple<Args...>;  // Alternative access
-};
+struct callable_traits<Ret (Class::*)(Args...) const> : callable_traits<Ret (*)(Args...)> {};
 
-template <typename Signature>
-class Query;
+// functor / lambda
+template <class F>
+struct callable_traits : callable_traits<decltype(&std::remove_reference_t<F>::operator())> {};
 
-template <typename R, Component... Args>
-class Query<R(Args...)> {
+template <typename F>
+    requires std::same_as<typename callable_traits<F>::returnType, void>
+class Query {
    public:
-    template <typename F>
-    Query(F&& operationFunction) : operation(std::forward<F>(operationFunction)) {}
-
-    void operator()() {
-        // Runs the query
-    }
+    explicit Query(F f) : func(std::move(f)) {}
+    using Args = callable_traits<F>::args;
+    using ArgsTuple = callable_traits<F>::argsTuple;
 
    private:
-    void (*operation)(Args...);
+    F func;
 };
 
+/*
 template <Component... Cs>
 class Query {
    public:
@@ -54,5 +49,6 @@ class Query {
    private:
     std::function<void(Cs...)> process;
 };
+*/
 
 }  // namespace ECS
