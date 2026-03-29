@@ -16,8 +16,7 @@ template <typename Ret, typename... Args>
 struct callable_traits<Ret (*)(Args...)> {
     using signature = Ret(Args...);
     using returnType = Ret;
-    using args = Args...;
-    using argsTuple = std::tuple<Args...>;  // Alternative access
+    using argsTuple = std::tuple<Args...>;
 };
 
 // Member function pointer (lambda/functor operator())
@@ -33,7 +32,6 @@ template <typename F>
 class Query {
    public:
     explicit Query(F f) : func(std::move(f)) {}
-    using Args = callable_traits<F>::args;
     using ArgsTuple = callable_traits<F>::argsTuple;
 
    private:
