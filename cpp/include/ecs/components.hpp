@@ -56,6 +56,12 @@ class BasicComponent : public ComponentTag {
         return lhs == rhs.val;
     }
 
+    friend bool operator==(const BasicComponent& lhs, const BasicComponent& rhs)
+        requires std::equality_comparable<T>
+    {
+        return lhs.val == rhs.val;
+    }
+
    private:
     T val;
 };

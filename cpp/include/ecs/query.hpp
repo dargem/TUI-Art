@@ -5,6 +5,7 @@
 #include <type_traits>
 
 #include "ecs/components.hpp"
+#include "ecs/concepts.hpp"
 
 namespace ECS {
 
@@ -17,6 +18,9 @@ struct callable_traits<Ret (*)(Args...)> {
     using signature = Ret(Args...);
     using returnType = Ret;
     using argsTuple = std::tuple<Args...>;
+    using typePack = TypePack<Args...>;
+    // remove const value and references qualifiers, not really std::decay but yk
+    using decayedTypePack = TypePack<std::remove_cvref_t<Args>...>;
 };
 
 // Member function pointer (lambda/functor operator())
@@ -24,7 +28,7 @@ template <typename Ret, typename Class, typename... Args>
 struct callable_traits<Ret (Class::*)(Args...) const> : callable_traits<Ret (*)(Args...)> {};
 
 // functor / lambda
-template <class F>
+template <typename F>
 struct callable_traits : callable_traits<decltype(&std::remove_reference_t<F>::operator())> {};
 
 template <typename F>
@@ -32,10 +36,15 @@ template <typename F>
 class Query {
    public:
     explicit Query(F f) : func(std::move(f)) {}
-    using ArgsTuple = callable_traits<F>::argsTuple;
+    using FuncArgTuple = callable_traits<F>::argsTuple;
+    using FuncArgTypePack = callable_traits<F>::typePack;
+    using FuncDecayedArgTypePack = callable_traits<F>::decayedTypePack;
 
-    
-    void execute(ArgsTuple args) { std::apply(func, args); }
+    template <typename... Args>
+        requires IsPermutationPacks<TypePack<std::remove_cvref_t<Args>...>, FuncDecayedArgTypePack>
+    void execute(std::tuple<Args...> args) {
+        std::apply(func, args);
+    }
 
    private:
     F func;
