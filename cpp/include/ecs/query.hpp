@@ -34,6 +34,9 @@ class Query {
     explicit Query(F f) : func(std::move(f)) {}
     using ArgsTuple = callable_traits<F>::argsTuple;
 
+    
+    void execute(ArgsTuple args) { std::apply(func, args); }
+
    private:
     F func;
 };

@@ -22,7 +22,7 @@ struct Entity {
     }
 
     template <Component... Csearch>
-        requires UniqueTypes<Csearch> && Bounded<Csearch, Cs>
+        requires UniqueTypes<Csearch> && BoundedPacks<TypePack<Csearch...>, TypePack<Cs...>>
     std::tuple<CSearch...> getComponents() {
         // get a tuple of its values
     }

@@ -25,7 +25,7 @@ class ArchetypeTable {
     // there must be one component passed in for each of the archetype table's components
     template <typename... Args>
         requires(Component<Args> && ...) &&
-                SameCompositionPacks<TypePack<Cs...>, TypePack<std::remove_cvref_t<Args>...>>
+                IsPermutationPacks<TypePack<Cs...>, TypePack<std::remove_cvref_t<Args>...>>
     [[nodiscard]] ID pushBack(Args&&... components) {
         ID id = getFreeSlot();
 

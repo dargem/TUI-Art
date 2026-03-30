@@ -80,18 +80,18 @@ concept SameSizePacks =
 
 namespace detail {
 template <typename PackA, typename PackB>
-struct SameCompositionPacksImpl : std::false_type {};
+struct IsPermutationPacksImpl : std::false_type {};
 
 template <typename... A, typename... B>
-struct SameCompositionPacksImpl<TypePack<A...>, TypePack<B...>>
+struct IsPermutationPacksImpl<TypePack<A...>, TypePack<B...>>
         : std::bool_constant<SameSizePacks<TypePack<A...>, TypePack<B...>> && UniqueTypes<A...> &&
                              UniqueTypes<B...> && BoundedPacks<TypePack<A...>, TypePack<B...>>> {};
 }  // namespace detail
 
-// SameCompositionPacks<TypePack<...>, TypePack<...>>. Checks if both both template packings are
+// IsPermutationPacks<TypePack<...>, TypePack<...>>. Checks if both both template packings are
 // made from the same templates, not necessarily in order If A and B are same size, both are unique,
 // and all members of A are bounded in B it must be made from exact same components
 template <typename PackA, typename PackB>
-concept SameCompositionPacks = TypePackType<PackA> && TypePackType<PackB> &&
-                               detail::SameCompositionPacksImpl<PackA, PackB>::value;
+concept IsPermutationPacks = TypePackType<PackA> && TypePackType<PackB> &&
+                             detail::IsPermutationPacksImpl<PackA, PackB>::value;
 }  // namespace ECS

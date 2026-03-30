@@ -58,17 +58,16 @@ TEST(ECSConceptTests, SameSize) {
     EXPECT_FALSE((SameSizePacks<TypePack<double, float>, TypePack<double>>));
 }
 
-TEST(ECSConceptTests, SameCompositionPacks) {
-    EXPECT_TRUE((SameCompositionPacks<TypePack<float, double>, TypePack<float, double>>));
-    EXPECT_TRUE((SameCompositionPacks<TypePack<float, double>, TypePack<double, float>>));
-    EXPECT_TRUE((SameCompositionPacks<TypePack<double, Foo<int>, float, short>,
-                                      TypePack<Foo<int>, short, float, double>>));
+TEST(ECSConceptTests, IsPermutationPack) {
+    EXPECT_TRUE((IsPermutationPacks<TypePack<float, double>, TypePack<float, double>>));
+    EXPECT_TRUE((IsPermutationPacks<TypePack<float, double>, TypePack<double, float>>));
+    EXPECT_TRUE((IsPermutationPacks<TypePack<double, Foo<int>, float, short>,
+                                    TypePack<Foo<int>, short, float, double>>));
 
-    EXPECT_FALSE((SameCompositionPacks<TypePack<float, long, double>, TypePack<double, float>>));
-    EXPECT_FALSE(
-        (SameCompositionPacks<TypePack<float, double, long>, TypePack<double, float, int>>));
-    EXPECT_FALSE((SameCompositionPacks<TypePack<float, double, long>, TypePack<float, int>>));
-    EXPECT_FALSE((SameCompositionPacks<TypePack<float>, TypePack<float, int>>));
+    EXPECT_FALSE((IsPermutationPacks<TypePack<float, long, double>, TypePack<double, float>>));
+    EXPECT_FALSE((IsPermutationPacks<TypePack<float, double, long>, TypePack<double, float, int>>));
+    EXPECT_FALSE((IsPermutationPacks<TypePack<float, double, long>, TypePack<float, int>>));
+    EXPECT_FALSE((IsPermutationPacks<TypePack<float>, TypePack<float, int>>));
 }
 
 TEST(ECSConceptTests, BoundedPack) {

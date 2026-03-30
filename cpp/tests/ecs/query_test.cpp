@@ -24,4 +24,16 @@ TEST(QueryTests, TemplateArgumentDeduction) {
     EXPECT_TRUE((std::same_as<decltype(query3)::ArgsTuple, std::tuple<A, B>>));
 }
 
+class PosTag;
+class VelTag;
+class Position : public BasicComponent<PosTag, float> {};
+class Velocity : public BasicComponent<VelTag, float> {};
+
+TEST(QueryTests, RunningQueryWorks) {
+    Query query{[](Velocity v, Position& p) { p += v; }};
+    Position pos{5.0f};
+    Velocity vel{1.0f};
+    query.execute(std::tuple<Velocity, Position>(vel, pos));
+}
+
 }  // namespace ECS
