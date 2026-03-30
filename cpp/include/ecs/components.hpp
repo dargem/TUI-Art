@@ -31,6 +31,7 @@ class BasicComponent : public ComponentTag {
     operator const T&() const { return val; }
     // Returns a comparison category object
     auto operator<=>(const BasicComponent&) const = default;
+    bool operator==(const BasicComponent&) const = default;
 
     friend auto operator<=>(const BasicComponent& lhs, const T& rhs)
         requires std::three_way_comparable<T>
@@ -54,12 +55,6 @@ class BasicComponent : public ComponentTag {
         requires std::equality_comparable<T>
     {
         return lhs == rhs.val;
-    }
-
-    friend bool operator==(const BasicComponent& lhs, const BasicComponent& rhs)
-        requires std::equality_comparable<T>
-    {
-        return lhs.val == rhs.val;
     }
 
    private:

@@ -31,6 +31,12 @@ TEST(ComponentTests, BasicComponentFunctions) {
     ASSERT_LT(loc_z, loc);
 }
 
+TEST(Componenttests, BasicComponentsZeroSpaceOverhead) {
+    // A sanity check
+    ASSERT_EQ(sizeof(X), sizeof(float));
+    ASSERT_EQ(alignof(X), alignof(float));
+}
+
 struct TesterTagged : public ComponentTag {};
 struct TesterUntagged {};
 
