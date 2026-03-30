@@ -58,7 +58,7 @@ TEST(QueryTests, RunningQueryWorks) {
     Velocity vel{1.0f};
 
     EXPECT_EQ(pos, 5.0f);
-    query.execute(std::tuple<Velocity, Position&>(vel, pos));
+    query.execute(vel, pos);
 
     EXPECT_NE(pos, 5.0f);
 
@@ -67,6 +67,19 @@ TEST(QueryTests, RunningQueryWorks) {
     EXPECT_NE(pos, ogPos) << "Query execution should modify original position";
     updatePosition(vel, ogPos);
     EXPECT_EQ(pos, ogPos);  // It should be running the given lambda
+}
+
+TEST(QueryTests, UnorderedQueryRunning) {
+    auto updatePosition = [](Velocity v, Position& p) { p += v; };
+    Query query{updatePosition};
+    Position pos{5.0f};
+    Velocity vel{1.0f};
+
+    query.execute(pos, vel);
+    EXPECT_EQ(pos, 6.0f);
+
+    query.execute(vel, pos);
+    EXPECT_EQ(pos, 7.0f);
 }
 
 }  // namespace ECS
