@@ -21,6 +21,8 @@ template <Component... Cs>
     requires UniqueTypes<Cs...>
 class ArchetypeTable {
    public:
+    using ComponentTypePack = TypePack<Cs...>;
+
     // Add the components of an entity into the archetype table. Requirements statement ensures that
     // there must be one component passed in for each of the archetype table's components
     template <typename... Args>
@@ -120,6 +122,20 @@ class ArchetypeTable {
 
     // tuple of dense vectors, where each vector holds a component type, SOA style
     std::tuple<std::vector<Cs>...> data;
+};
+
+template <typename T>
+concept HasComponentTypePack = requires { T::ComponentTypePack; };
+
+template <typename... Ts>
+    requires(HasComponentTypePack<Ts>, ...)
+class ArchetypeRegistry {
+   public:
+    template <typename Query>
+    
+
+   private:
+    std::tuple<Ts...> tables;
 };
 
 }  // namespace ECS
