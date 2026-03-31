@@ -3,6 +3,7 @@
 #include <cassert>
 #include <concepts>
 #include <cstdint>
+#include <exception>
 #include <ranges>
 #include <tuple>
 #include <type_traits>
@@ -125,14 +126,32 @@ class ArchetypeTable {
 };
 
 template <typename T>
-concept HasComponentTypePack = requires { T::ComponentTypePack; };
+concept HasComponentTypePack = requires { typename std::remove_cvref_t<T>::ComponentTypePack; };
 
 template <typename... Ts>
-    requires(HasComponentTypePack<Ts>, ...)
+    requires(HasComponentTypePack<Ts> && ...)
 class ArchetypeRegistry {
    public:
-    template <typename Query>
-    
+    /**
+     * @brief Query the return type (tuple of tables) to find types. Don't call the function, find
+     * the returned type to figure out which tables are relevant.
+     *
+     * @tparam ComponentQuery, (components the table must contain)
+     * @return auto, tuple of archetype tables.
+     */
+    template <Component... ComponentQuery>
+    auto findRelevantTables() {
+        auto tables = std::tuple_cat(
+            std::conditional_t<
+                BoundedPacks<TypePack<ComponentQuery...>, typename Ts::ComponentTypePack>,
+                typename Ts::ComponentTypePack, std::tuple<>>(Ts::ComponentTypePack)...);
+
+        // Nuclear option should never be actually called
+        assert(false);
+        std::terminate();
+
+        return tables;
+    }
 
    private:
     std::tuple<Ts...> tables;

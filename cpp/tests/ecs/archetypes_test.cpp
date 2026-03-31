@@ -27,8 +27,23 @@ TEST(ArchetypesTest, pushBackEntities) {
     sink = table.pushBack(BoolComponent{}, a);
 }
 
-TEST(ArchetypesTest, fetchComponents) {
-    
+TEST(ArchetypesTest, fetchComponents) {}
+
+TEST(ArchetypeTest, hasComponentTypePack) {
+    ArchetypeTable<IntComponent, BoolComponent> archetype;
+    ASSERT_TRUE((std::same_as<decltype(archetype)::ComponentTypePack,
+                              TypePack<IntComponent, BoolComponent>>));
+    ASSERT_TRUE(HasComponentTypePack<decltype(archetype)>);
+}
+
+TEST(ArchetypeTest, archetypeRegistryConstructs) {
+    // clang-format off
+    ArchetypeRegistry<
+        ArchetypeTable<IntComponent, BoolComponent>,
+        ArchetypeTable<BoolComponent>,
+        ArchetypeTable<IntComponent>
+    > registry{};
+    // clang-format on
 }
 
 }  // namespace ECS
