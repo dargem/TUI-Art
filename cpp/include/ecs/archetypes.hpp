@@ -150,6 +150,12 @@ class ArchetypeRegistry {
                 std::tuple<typename Ts::ComponentTypePack>, std::tuple<>>{}...);
     }
 
+    template <typename Table>
+        requires OneOfPack<Table, TypePack<Ts...>>
+    auto getTable() {
+        return std::get<Table>(tables);
+    }
+
    private:
     std::tuple<Ts...> tables;
 };

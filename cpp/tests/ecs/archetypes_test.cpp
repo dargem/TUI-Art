@@ -71,4 +71,21 @@ TEST(ArchetypeTest, registryFindsRelevantTables) {
     ASSERT_TRUE((std::same_as<MatchingLongTables, std::tuple<>>));
 }
 
+TEST(ArchetypeTest, registryGetsTables) {
+    // clang-format off
+    ArchetypeRegistry<
+        ArchetypeTable<IntComponent, BoolComponent>,
+        ArchetypeTable<BoolComponent>,
+        ArchetypeTable<IntComponent>
+    > registry{};
+    // clang-format on
+
+    using Table = decltype(registry.getTable<ArchetypeTable<IntComponent, BoolComponent>>());
+    ASSERT_TRUE((std::same_as<Table, ArchetypeTable<IntComponent, BoolComponent>>));
+
+    // using MatchingIntTables = decltype(registry.findRelevantTables<IntComponent>());
+    //  ASSERT_TRUE((std::same_as<decltype(std::get<0>(registry.findRelevantTables<IntComponent>())),
+    //                          ArchetypeTable<IntComponent, BoolComponent>>));
+}
+
 }  // namespace ECS
