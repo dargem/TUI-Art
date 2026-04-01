@@ -13,6 +13,10 @@ struct BoolComponent : public ComponentTag {
     bool value{true};
 };
 
+struct LongComponent : public ComponentTag {
+    long value{5l};
+};
+
 TEST(ArchetypesTest, pushBackEntities) {
     ArchetypeTable<IntComponent, BoolComponent> table;
     IntComponent a{};
@@ -44,6 +48,27 @@ TEST(ArchetypeTest, archetypeRegistryConstructs) {
         ArchetypeTable<IntComponent>
     > registry{};
     // clang-format on
+}
+
+TEST(ArchetypeTest, registryFindsRelevantTables) {
+    // clang-format off
+    ArchetypeRegistry<
+        ArchetypeTable<IntComponent, BoolComponent>,
+        ArchetypeTable<BoolComponent>,
+        ArchetypeTable<IntComponent>
+    > registry{};
+    // clang-format on
+
+    using MatchingIntTables = decltype(registry.findRelevantTables<IntComponent>());
+    ASSERT_TRUE(
+        (std::same_as<MatchingIntTables,
+                      std::tuple<TypePack<IntComponent, BoolComponent>, TypePack<IntComponent>>>));
+    using MatchingBoolTables = decltype(registry.findRelevantTables<BoolComponent>());
+    ASSERT_TRUE(
+        (std::same_as<MatchingBoolTables,
+                      std::tuple<TypePack<IntComponent, BoolComponent>, TypePack<BoolComponent>>>));
+    using MatchingLongTables = decltype(registry.findRelevantTables<LongComponent>());
+    ASSERT_TRUE((std::same_as<MatchingLongTables, std::tuple<>>));
 }
 
 }  // namespace ECS

@@ -141,16 +141,13 @@ class ArchetypeRegistry {
      */
     template <Component... ComponentQuery>
     auto findRelevantTables() {
-        auto tables = std::tuple_cat(
-            std::conditional_t<
-                BoundedPacks<TypePack<ComponentQuery...>, typename Ts::ComponentTypePack>,
-                typename Ts::ComponentTypePack, std::tuple<>>(Ts::ComponentTypePack)...);
-
-        // Nuclear option should never be actually called
+        // nuclear option shouldn't be actually called, just used to find a type
         assert(false);
         std::terminate();
-
-        return tables;
+        return std::tuple_cat(
+            std::conditional_t<
+                BoundedPacks<TypePack<ComponentQuery...>, typename Ts::ComponentTypePack>,
+                std::tuple<typename Ts::ComponentTypePack>, std::tuple<>>{}...);
     }
 
    private:
