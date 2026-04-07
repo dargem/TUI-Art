@@ -8,6 +8,7 @@
 
 #include "ecs/components.hpp"
 #include "ecs/concepts.hpp"
+#include "ecs/query_runner.hpp"
 
 namespace ECS {
 
@@ -54,6 +55,7 @@ struct callable_traits<Ret (*)(Args...)> {
     using typePack = TypePack<Args...>;
     // remove const value and references qualifiers, not really std::decay but yk
     using decayedTypePack = TypePack<std::remove_cvref_t<Args>...>;
+    using decayedReadTuple = std::tuple_cat(std::conditional_t<>)
 };
 
 // Member function pointer (lambda/functor operator())
@@ -65,13 +67,13 @@ template <typename F>
 struct callable_traits : callable_traits<decltype(&std::remove_reference_t<F>::operator())> {};
 
 template <typename F>
-    requires std::same_as<typename callable_traits<F>::returnType, void>
 class Query {
    public:
     explicit Query(F f) : func(std::move(f)) {}
     using FuncArgTuple = callable_traits<F>::argsTuple;
     using FuncArgTypePack = callable_traits<F>::typePack;
     using FuncDecayedArgTypePack = callable_traits<F>::decayedTypePack;
+
 
     template <typename... Args>
         requires IsPermutationPacks<TypePack<std::remove_cvref_t<Args>...>, FuncDecayedArgTypePack>

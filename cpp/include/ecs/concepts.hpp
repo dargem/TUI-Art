@@ -95,3 +95,11 @@ template <typename PackA, typename PackB>
 concept IsPermutationPacks = TypePackType<PackA> && TypePackType<PackB> &&
                              detail::IsPermutationPacksImpl<PackA, PackB>::value;
 }  // namespace ECS
+
+// If its a const reference or just a copy its just a read
+template <typename T>
+concept IsRead = std::is_const_v<T> || (!std::is_reference_v<T> && !std::is_rvalue_reference_v<T>);
+
+// A non const reference is a write
+template <typename T>
+concept IsWrite = std::is_lvalue_reference_v<T> && !std::is_const_v<T>;

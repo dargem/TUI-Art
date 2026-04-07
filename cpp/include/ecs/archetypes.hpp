@@ -126,6 +126,12 @@ class ArchetypeTable {
 };
 
 template <typename T>
+concept TableQueryable = requires(T t) {
+    t.findRelevantTables();
+    t.getTable();
+};
+
+template <typename T>
 concept HasComponentTypePack = requires { typename std::remove_cvref_t<T>::ComponentTypePack; };
 
 template <typename... Ts>
