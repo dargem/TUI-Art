@@ -50,6 +50,18 @@ TEST(QueryTests, TemplateArgumentDeductionForExecutionDecay) {
         << "Should decay the reference";
 }
 
+TEST(QueryTests, QueryReadArgExtracts) {
+    Query query{[](A a, B& b, const Position& pos, const Velocity v) {}};
+
+    EXPECT_TRUE((
+        std::same_as<decltype(query)::FuncDecayedReadArgTuple, std::tuple<A, Position, Velocity>>));
+}
+
+TEST(QueryTests, QueryWriteArgsExtracts) {
+    Query query{[](A a, B& b, const Position& pos, Velocity& v) {}};
+    EXPECT_TRUE((std::same_as<decltype(query)::FuncDecayedWriteArgTuple, std::tuple<B, Velocity>>));
+}
+
 TEST(QueryTests, RunningQueryWorks) {
     auto updatePosition = [](Velocity v, Position& p) { p += v; };
     Query query{updatePosition};
