@@ -9,13 +9,10 @@ template <typename Query, typename OtherQueryPack>
     requires TypePackType<OtherQueryPack>
 class QueryNode {
    public:
-    explicit QueryRunner(Query&& query) : query(std::forward(query)) {}
-
-        
+    explicit QueryNode(Query&& query) : query(std::forward(query)) {}
 
    private:
     Query query;
-    
 };
 
 /**

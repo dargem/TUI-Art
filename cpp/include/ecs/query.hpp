@@ -48,6 +48,7 @@ struct callable_traits;
 
 // Function pointers: Ret(*)(Args...)
 template <typename Ret, typename... Args>
+    requires((IsWrite<Args> || IsRead<Args>) && ...)
 struct callable_traits<Ret (*)(Args...)> {
     using signature = Ret(Args...);
     using returnType = Ret;
@@ -55,7 +56,12 @@ struct callable_traits<Ret (*)(Args...)> {
     using typePack = TypePack<Args...>;
     // remove const value and references qualifiers, not really std::decay but yk
     using decayedTypePack = TypePack<std::remove_cvref_t<Args>...>;
-    using decayedReadTuple = std::tuple_cat(std::conditional_t<>)
+    using decayedReadTuple = decltype(std::tuple_cat(
+        std::conditional_t<IsRead<Args>, std::tuple<std::remove_cvref_t<Args>>,
+                           std::tuple<>>{}...));
+    using decayedWriteTuple = decltype(std::tuple_cat(
+        std::conditional_t<IsWrite<Args>, std::tuple<std::remove_cvref_t<Args>>,
+                           std::tuple<>>{}...));
 };
 
 // Member function pointer (lambda/functor operator())
@@ -73,7 +79,8 @@ class Query {
     using FuncArgTuple = callable_traits<F>::argsTuple;
     using FuncArgTypePack = callable_traits<F>::typePack;
     using FuncDecayedArgTypePack = callable_traits<F>::decayedTypePack;
-
+    using FuncDecayedReadArgTuple = callable_traits<F>::decayedReadTuple;
+    using FuncDecayedWriteArgTuple = callable_traits<F>::decayedWriteTuple;
 
     template <typename... Args>
         requires IsPermutationPacks<TypePack<std::remove_cvref_t<Args>...>, FuncDecayedArgTypePack>
