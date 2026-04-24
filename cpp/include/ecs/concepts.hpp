@@ -10,28 +10,40 @@ struct TypePack {};
 
 namespace detail {
 template <typename T>
-struct IsTypePack : std::false_type {};
+struct IsTypePackImpl : std::false_type {
+    // calling ::value type trait forces full instantiation, SFINAE only catches error in immediate
+    // context so the parameter substitution itself, once evaluating the members its past that
+    // point. So this hard fails if it isn't a type pack which is wanted
+    static_assert(false, "Must be a TypePack");
+};
 
 template <typename... Ts>
-struct IsTypePack<TypePack<Ts...>> : std::true_type {};
+struct IsTypePackImpl<TypePack<Ts...>> : std::true_type {};
 }  // namespace detail
 
 template <typename T>
-concept TypePackType = detail::IsTypePack<T>::value;
+concept IsTypePack = detail::IsTypePackImpl<T>::value;
 
-// this basically takes in a variadic template, the first argument binds to T while the rest are
-// packed in Td. Then it compares checking T isn't the same as anything in types through the fold
-// expression. Then it ands this with a recursive call to itself using Ts to they're all unique.
-template <typename T, typename... Ts>
-inline constexpr bool areUniqueV = (!std::is_same_v<T, Ts> && ...) && areUniqueV<Ts...>;
+namespace detail {
 
-// The base case for just one type
 template <typename T>
-constexpr bool areUniqueV<T> = true;
+struct Base {};
 
-// Use at call site to require variadic template to be unique
+// direct multi-inheritance from the same class is ill formed so we use a default lambda to abstract
+// away the true base (the type) another layer down, so it will be falsy but not compile error
+template <typename T, auto Differentiator = [] {}>
+struct BaseClass : Base<T> {};
+
+template <typename T>
+struct UniqueTypesImpl {};
+
 template <typename... Ts>
-concept UniqueTypes = areUniqueV<Ts...>;
+struct UniqueTypesImpl<TypePack<Ts...>> : BaseClass<Ts>... {};
+}  // namespace detail
+
+template <typename TypePack>
+concept IsUniqueTypes =
+    IsTypePack<TypePack> && std::is_standard_layout_v<detail::UniqueTypesImpl<TypePack>>;
 
 template <typename T, typename... Ts>
 concept OneOf = (std::is_same_v<T, Ts> || ...);
@@ -46,7 +58,7 @@ struct OneOfPackImpl<T, TypePack<Ts...>> : std::bool_constant<OneOf<T, Ts...>> {
 
 // OneOf<T, TypePack<...>>, checks if T is in  the TypePack
 template <typename T, typename Pack>
-concept OneOfPack = TypePackType<Pack> && detail::OneOfPackImpl<T, Pack>::value;
+concept OneOfPack = IsTypePack<Pack> && detail::OneOfPackImpl<T, Pack>::value;
 
 namespace detail {
 template <typename ElementsPack, typename SetPack>
@@ -60,7 +72,7 @@ struct BoundedPacksImpl<TypePack<Elements...>, TypePack<Set...>>
 // BoundedPacks<TypePack<...>, TypePack<...>>
 // Checks if element of types in first pack are a subset of types in second pack
 template <typename ElementsPack, typename SetPack>
-concept BoundedPacks = TypePackType<ElementsPack> && TypePackType<SetPack> &&
+concept BoundedPacks = IsTypePack<ElementsPack> && IsTypePack<SetPack> &&
                        detail::BoundedPacksImpl<ElementsPack, SetPack>::value;
 
 namespace detail {
@@ -76,7 +88,7 @@ struct SameSizePacksImpl<TypePack<A...>, TypePack<B...>>
 // Checks if the template packings are the same size
 template <typename PackA, typename PackB>
 concept SameSizePacks =
-    TypePackType<PackA> && TypePackType<PackB> && detail::SameSizePacksImpl<PackA, PackB>::value;
+    IsTypePack<PackA> && IsTypePack<PackB> && detail::SameSizePacksImpl<PackA, PackB>::value;
 
 namespace detail {
 template <typename PackA, typename PackB>
@@ -92,9 +104,13 @@ struct IsPermutationPacksImpl<TypePack<A...>, TypePack<B...>>
 // made from the same templates, not necessarily in order If A and B are same size, both are unique,
 // and all members of A are bounded in B it must be made from exact same components
 template <typename PackA, typename PackB>
-concept IsPermutationPacks = TypePackType<PackA> && TypePackType<PackB> &&
-                             detail::IsPermutationPacksImpl<PackA, PackB>::value;
-}  // namespace ECS
+concept IsPermutationPacks =
+    IsTypePack<PackA> && IsTypePack<PackB> && detail::IsPermutationPacksImpl<PackA, PackB>::value;
+
+namespace detail {}
+
+// template <typename PackA, typename PackB>
+// concept IsUniqueTypes =
 
 // If its a const reference or just a copy its just a read
 // std::is_const_v would not work for const int&
@@ -108,3 +124,11 @@ concept IsRead = std::is_const_v<std::remove_reference_t<T>> ||
 // A non const reference is a write
 template <typename T>
 concept IsWrite = std::is_lvalue_reference_v<T> && !std::is_const_v<std::remove_reference_t<T>>;
+
+template <typename T>
+concept HasQueryInterface = requires(T t) {
+    T::FuncDecayedReadArgTuple;
+    T::FuncDecayedWriteArgTuple;
+};
+
+}  // namespace ECS
