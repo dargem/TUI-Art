@@ -47,7 +47,7 @@ struct UniqueTypesImpl : std::bool_constant<std::is_standard_layout_v<Layout<Pac
 }  // namespace detail
 
 template <typename TypePack>
-concept IsUniqueTypes = IsTypePack<TypePack> && detail::UniqueTypesImpl<TypePack>::value;
+concept IsUniquePackTypes = IsTypePack<TypePack> && detail::UniqueTypesImpl<TypePack>::value;
 
 namespace detail {
 template <typename T, typename... Ts>
@@ -100,8 +100,9 @@ struct IsPermutationPacksImpl : std::false_type {};
 
 template <typename... A, typename... B>
 struct IsPermutationPacksImpl<TypePack<A...>, TypePack<B...>>
-        : std::bool_constant<SameSizePacks<TypePack<A...>, TypePack<B...>> && UniqueTypes<A...> &&
-                             UniqueTypes<B...> && BoundedPacks<TypePack<A...>, TypePack<B...>>> {};
+        : std::bool_constant<
+              SameSizePacks<TypePack<A...>, TypePack<B...>> && IsUniquePackTypes<TypePack<A...>> &&
+              IsUniquePackTypes<TypePack<B...>> && BoundedPacks<TypePack<A...>, TypePack<B...>>> {};
 }  // namespace detail
 
 // IsPermutationPacks<TypePack<...>, TypePack<...>>. Checks if both both template packings are
@@ -125,13 +126,12 @@ template <typename T>
 concept IsWrite = std::is_lvalue_reference_v<T> && !std::is_const_v<std::remove_reference_t<T>>;
 
 namespace detail {
-
 template <typename A, typename B>
 struct IsIntersectingImpl {};
 
 template <typename... A, typename... B>
 struct IsIntersectingImpl<TypePack<A...>, TypePack<B...>>
-        : std::bool_constant<OneOf<A, B...> || ...> {};
+        : std::bool_constant<(OneOf<A, B...> || ...)> {};
 }  // namespace detail
 
 // Is truthy if the parameter packs share at least 1 type, false if no intersecting types

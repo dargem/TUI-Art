@@ -10,19 +10,20 @@
 namespace ECS {
 
 template <Component... Cs>
-    requires UniqueTypes<Cs...>
+    requires IsUniquePackTypes<TypePack<Cs...>>
 struct Entity {
     ID index;            // used to lookup entity in entityMap
     uint32_t version{};  // incremented when an entity is destroyed
 
     template <Component C>
-        requires OneOf<C, Cs>
+        requires OneOfPack<C, TypePack<Cs...>>
     C get() {
         // some holder logic
     }
 
     template <Component... Csearch>
-        requires UniqueTypes<Csearch> && BoundedPacks<TypePack<Csearch...>, TypePack<Cs...>>
+        requires IsUniquePackTypes<TypePack<Csearch...>> &&
+                 BoundedPacks<TypePack<Csearch...>, TypePack<Cs...>>
     std::tuple<CSearch...> getComponents() {
         // get a tuple of its values
     }

@@ -19,7 +19,7 @@ using ID = uint32_t;
 
 // Used to hold archetypes (component groupings)
 template <Component... Cs>
-    requires UniqueTypes<Cs...>
+    requires IsUniquePackTypes<TypePack<Cs...>>
 class ArchetypeTable {
    public:
     using ComponentTypePack = TypePack<Cs...>;
@@ -68,14 +68,15 @@ class ArchetypeTable {
 
     // get an unordered vector of a specific component type
     template <Component C>
-        requires OneOf<C, Cs...>
+        requires OneOfPack<C, TypePack<Cs...>>
     std::vector<C>& column() {
         return std::get<std::vector<C>>(data);
     }
 
     // get a zipped view of multiple components
     template <Component... Csearch>
-        requires UniqueTypes<Csearch...> && BoundedPacks<TypePack<Csearch...>, TypePack<Cs...>>
+        requires IsUniquePackTypes<TypePack<Csearch...>> &&
+                 BoundedPacks<TypePack<Csearch...>, TypePack<Cs...>>
     auto columns() {
         return std::views::zip(std::get<std::vector<Csearch>>(data)...) | std::views::reverse;
     }
