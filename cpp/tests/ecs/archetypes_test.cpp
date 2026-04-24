@@ -59,15 +59,17 @@ TEST(ArchetypeTest, registryFindsRelevantTables) {
     > registry{};
     // clang-format on
 
-    using MatchingIntTables = decltype(registry.findRelevantTables<IntComponent>());
+    using MatchingIntTables = decltype(registry)::RelevantTables<IntComponent>;
+
     ASSERT_TRUE(
         (std::same_as<MatchingIntTables,
                       std::tuple<TypePack<IntComponent, BoolComponent>, TypePack<IntComponent>>>));
-    using MatchingBoolTables = decltype(registry.findRelevantTables<BoolComponent>());
+    using MatchingBoolTables = decltype(registry)::RelevantTables<BoolComponent>;
+
     ASSERT_TRUE(
         (std::same_as<MatchingBoolTables,
                       std::tuple<TypePack<IntComponent, BoolComponent>, TypePack<BoolComponent>>>));
-    using MatchingLongTables = decltype(registry.findRelevantTables<LongComponent>());
+    using MatchingLongTables = decltype(registry)::RelevantTables<LongComponent>;
     ASSERT_TRUE((std::same_as<MatchingLongTables, std::tuple<>>));
 }
 

@@ -128,7 +128,7 @@ class ArchetypeTable {
 
 template <typename T>
 concept TableQueryable = requires(T t) {
-    t.findRelevantTables();
+    T::RelevantTables<>;
     t.getTable();
 };
 
@@ -156,6 +156,12 @@ class ArchetypeRegistry {
                 BoundedPacks<TypePack<ComponentQuery...>, typename Ts::ComponentTypePack>,
                 std::tuple<typename Ts::ComponentTypePack>, std::tuple<>>{}...);
     }
+
+    template <Component... ComponentQuery>
+    using RelevantTables = decltype(std::tuple_cat(
+        std::conditional_t<
+            BoundedPacks<TypePack<ComponentQuery...>, typename Ts::ComponentTypePack>,
+            std::tuple<typename Ts::ComponentTypePack>, std::tuple<>>{}...));
 
     template <typename Table>
         requires OneOfPack<Table, TypePack<Ts...>>
