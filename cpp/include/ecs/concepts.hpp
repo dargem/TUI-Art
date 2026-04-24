@@ -35,20 +35,24 @@ template <typename T, auto Differentiator = [] {}>
 struct BaseClass : Base<T> {};
 
 template <typename T>
-struct UniqueTypesImpl {};
+struct Layout {
+};  // type pack has higher specificity so even for arguments of length 1 this won't instantiate
 
 template <typename... Ts>
-struct UniqueTypesImpl<TypePack<Ts...>> : BaseClass<Ts>... {};
+struct Layout<TypePack<Ts...>> : BaseClass<Ts>... {};
+
+// will only have a standard layout if all its base classes are of distinct types
+template <typename Pack>
+struct UniqueTypesImpl : std::bool_constant<std::is_standard_layout_v<Layout<Pack>>> {};
 }  // namespace detail
 
 template <typename TypePack>
-concept IsUniqueTypes =
-    IsTypePack<TypePack> && std::is_standard_layout_v<detail::UniqueTypesImpl<TypePack>>;
+concept IsUniqueTypes = IsTypePack<TypePack> && detail::UniqueTypesImpl<TypePack>::value;
 
+namespace detail {
 template <typename T, typename... Ts>
 concept OneOf = (std::is_same_v<T, Ts> || ...);
 
-namespace detail {
 template <typename T, typename Pack>
 struct OneOfPackImpl : std::false_type {};
 
@@ -107,11 +111,6 @@ template <typename PackA, typename PackB>
 concept IsPermutationPacks =
     IsTypePack<PackA> && IsTypePack<PackB> && detail::IsPermutationPacksImpl<PackA, PackB>::value;
 
-namespace detail {}
-
-// template <typename PackA, typename PackB>
-// concept IsUniqueTypes =
-
 // If its a const reference or just a copy its just a read
 // std::is_const_v would not work for const int&
 // this is because its a non const reference, pointing to a const object
@@ -124,6 +123,21 @@ concept IsRead = std::is_const_v<std::remove_reference_t<T>> ||
 // A non const reference is a write
 template <typename T>
 concept IsWrite = std::is_lvalue_reference_v<T> && !std::is_const_v<std::remove_reference_t<T>>;
+
+namespace detail {
+
+template <typename A, typename B>
+struct IsIntersectingImpl {};
+
+template <typename... A, typename... B>
+struct IsIntersectingImpl<TypePack<A...>, TypePack<B...>>
+        : std::bool_constant<OneOf<A, B...> || ...> {};
+}  // namespace detail
+
+// Is truthy if the parameter packs share at least 1 type, false if no intersecting types
+template <typename PackA, typename PackB>
+concept IsIntersecting =
+    IsTypePack<PackA> && IsTypePack<PackB> && detail::IsIntersectingImpl<PackA, PackB>::value;
 
 template <typename T>
 concept HasQueryInterface = requires(T t) {
