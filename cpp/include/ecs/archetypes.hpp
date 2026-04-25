@@ -128,7 +128,7 @@ class ArchetypeTable {
 
 template <typename T>
 concept TableQueryable = requires(T t) {
-    T::RelevantTables<>;
+    T::RelevantTablesComponents;
     t.getTable();
 };
 
@@ -140,33 +140,35 @@ template <typename... Ts>
 class ArchetypeRegistry {
    public:
     /**
-     * @brief Query the return type (tuple of tables) to find types. Don't call the function, find
-     * the returned type to figure out which tables are relevant.
+     * @brief Query to find typepacked components of tables that are a superset of those components.
+     * ie query with bool and it responds std::tuple<TypePack<bool>, TypePack<bool, int>>
      *
      * @tparam ComponentQuery, (components the table must contain)
-     * @return auto, tuple of archetype tables.
+     * @return auto, tuple of archetype table types.
      */
     template <Component... ComponentQuery>
-    auto findRelevantTables() {
-        // nuclear option shouldn't be actually called, just used to find a type
-        assert(false);
-        std::terminate();
-        return std::tuple_cat(
-            std::conditional_t<
-                BoundedPacks<TypePack<ComponentQuery...>, typename Ts::ComponentTypePack>,
-                std::tuple<typename Ts::ComponentTypePack>, std::tuple<>>{}...);
-    }
-
-    template <Component... ComponentQuery>
-    using RelevantTables = decltype(std::tuple_cat(
+    using RelevantTablesComponents = decltype(std::tuple_cat(
         std::conditional_t<
             BoundedPacks<TypePack<ComponentQuery...>, typename Ts::ComponentTypePack>,
             std::tuple<typename Ts::ComponentTypePack>, std::tuple<>>{}...));
 
-    template <typename Table>
-        requires OneOfPack<Table, TypePack<Ts...>>
-    auto getTable() {
-        return std::get<Table>(tables);
+    /**
+     * @brief Query to find tuple of references to tables that are a superset of those components.
+     * ie query with bool for std::tuple<ArchetypeTable<bool>& A, ArchetypeTable<bool, int>& B>
+     *
+     * @tparam ComponentQuery, the components the table must contain
+     * @return auto, table of references to tables
+     */
+    template <Component... ComponentQuery>
+    auto getRelevantTables() {
+        return std::tuple_cat(([&] {
+            if constexpr (BoundedPacks<TypePack<ComponentQuery...>,
+                                       typename Ts::ComponentTypePack>) {
+                return std::tuple<Ts&>{std::get<Ts>(tables)};
+            } else {
+                return std::tuple<>{};
+            }
+        }())...);
     }
 
    private:

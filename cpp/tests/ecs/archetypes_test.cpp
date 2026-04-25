@@ -59,17 +59,17 @@ TEST(ArchetypeTest, registryFindsRelevantTables) {
     > registry{};
     // clang-format on
 
-    using MatchingIntTables = decltype(registry)::RelevantTables<IntComponent>;
-
+    using MatchingIntTables = decltype(registry)::RelevantTablesComponents<IntComponent>;
     ASSERT_TRUE(
         (std::same_as<MatchingIntTables,
                       std::tuple<TypePack<IntComponent, BoolComponent>, TypePack<IntComponent>>>));
-    using MatchingBoolTables = decltype(registry)::RelevantTables<BoolComponent>;
 
+    using MatchingBoolTables = decltype(registry)::RelevantTablesComponents<BoolComponent>;
     ASSERT_TRUE(
         (std::same_as<MatchingBoolTables,
                       std::tuple<TypePack<IntComponent, BoolComponent>, TypePack<BoolComponent>>>));
-    using MatchingLongTables = decltype(registry)::RelevantTables<LongComponent>;
+
+    using MatchingLongTables = decltype(registry)::RelevantTablesComponents<LongComponent>;
     ASSERT_TRUE((std::same_as<MatchingLongTables, std::tuple<>>));
 }
 
@@ -82,12 +82,16 @@ TEST(ArchetypeTest, registryGetsTables) {
     > registry{};
     // clang-format on
 
-    using Table = decltype(registry.getTable<ArchetypeTable<IntComponent, BoolComponent>>());
-    ASSERT_TRUE((std::same_as<Table, ArchetypeTable<IntComponent, BoolComponent>>));
+    ASSERT_TRUE((std::same_as<decltype(registry.getRelevantTables<IntComponent>()),
+                              std::tuple<ArchetypeTable<IntComponent, BoolComponent>&,
+                                         ArchetypeTable<IntComponent>&>>));
 
-    // using MatchingIntTables = decltype(registry.findRelevantTables<IntComponent>());
-    //  ASSERT_TRUE((std::same_as<decltype(std::get<0>(registry.findRelevantTables<IntComponent>())),
-    //                          ArchetypeTable<IntComponent, BoolComponent>>));
+    ASSERT_TRUE((std::same_as<decltype(registry.getRelevantTables<BoolComponent>()),
+                              std::tuple<ArchetypeTable<IntComponent, BoolComponent>&,
+                                         ArchetypeTable<BoolComponent>&>>));
+
+    ASSERT_TRUE(
+        (std::same_as<decltype(registry.getRelevantTables<LongComponent>()), std::tuple<>>));
 }
 
 }  // namespace ECS
